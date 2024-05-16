@@ -1,18 +1,18 @@
 import "reflect-metadata";
 import "express-async-errors";
 import express, { NextFunction, Request, Response } from "express";
-import { AppError } from "@shared/errors/AppError";
 import * as path from 'path'; 
 import * as fs from 'fs';
 import * as https from 'https';
 
 import { router } from "./router";
 import cors from "cors";
+import { AppError } from "@Domain/Exceptions/AppError";
 
 export const app = express();
 
-const certPath = path.resolve(__dirname, '../../SSL/code.crt'); 
-const keyPath = path.resolve(__dirname, '../../SSL/code.key');
+const certPath = path.resolve(__dirname, '../Http/SSL/code.crt'); 
+const keyPath = path.resolve(__dirname, '../Http/SSL/code.key');
 
 const options: https.ServerOptions = {
   key: fs.readFileSync(keyPath),

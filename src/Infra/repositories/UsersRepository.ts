@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { BaseRepository } from './BaseRepository';
 import { IUsersRepository } from './IUsersRepository';
 import { PrismaClient, Users } from '@prisma/client';
-import { prisma } from '@shared/infra/database';
+import { prisma } from 'Infra/Data/database';
 
 
 @injectable()
