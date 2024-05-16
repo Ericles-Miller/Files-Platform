@@ -1,5 +1,4 @@
 import { User } from "@entities/User";
-import { Users } from "@prisma/client";
 import { IUsersRepository } from "@repositories/IUsersRepository";
 import { AppError } from "@shared/errors/AppError";
 import { inject, injectable } from "inversify";
@@ -10,16 +9,14 @@ interface IRequestDTO {
   password: string;
 }
 
-
 @injectable()
-export class UsersService {
+export class CreateUserUseCase {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
   ) {}
 
-  async create({email, name,password }: IRequestDTO) : Promise<void> {    
-    
+  async execute({email, name,password }: IRequestDTO) : Promise<void> {    
     const userAlreadyExists = await this.usersRepository.checkEmailAlreadyExist(email);
         
     if(userAlreadyExists) {
@@ -28,11 +25,5 @@ export class UsersService {
     
     const user = new User(name, email, password);    
     await this.usersRepository.create(user);
-  }
-
-  async list(): Promise<Users[]> {
-    const users = await this.usersRepository.listAll();
-
-    return users;
   }
 }
