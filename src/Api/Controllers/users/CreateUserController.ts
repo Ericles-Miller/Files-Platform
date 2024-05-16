@@ -5,10 +5,15 @@ import { container } from "IoC";
 export class CreateUserController {
   async handle(request: Request, response: Response) : Promise<Response> {
     const { name, email, password } = request.body;
+    console.log(request.body);
+    const { path } = request.file;
+
+    
+
 
     const createUserUseCase = container.get(CreateUserUseCase);
-
-    await createUserUseCase.execute({email, name, password});
+    const avatar = path;
+    await createUserUseCase.execute({email, name, password, avatar});
 
     return response.status(201).send();
   }

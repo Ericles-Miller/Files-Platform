@@ -19,7 +19,8 @@ export class ListUsersUseCase {
         email: user.email,
         enable: user.enable,
         updatedAt: user.updatedAt,
-        name: user.name
+        name: user.name,
+        avatar: user.avatar
       }
       return listUser
     })
