@@ -3,18 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
-model Posts {
-  id        String     @id @default(uuid())
-  title     String
-  author    String
-  createdAt DateTime   @default(now())
-  updateAt  DateTime?  @default(now())
-  enable    Boolean
-  Comments  Comments[]
+model Files {
+  id           String     @id @default(uuid())
+  displayName  String     @unique
+  displayCover String
+  createdAt    DateTime   @default(now())
+  updateAt     DateTime?  @default(now())
+  description  String
+  Comments     Comments[]
 
   @@map("posts")
 }
@@ -34,6 +34,6 @@ model Users {
 model Comments {
   id          String @id @default(uuid())
   description String
-  post        Posts  @relation(fields: [postsId], references: [id])
+  files       Files  @relation(fields: [postsId], references: [id])
   postsId     String
 }
