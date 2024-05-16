@@ -1,8 +1,6 @@
+import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
 import { Request, Response } from "express";
-import { container } from "@shared/IoC";
-import { ListUsersUseCase } from "./ListUserUseCase";
-
-
+import { container } from "IoC";
 
 export class ListUserController {
   async handle(request: Request, response: Response) : Promise<Response> {

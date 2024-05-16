@@ -47,6 +47,6 @@
   "scripts": {
     "start": "node build/shared/infra/http/server.js",
     "build": "babel src --out-dir build --copy-files --extensions \".js,.ts\"",
-    "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only  --ignore-watch node_modules --respawn src/shared/infra/http/server.ts "
+    "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only  --ignore-watch node_modules --respawn src/Api/Http/server.ts"
   }
 }

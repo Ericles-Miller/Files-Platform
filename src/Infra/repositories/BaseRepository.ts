@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { IBaseRepository } from "./IBaseRepository";
 import { Users, Posts } from "@prisma/client";
-import { RepositoryType } from "@shared/infra/database";
+import { RepositoryType } from "Infra/Data/database";
 
 @injectable()
 export class BaseRepository<T extends Users | Posts> implements IBaseRepository<T> {

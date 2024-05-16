@@ -1,8 +1,6 @@
-
+import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
 import { Request, Response } from "express";
-import { container } from "@shared/IoC";
-import { CreateUserUseCase } from "./CreateUserUseCase";
-
+import { container } from "IoC";
 
 export class CreateUserController {
   async handle(request: Request, response: Response) : Promise<Response> {
@@ -13,6 +11,5 @@ export class CreateUserController {
     await createUserUseCase.execute({email, name, password});
 
     return response.status(201).send();
-
   }
 }

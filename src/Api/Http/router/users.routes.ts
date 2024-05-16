@@ -1,5 +1,5 @@
-import { CreateUserController } from "@controllers/createUser/CreateUserController";
-import { ListUserController } from "@controllers/ListUser/ListUserController";
+import { CreateUserController } from "@Api/Controllers/users/CreateUserController";
+import { ListUserController } from "@Api/Controllers/users/ListUserController";
 import { Router } from "express";
 
 export const usersRoutes = Router();

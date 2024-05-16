@@ -1,13 +1,9 @@
-import { User } from "@entities/User";
-import { IUsersRepository } from "@repositories/IUsersRepository";
-import { AppError } from "@shared/errors/AppError";
 import { inject, injectable } from "inversify";
+import { User } from "Domain/Entities/User";
+import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
+import { AppError } from "@Domain/Exceptions/AppError";
+import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
 
-interface IRequestDTO {
-  name: string;
-  email: string;
-  password: string;
-}
 
 @injectable()
 export class CreateUserUseCase {

@@ -1,4 +1,4 @@
-import { Base } from "./Base";
+import { Base } from "./shared/Base";
 
 export class User extends Base {
 

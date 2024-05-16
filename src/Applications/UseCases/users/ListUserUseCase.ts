@@ -1,15 +1,6 @@
-import { Users } from "@prisma/client";
-import { IUsersRepository } from "@repositories/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
+import { IListUsersDTO } from "@Infra/DTOs/users/IListUsersDto";
 import { inject, injectable } from "inversify";
-
-export interface IListUsers {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date | null;
-  enable: boolean;
-}
 
 @injectable()
 export class ListUsersUseCase { 
@@ -18,11 +9,11 @@ export class ListUsersUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute() : Promise<IListUsers[]> {
+  async execute() : Promise<IListUsersDTO[]> {
     const users = await this.usersRepository.listAll();
 
     const listAllUsers = users.map((user) => {
-      const listUser : IListUsers = {
+      const listUser : IListUsersDTO = {
         id: user.id,
         createdAt: user.createdAt,
         email: user.email,

@@ -1,4 +1,4 @@
-import { IBaseRepository } from './IBaseRepository';
+import { IBaseRepository } from '../IBaseRepository';
 import { Users } from '@prisma/client';
 
 export interface IUsersRepository extends IBaseRepository<Users> {
