@@ -17,3 +17,8 @@ export class CreateUserController {
   }
 }
 
+
+BUCKET_NAME=files-platform-web-api
+BUCKET_REGION=us-east-2
+ACCESS_KEY=AKIAW3MD7D4O7HAFIUCV
+SECRET_KEY=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
