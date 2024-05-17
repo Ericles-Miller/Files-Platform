@@ -8,9 +8,7 @@ export class CreateUserController {
     console.log(request.body);
     const { path } = request.file;
 
-    
-
-
+  
     const createUserUseCase = container.get(CreateUserUseCase);
     const avatar = path;
     await createUserUseCase.execute({email, name, password, avatar});
@@ -18,3 +16,8 @@ export class CreateUserController {
     return response.status(201).send();
   }
 }
+
+BUCKET_NAME=files-platform-web-api
+BUCKET_REGION=us-east-2
+ACCESS_KEY=AKIAW3MD7D4O7HAFIUCV
+SECRET_KEY=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
