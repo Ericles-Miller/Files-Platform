@@ -3,9 +3,9 @@ services:
   pantry-tracker-db:
     image: postgres
     restart: always
-    container_name: pantry-tracker-db
+    container_name: crudAwsS3
     ports:
-      - 5435:5432
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: 18er0821
       PGDATA: /data/postgres

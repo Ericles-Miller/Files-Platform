@@ -6,7 +6,7 @@ export default {
     return {
       storage: multer.diskStorage({
         destination: (request, file, callback) => {
-          callback(null, resolve(__dirname, "../../", folder));
+          callback(null, resolve(__dirname, folder));
         },
         filename: (request, file, callback) => {
           const fileName = `${file.originalname}`;
