@@ -7,7 +7,6 @@ export class CreateUserController {
     const { name, email, password } = request.body;
     const { path } = request.file;
 
-  
     const createUserUseCase = container.get(CreateUserUseCase);
     const avatar = path;
     await createUserUseCase.execute({email, name, password, avatar});
