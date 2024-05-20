@@ -1,6 +1,7 @@
 import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
 import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
+import { UpdateUserUseCase } from "@Applications/UseCases/users/UpdateUserUseCase";
 import { prisma } from "@Infra/Data/database";
 import { BaseRepository } from "@Infra/repositories/BaseRepository";
 import { UsersRepository } from "@Infra/repositories/UsersRepository";
@@ -16,3 +17,4 @@ container.bind<PrismaClient>('PrismaClient').toConstantValue(prisma);
 
 container.bind<ListUsersUseCase>(ListUsersUseCase).toSelf()
 container.bind<CreateUserUseCase>(CreateUserUseCase).toSelf()
+container.bind<UpdateUserUseCase>(UpdateUserUseCase).toSelf()

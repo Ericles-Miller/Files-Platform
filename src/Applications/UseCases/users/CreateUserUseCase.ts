@@ -3,7 +3,7 @@ import { User } from "Domain/Entities/User";
 import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
-import {PutObjectCommand ,S3} from '@aws-sdk/client-s3';
+import {PutObjectCommand} from '@aws-sdk/client-s3';
 import { s3 } from "Jobs/AwsS3";
 
 
@@ -21,6 +21,8 @@ export class CreateUserUseCase {
         throw new AppError('user already exists with email!', 400);
       }
 
+      const user = new User(name, email, password); 
+
       if(file) { 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
@@ -29,12 +31,8 @@ export class CreateUserUseCase {
           ContentType: file.mimetype,
         }));
         
-        const user = new User(name, email, password, file.originalname); 
+        user.setAvatar(file.originalname)
         await this.usersRepository.create(user);   
-  
-      } else {
-        const user = new User(name, email, password, null );
-        await this.usersRepository.create(user);
       }
     } catch (error) {
       if(error instanceof AppError) {

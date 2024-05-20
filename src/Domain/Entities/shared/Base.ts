@@ -15,10 +15,18 @@ export class Base {
 
   
   setUpdatedAt(date: Date): void {
-    this.updatedAt = new Date();
+    this.updatedAt = date;
   }
 
   getUpdatedAt(): Date | null {
     return this.updatedAt;
+  }
+
+  setEnable(status: boolean): void {
+    this.enable = status;
+  }
+
+  getEnable(): boolean {
+    return this.enable;
   }
 }
