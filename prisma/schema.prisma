@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +28,7 @@ model Users {
   updatedAt DateTime? @default(now())
   enable    Boolean
   avatar    String?
+  fileName  String?
 
   @@map("users")
 }

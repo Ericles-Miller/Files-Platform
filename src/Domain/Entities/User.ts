@@ -6,6 +6,7 @@ export class User extends Base {
   email: string;
   password: string;
   avatar!: string | null
+  fileName!: string | null
 
   constructor(name: string, email: string, password: string) {
     super();
@@ -31,5 +32,15 @@ export class User extends Base {
 
   getAvatar() : string | null{
     return this.avatar;
+  }
+
+  setFileName(nameFile: string | null): void {
+    if(nameFile) {
+      this.avatar = nameFile;
+    }
+  }
+
+  getFileName() : string | null{
+    return this.fileName;
   }
 }

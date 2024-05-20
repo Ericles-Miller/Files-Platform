@@ -3,8 +3,8 @@ import { User } from "Domain/Entities/User";
 import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
-import {PutObjectCommand} from '@aws-sdk/client-s3';
-import { s3 } from "Jobs/AwsS3";
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { s3 } from "@Jobs/AwsS3";
 
 
 @injectable()
@@ -31,9 +31,11 @@ export class CreateUserUseCase {
           ContentType: file.mimetype,
         }));
         
-        user.setAvatar(file.originalname)
-        await this.usersRepository.create(user);   
+        user.setAvatar(file.originalname);
+        user.setFileName(file.originalname);
       }
+      
+      await this.usersRepository.create(user);   
     } catch (error) {
       if(error instanceof AppError) {
         throw error

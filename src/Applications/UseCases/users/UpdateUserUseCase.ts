@@ -23,11 +23,10 @@ export class UpdateUserUseCase {
       
       const user = new User(name,email,password)
       
-      if(file) {
-        // deletar o antigo 
+      if(file && findUser.nameFile) {
         await s3.send(new DeleteObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: findUser.avatar,
+          Key: findUser.nameFile,
         }))
 
         await s3.send(new PutObjectCommand({
@@ -37,11 +36,11 @@ export class UpdateUserUseCase {
           ContentType: file.mimetype
         }));
         user.setAvatar(file.originalname);
+        user.setFileName(file.originalname);
       }
       
       user.enable = enable;
       user.update(user);
-
 
       await this.usersRepository.update(id, user);
     } catch (error) {
