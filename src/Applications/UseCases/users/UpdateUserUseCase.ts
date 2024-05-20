@@ -4,7 +4,8 @@ import { AppError } from "@Domain/Exceptions/AppError";
 import { IUpdateUserFileDTO } from "@Infra/DTOs/users/IUpdateUserFileDTO";
 import { inject, injectable } from "inversify";
 import { s3 } from "Jobs/AwsS3";
-import {PutObjectCommand} from '@aws-sdk/client-s3';
+import {PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
+import { Users } from "@prisma/client";
 
 @injectable()
 export class UpdateUserUseCase {
@@ -15,7 +16,7 @@ export class UpdateUserUseCase {
 
   async execute({ email, enable, id, name, password, file}: IUpdateUserFileDTO) : Promise<void> {
     try {
-      const findUser = await this.usersRepository.findById(id);
+      const findUser: Users = await this.usersRepository.findById(id);
       if(!findUser) {
         throw new AppError('UserId does not exists', 404);
       }
@@ -23,9 +24,11 @@ export class UpdateUserUseCase {
       const user = new User(name,email,password)
       
       if(file) {
-
         // deletar o antigo 
-
+        await s3.send(new DeleteObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: findUser.avatar,
+        }))
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
