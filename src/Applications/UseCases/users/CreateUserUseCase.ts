@@ -29,7 +29,7 @@ export class CreateUserUseCase {
           ContentType: file.mimetype,
         }));
         
-        const user = new User(name, email, password, file.filename); 
+        const user = new User(name, email, password, file.originalname); 
         await this.usersRepository.create(user);   
   
       } else {

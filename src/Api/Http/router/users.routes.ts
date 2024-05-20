@@ -2,7 +2,6 @@ import { CreateUserController } from "@Api/Controllers/users/CreateUserControlle
 import { ListUserController } from "@Api/Controllers/users/ListUserController";
 import { Router } from "express";
 import multer from "multer";
-import uploadFileAvatar from "Jobs/UploadAvatar";
 
 export const usersRoutes = Router();
 

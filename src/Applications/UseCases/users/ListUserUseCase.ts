@@ -1,6 +1,10 @@
 import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
 import { IListUsersDTO } from "@Infra/DTOs/users/IListUsersDto";
 import { inject, injectable } from "inversify";
+import {GetObjectCommand} from '@aws-sdk/client-s3';
+import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
+import { s3 } from "Jobs/AwsS3";
+
 
 @injectable()
 export class ListUsersUseCase { 
@@ -12,7 +16,26 @@ export class ListUsersUseCase {
   async execute() : Promise<IListUsersDTO[]> {
     const users = await this.usersRepository.listAll();
 
-    const listAllUsers = users.map((user) => {
+    const listAllUsers = Promise.all(users.map(async (user) => {
+      if(user.avatar) {
+        const getAvatar = new GetObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: user.avatar,
+        });
+  
+        const url = await getSignedUrl(s3, getAvatar, {expiresIn : 3600});
+        const listUser : IListUsersDTO = {
+          id: user.id,
+          createdAt: user.createdAt,
+          email: user.email,
+          enable: user.enable,
+          updatedAt: user.updatedAt,
+          name: user.name,
+          avatar: url
+        }
+        return listUser
+      }
+
       const listUser : IListUsersDTO = {
         id: user.id,
         createdAt: user.createdAt,
@@ -20,10 +43,11 @@ export class ListUsersUseCase {
         enable: user.enable,
         updatedAt: user.updatedAt,
         name: user.name,
-        avatar: user.avatar
-      }
+        avatar: ''
+      };
+
       return listUser
-    })
+    }))
 
     return listAllUsers;
   }
