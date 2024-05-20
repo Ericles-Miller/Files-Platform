@@ -14,7 +14,7 @@ export class Base {
   }
 
   
-  setUpdatedAt(date: Date): void {
+  setUpdatedAt(): void {
     this.updatedAt = new Date();
   }
 
