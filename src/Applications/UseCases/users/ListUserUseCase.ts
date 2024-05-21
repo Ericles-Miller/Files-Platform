@@ -3,7 +3,7 @@ import { IListUsersDTO } from "@Infra/DTOs/users/IListUsersDto";
 import { inject, injectable } from "inversify";
 import {GetObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
-import { s3 } from "Jobs/AwsS3";
+import { s3 } from "@Applications/Services/awsS3";
 
 
 @injectable()

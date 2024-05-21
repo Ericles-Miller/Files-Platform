@@ -34,9 +34,9 @@ export class User extends Base {
     return this.avatar;
   }
 
-  setFileName(nameFile: string | null): void {
-    if(nameFile) {
-      this.avatar = nameFile;
+  setFileName(fileName: string | null): void {
+    if(fileName) {
+      this.fileName = fileName;
     }
   }
 

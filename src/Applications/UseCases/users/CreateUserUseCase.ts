@@ -4,7 +4,7 @@ import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepositor
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { s3 } from "@Jobs/AwsS3";
+import { s3 } from "@Applications/Services/awsS3";
 
 
 @injectable()
@@ -25,10 +25,10 @@ export class CreateUserUseCase {
 
       if(file) { 
         await s3.send(new PutObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: file.originalname,
-          Body:file.buffer,
-          ContentType: file.mimetype,
+         Bucket: process.env.BUCKET_NAME,
+         Key: file.originalname,
+         Body:file.buffer,
+         ContentType: file.mimetype,
         }));
         
         user.setAvatar(file.originalname);
