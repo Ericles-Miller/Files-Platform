@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { BaseRepository } from './BaseRepository';
+import { BaseRepository } from './shared/BaseRepository';
 import { IUsersRepository } from './IUsersRepository';
 import { PrismaClient, Users } from '@prisma/client';
 import { prisma } from 'Infra/Data/database';
