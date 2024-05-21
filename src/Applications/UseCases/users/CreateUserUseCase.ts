@@ -21,7 +21,7 @@ export class CreateUserUseCase {
         throw new AppError('user already exists with email!', 400);
       }
 
-      const user = new User(name, email, password); 
+      const user = new User(name, email, password, null); 
 
       if(file) { 
         await s3.send(new PutObjectCommand({
