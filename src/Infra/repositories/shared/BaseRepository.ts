@@ -22,10 +22,7 @@ export class BaseRepository<T extends Users > implements IBaseRepository<T> {
   }
 
   async create(data: T): Promise<void> {
-    
-    await this.repository.create({
-      data,
-    });
+    await this.repository.create({ data });
   }
 
   async listAll(): Promise<T[]> {
@@ -42,5 +39,9 @@ export class BaseRepository<T extends Users > implements IBaseRepository<T> {
     });
 
     return context;
+  }
+
+  async delete(id: string) : Promise<void> {
+    await this.repository.delete({ where: { id }}); 
   }
 }

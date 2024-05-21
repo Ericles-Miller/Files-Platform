@@ -15,13 +15,13 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute({ enable, id, name, password, file}: IUpdateUserFileDTO) : Promise<void> {
-    try {
+    try {  
       const findUser: Users = await this.usersRepository.findById(id);
       if(!findUser) {
         throw new AppError('UserId does not exists', 404);
       }
       
-      const user = new User(name,findUser.email,password)
+      const user = new User(name, findUser.email, password, id);
       
       if(file && findUser.fileName) {
         await s3.send(new DeleteObjectCommand({
@@ -41,7 +41,7 @@ export class UpdateUserUseCase {
       
       user.enable = enable;
       user.update(user);
-
+      
       await this.usersRepository.update(id, user);
     } catch (error) {
       if(error instanceof AppError) throw error

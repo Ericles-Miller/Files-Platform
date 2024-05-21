@@ -8,14 +8,15 @@ export class User extends Base {
   avatar!: string | null
   fileName!: string | null
 
-  constructor(name: string, email: string, password: string) {
-    super();
+  constructor(name: string, email: string, password: string, id: string | null) {
+    super(id);
     this.name = name;
     this.email = email;
     this.password = password;
   }
 
-  update({ avatar,email,enable,name,password }: IUpdateUserDTO) {
+  update({ id, avatar,email,enable,name,password }: IUpdateUserDTO) {
+    this.id = id;
     this.name = name;
     this.email = email;
     this.password = password;

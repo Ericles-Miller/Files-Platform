@@ -2,6 +2,6 @@ export interface IUpdateUserFileDTO {
   id: string;
   name: string;
   password: string;  
-  enable: boolean
+  enable: boolean;
   file: Express.Multer.File | undefined;
 }
