@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import { IBaseRepository } from "./IBaseRepository";
-import { Users, Posts } from "@prisma/client";
+import { Users, } from "@prisma/client";
 import { RepositoryType } from "Infra/Data/database";
+import { IBaseRepository } from "@Applications/Interfaces/IBaseRepository";
 
 @injectable()
-export class BaseRepository<T extends Users | Posts> implements IBaseRepository<T> {
+export class BaseRepository<T extends Users > implements IBaseRepository<T> {
   protected readonly repository: RepositoryType<T>;
 
   constructor(repository: RepositoryType<T> ) {  
@@ -22,10 +22,7 @@ export class BaseRepository<T extends Users | Posts> implements IBaseRepository<
   }
 
   async create(data: T): Promise<void> {
-    
-    await this.repository.create({
-      data,
-    });
+    await this.repository.create({ data });
   }
 
   async listAll(): Promise<T[]> {
@@ -42,5 +39,9 @@ export class BaseRepository<T extends Users | Posts> implements IBaseRepository<
     });
 
     return context;
+  }
+
+  async delete(id: string) : Promise<void> {
+    await this.repository.delete({ where: { id }}); 
   }
 }

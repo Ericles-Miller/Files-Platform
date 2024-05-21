@@ -5,4 +5,5 @@ export interface IListUsersDTO {
   createdAt: Date;
   updatedAt: Date | null;
   enable: boolean;
+  avatar: string | null
 }

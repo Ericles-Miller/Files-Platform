@@ -1,8 +1,10 @@
 import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
+import { DeleteUserUseCase } from "@Applications/UseCases/users/DeleteUserUseCase";
 import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
+import { UpdateUserUseCase } from "@Applications/UseCases/users/UpdateUserUseCase";
 import { prisma } from "@Infra/Data/database";
-import { BaseRepository } from "@Infra/repositories/BaseRepository";
+import { BaseRepository } from "@Infra/repositories/shared/BaseRepository";
 import { UsersRepository } from "@Infra/repositories/UsersRepository";
 import { PrismaClient, Users } from "@prisma/client";
 import { Container } from "inversify";
@@ -14,5 +16,7 @@ container.bind<BaseRepository<Users>>('UsersRepository').to(UsersRepository)
 //container.bind<BaseRepository<Posts>>('PostRepository').to(PostRepository)
 container.bind<PrismaClient>('PrismaClient').toConstantValue(prisma);
 
-container.bind<ListUsersUseCase>(ListUsersUseCase).toSelf()
-container.bind<CreateUserUseCase>(CreateUserUseCase).toSelf()
+container.bind<ListUsersUseCase>(ListUsersUseCase).toSelf();
+container.bind<CreateUserUseCase>(CreateUserUseCase).toSelf();
+container.bind<UpdateUserUseCase>(UpdateUserUseCase).toSelf(); 
+container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf(); 

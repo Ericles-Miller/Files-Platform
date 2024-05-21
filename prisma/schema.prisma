@@ -27,6 +27,8 @@ model Users {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @default(now())
   enable    Boolean
+  avatar    String?
+  fileName  String?
 
   @@map("users")
 }
