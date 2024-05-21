@@ -19,22 +19,25 @@ export class UpdateUserUseCase {
       const findUser: Users = await this.usersRepository.findById(id);
       if(!findUser) {
         throw new AppError('UserId does not exists', 404);
-      }
-      
+      }    
+
       const user = new User(name, findUser.email, password, id);
       
-      if(file && findUser.fileName) {
+      if(findUser.fileName) {
         await s3.send(new DeleteObjectCommand({
           Bucket: process.env.BUCKET_NAME,
           Key: findUser.fileName,
         }))
+      }
 
+      if(file) {
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
           Key: file.originalname,
           Body: file.buffer,
           ContentType: file.mimetype
         }));
+        
         user.setAvatar(file.originalname);
         user.setFileName(file.originalname);
       }
