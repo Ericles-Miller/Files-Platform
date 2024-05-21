@@ -30,11 +30,12 @@ export class CreateUserUseCase {
          Body:file.buffer,
          ContentType: file.mimetype,
         }));
-        
+
         user.setAvatar(file.originalname);
         user.setFileName(file.originalname);
       }
       
+      await user.setPassword(user.password);
       await this.usersRepository.create(user);   
     } catch (error) {
       if(error instanceof AppError) {

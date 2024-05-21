@@ -39,6 +39,7 @@ export class UpdateUserUseCase {
         user.setFileName(file.originalname);
       }
       
+      await user.setPassword(user.password);
       user.enable = enable;
       user.update(user);
       

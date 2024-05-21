@@ -1,5 +1,6 @@
 import { IUpdateUserDTO } from "@Infra/DTOs/users/IUpdateUserDTO";
 import { Base } from "./shared/Base";
+import { hash } from "bcryptjs";
 
 export class User extends Base {
   name: string;
@@ -43,5 +44,14 @@ export class User extends Base {
 
   getFileName() : string | null{
     return this.fileName;
+  }
+
+  async setPassword(password: string) : Promise<void> {
+    const passwordHash = await hash(password, 8);
+    this.password = passwordHash;
+  }
+
+  getPassword() : string {
+    return this.password;
   }
 }
