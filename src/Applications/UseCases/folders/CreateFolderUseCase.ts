@@ -25,7 +25,7 @@ export class CreateFolderUseCase {
       await this.foldersRepository.create(folder);
 
       // buscar a pasta pai para atualizar o campo children com o id de folder
-      const parentFolder  = await this.foldersRepository.test(parentId);
+      const parentFolder  = await this.foldersRepository.findById(parentId);
       if (!parentFolder) {
         throw new AppError('Parent folder not found!', 404);
       }
