@@ -19,9 +19,9 @@ model Files {
   user         Users    @relation(fields: [userId], references: [id])
   userId       String
   folderId     String
-  folder       Folders  @relation(fields: [folderId], references: [id])
+  folder       Folder   @relation(fields: [folderId], references: [id])
 
-  @@map("posts")
+  @@map("files")
 }
 
 model Users {
@@ -34,23 +34,26 @@ model Users {
   enable        Boolean
   avatar        String?
   fileName      String?
-  Files         Files[]
-  RefreshTokens RefreshTokens[]
+  files         Files[]
+  refreshTokens RefreshTokens[]
+  folders       Folder[]
 
   @@map("users")
 }
 
-model Folders {
-  id           String    @id @default(uuid())
-  displayName  String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @default(now())
-  size         Float
-  dadId        String?
-  prerequisite Folders?  @relation("FolderToFolder", fields: [dadId], references: [id])
-  children    Folders[] @relation("FolderToFolder")
+model Folder {
+  id          String    @id @default(uuid())
+  displayName String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @default(now())
+  size        Float
+  parentId    String?
+  parent      Folder?   @relation("FolderToFolder", fields: [parentId], references: [id])
+  children    Folder[]  @relation("FolderToFolder")
 
-  Files Files[]
+  files   Files[]
+  Users   Users?  @relation(fields: [usersId], references: [id])
+  usersId String?
 }
 
 model RefreshTokens {

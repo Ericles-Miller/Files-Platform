@@ -1,18 +1,19 @@
 import { IFolderParamsDTO } from "@Infra/DTOs/folders/IFolderParamsDTO";
 import { Base } from "./shared/Base";
 
-
 export class Folder extends Base {
-  displayName : string;
+  displayName: string;
   size: number;
-  dadId: string;
-  children: Folder [];
+  children: Folder[];
+  readonly parentId: string;
+  readonly userId: string;
 
-  constructor({ children, dadId, displayName, size, id }: IFolderParamsDTO) {
-    super(id)
+  constructor({ children, parentId, displayName, size, id, userId }: IFolderParamsDTO) {
+    super(id);
     this.displayName = displayName;
     this.size = size;
-    this.dadId = dadId;
-    this.children = children;
+    this.parentId = parentId;
+    this.children = children || [];
+    this.userId = userId;
   }
 }

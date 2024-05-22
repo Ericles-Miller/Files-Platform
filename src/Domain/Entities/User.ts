@@ -16,7 +16,7 @@ export class User extends Base {
     this.password = password;
   }
 
-  update({ id, avatar,email,enable,name,password }: IUpdateUserDTO) {
+  update({ id, avatar, email, enable, name, password }: IUpdateUserDTO) {
     this.id = id;
     this.name = name;
     this.email = email;

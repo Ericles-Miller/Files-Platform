@@ -7,8 +7,8 @@ export class File extends Base {
   type: string;
   size: number;
   folderPath: string;
-  userId : string
-  folderId :string
+  readonly userId: string;
+  readonly folderId: string;
 
   constructor({ displayCover, displayName, folderId, folderPath, id, size, type, userId }: IFilesParamsDTO) {
     super(id)
