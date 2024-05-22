@@ -15,6 +15,11 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
   async checkNameFolderAlreadyExits(displayName: string): Promise<Folders | null> {
     const folder = await prisma.folders.findFirst({where : { displayName }});
     return folder;
+
+  }
+  async test(id: string) : Promise<Folders | null> {
+    const a = await prisma.folders.findFirst({ where: { id } });
+    return a;
   }
 
 }

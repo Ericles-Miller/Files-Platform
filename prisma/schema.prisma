@@ -47,13 +47,23 @@ model Folders {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
   size        Float?
-  parentId    String?
-  parent      Folders?  @relation("FolderToFolder", fields: [parentId], references: [id])
-  children    Folders[] @relation("FolderToFolder")
+  path        String
 
-  files   Files[]
-  Users   Users?  @relation(fields: [userId], references: [id])
-  userId String?
+  Users     Users?      @relation(fields: [userId], references: [id])
+  userId    String?
+  files     Files[]
+  childrens Childrens[]
+
+  @@map("folders")
+}
+
+model Childrens {
+  id String @id @default(uuid())
+
+  folder   Folders? @relation(fields: [folderId], references: [id])
+  folderId String?
+
+  @@map("children")
 }
 
 model RefreshTokens {
