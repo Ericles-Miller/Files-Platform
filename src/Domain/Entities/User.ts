@@ -6,8 +6,8 @@ export class User extends Base {
   name: string;
   email: string;
   password: string;
-  avatar!: string | null
-  fileName!: string | null
+  avatar!: string | null;
+  fileName!: string | null;
 
   constructor(name: string, email: string, password: string, id: string | null) {
     super(id);
@@ -23,7 +23,7 @@ export class User extends Base {
     this.password = password;
     this.avatar = avatar;
     this.setUpdatedAt(new Date());
-    this.setEnable(enable)
+    this.setEnable(enable);
   }
 
   setAvatar(avatar: string | null): void {
