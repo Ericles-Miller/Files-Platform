@@ -16,7 +16,7 @@ const keyPath = path.resolve(__dirname, '../Http/SSL/code.key');
 
 const options: https.ServerOptions = {
   key: fs.readFileSync(keyPath),
-  cert: fs.readFileSync(certPath)
+  cert: fs.readFileSync(certPath),
 };
 
 
