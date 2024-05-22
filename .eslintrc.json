@@ -15,7 +15,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "eslint-plugin-import-helpers", "prettier"],
+  "plugins": ["@typescript-eslint", "eslint-plugin-import-helpers"],
   "rules": {
     "prettier/prettier": "error",
     "max-len": ["error", { "code": 170 }],

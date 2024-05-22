@@ -1,4 +1,5 @@
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { Children } from "@Domain/Entities/Children";
 import { Folder } from "@Domain/Entities/Folder";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestFoldersDTO } from "@Infra/DTOs/folders/IRequestFoldersDTO";
@@ -12,30 +13,31 @@ export class CreateFolderUseCase {
     private foldersRepository: IFoldersRepository,
   ) {}
 
-  async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<void> {
-    const FindFolder = await this.foldersRepository.checkNameFolderAlreadyExits(displayName);
-    // consertar excecao depois 
-    if(FindFolder) {
-      throw new AppError('Name of folder already exists!', 400);
-    }
+  async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<void> {    
     const folder = new Folder({displayName, id: null, parentId, userId });    
     
     if(parentId) {
       folder.setParentFolder(parentId);
+      folder.setSize(10); // mudar
+      folder.setPath('teste') // mudar 
+      
       await this.foldersRepository.create(folder);
 
       // buscar a pasta pai para atualizar o campo children com o id de folder
-      const parentFolder  = await this.foldersRepository.findById(parentId);
+      const parentFolder: Folders  = await this.foldersRepository.findById(parentId);
       if (!parentFolder) {
         throw new AppError('Parent folder not found!', 404);
       }
 
+      const children = new Children(parentFolder.id, null);
       
 
-
+    } else {
+      folder.setSize(10); // mudar
+      folder.setPath('teste') // mudar 
+      await this.foldersRepository.create(folder);
     }
 
 
-    await this.foldersRepository.create(folder);
   }
 }

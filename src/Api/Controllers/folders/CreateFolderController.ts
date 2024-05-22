@@ -5,11 +5,11 @@ import { Request, Response } from "express";
 
 export class CreateFolderController {
   async handle(request: Request, response: Response) : Promise<Response> {
-    const { displayName, size, parentId, children, userId } = request.body;
+    const { displayName, parentId, userId } = request.body;
 
     const createFolderUseCase = container.get(CreateFolderUseCase);
 
-    await createFolderUseCase.execute({ children, displayName, parentId, size, userId }); 
+    await createFolderUseCase.execute({ displayName, parentId, userId }); 
 
     return response.status(201).send();
   }

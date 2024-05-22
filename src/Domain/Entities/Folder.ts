@@ -6,6 +6,7 @@ export class Folder extends Base {
   size!: number | null;
   parentId: string | null;
   children!: Folder[];
+  path!: string;
   readonly userId: string;
 
   constructor({ id, displayName, parentId, userId }: IFolderParamsDTO) {
@@ -29,5 +30,21 @@ export class Folder extends Base {
 
   getChildren(): Folder[] {
     return this.children;
+  }
+
+  setSize(size: number) :void {
+    this.size = size;
+  }
+
+  getSize(): number | null {
+    return this.size;
+  }
+  
+  setPath(path: string): void {
+    this.path = path;
+  }
+
+  getPath(): string {
+    return this.path;
   }
 }
