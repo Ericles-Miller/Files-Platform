@@ -8,6 +8,7 @@ export class User extends Base {
   password: string;
   avatar!: string | null;
   fileName!: string | null;
+  enable!: boolean;
 
   constructor(name: string, email: string, password: string, id: string | null) {
     super(id);
@@ -53,5 +54,13 @@ export class User extends Base {
 
   getPassword() : string {
     return this.password;
+  }
+
+  setEnable(status: boolean): void {
+    this.enable = status;
+  }
+
+  getEnable(): boolean {
+    return this.enable;
   }
 }

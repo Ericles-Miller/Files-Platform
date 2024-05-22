@@ -3,17 +3,16 @@ import { Base } from "./shared/Base";
 
 export class Folder extends Base {
   displayName: string;
-  size: number;
-  children: Folder[];
-  readonly parentId: string;
+  size: number | null;
+  parentId: string | null;
+  children!: Folder[];
   readonly userId: string;
 
-  constructor({ children, parentId, displayName, size, id, userId }: IFolderParamsDTO) {
+  constructor({ id, displayName, size, parentId, userId }: IFolderParamsDTO) {
     super(id);
     this.displayName = displayName;
     this.size = size;
-    this.parentId = parentId;
-    this.children = children || [];
+    this.parentId = parentId || null;
     this.userId = userId;
   }
 }
