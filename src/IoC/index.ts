@@ -3,7 +3,7 @@ import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCas
 import { DeleteUserUseCase } from "@Applications/UseCases/users/DeleteUserUseCase";
 import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
 import { UpdateUserUseCase } from "@Applications/UseCases/users/UpdateUserUseCase";
-import { prisma } from "@Infra/Data/database";
+import { prisma } from "@Infra/Database/database";
 import { BaseRepository } from "@Infra/repositories/shared/BaseRepository";
 import { UsersRepository } from "@Infra/repositories/UsersRepository";
 import { PrismaClient, Users } from "@prisma/client";
