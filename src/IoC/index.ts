@@ -2,6 +2,7 @@ import { IChildrenRepository } from "@Applications/Interfaces/IChildrenRepositor
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
+import { UpdateFolderUseCase } from "@Applications/UseCases/folders/UpdateFolderUseCase";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
 import { DeleteUserUseCase } from "@Applications/UseCases/users/DeleteUserUseCase";
 import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
@@ -26,6 +27,7 @@ container.bind<PrismaClient>('PrismaClient').toConstantValue(prisma);
 container.bind<IUsersRepository>(UsersRepository).toSelf().inSingletonScope();
 container.bind<IFoldersRepository>(FoldersRepository).toSelf().inSingletonScope();
 container.bind<IChildrenRepository>(ChildrenRepository).toSelf().inSingletonScope();
+
 /// users
 container.bind<ListUsersUseCase>(ListUsersUseCase).toSelf();
 container.bind<CreateUserUseCase>(CreateUserUseCase).toSelf();
@@ -34,6 +36,7 @@ container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf();
 
 /// folders
 container.bind<CreateFolderUseCase>(CreateFolderUseCase).toSelf();
+container.bind<UpdateFolderUseCase>(UpdateFolderUseCase).toSelf();
 
 ///children
 

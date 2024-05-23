@@ -3,7 +3,7 @@ import { Base } from "./shared/Base";
 
 export class Folder extends Base {
   displayName: string;
-  size!: number | null;
+  size!: number;
   parentId!: string | null;
   children!: Folder[];
   path!: string;
@@ -15,7 +15,7 @@ export class Folder extends Base {
     this.userId = userId;
   }
 
-  setParentFolder(parentId: string) : void {
+  setParentFolder(parentId: string | null) : void {
     this.parentId = parentId;
   }
 
