@@ -4,15 +4,14 @@ import { Base } from "./shared/Base";
 export class Folder extends Base {
   displayName: string;
   size!: number | null;
-  parentId: string | null;
+  parentId!: string | null;
   children!: Folder[];
   path!: string;
   readonly userId: string;
 
-  constructor({ id, displayName, parentId, userId }: IFolderParamsDTO) {
+  constructor({ id, displayName, userId }: IFolderParamsDTO) {
     super(id);
     this.displayName = displayName;
-    this.parentId = parentId || null;
     this.userId = userId;
   }
 

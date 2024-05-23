@@ -43,25 +43,27 @@ model Users {
 
 model Folders {
   id          String    @id @default(uuid())
-  displayName String    @unique
+  displayName String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @default(now())
   size        Float?
-  path        String
+  path        String    @unique
 
-  Users     Users?      @relation(fields: [userId], references: [id])
-  userId    String?
-  files     Files[]
-  childrens Childrens[]
+  user     Users      @relation(fields: [userId], references: [id])
+  userId   String
+  files    Files[]
+  children Children[]
 
   @@map("folders")
 }
 
-model Childrens {
+model Children {
   id String @id @default(uuid())
 
-  folder   Folders? @relation(fields: [folderId], references: [id])
-  folderId String?
+  folder    Folders?  @relation(fields: [folderId], references: [id])
+  folderId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now())
 
   @@map("children")
 }

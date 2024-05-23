@@ -1,6 +1,6 @@
 import { Base } from "./shared/Base";
 
-export class Children extends Base {
+export class Child extends Base {
   folderId: string;
 
   constructor(folderId : string, id: string | null) {
