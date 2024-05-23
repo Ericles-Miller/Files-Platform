@@ -3,17 +3,47 @@ import { Base } from "./shared/Base";
 
 export class Folder extends Base {
   displayName: string;
-  size: number;
-  children: Folder[];
-  readonly parentId: string;
+  size!: number | null;
+  parentId!: string | null;
+  children!: Folder[];
+  path!: string;
   readonly userId: string;
 
-  constructor({ children, parentId, displayName, size, id, userId }: IFolderParamsDTO) {
+  constructor({ id, displayName, userId }: IFolderParamsDTO) {
     super(id);
     this.displayName = displayName;
-    this.size = size;
-    this.parentId = parentId;
-    this.children = children || [];
     this.userId = userId;
+  }
+
+  setParentFolder(parentId: string) : void {
+    this.parentId = parentId;
+  }
+
+  getParentFolder(): string | null {
+    return this.parentId;
+  }
+
+  setChildren(folder: Folder) : void {
+    this.children.push(folder)
+  }
+
+  getChildren(): Folder[] {
+    return this.children;
+  }
+
+  setSize(size: number) :void {
+    this.size = size;
+  }
+
+  getSize(): number | null {
+    return this.size;
+  }
+  
+  setPath(path: string): void {
+    this.path = path;
+  }
+
+  getPath(): string {
+    return this.path;
   }
 }

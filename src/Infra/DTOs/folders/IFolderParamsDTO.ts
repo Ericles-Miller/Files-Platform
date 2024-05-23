@@ -1,10 +1,6 @@
-import { Folder } from "@Domain/Entities/Folder";
-
 export interface IFolderParamsDTO { 
   displayName : string;
-  size: number;
-  parentId: string;
-  children: Folder [];
+  parentId: string | null;
   userId : string;
-  id:string | null
+  id: string | null
 }

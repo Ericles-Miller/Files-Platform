@@ -10,7 +10,6 @@ export class Base {
     if(!id) {
       this.id = uuid();
       this.createdAt = new Date();
-      this.enable = true;
       this.updatedAt = null;
     } else {
       this.id = id;
@@ -24,12 +23,5 @@ export class Base {
   getUpdatedAt(): Date | null {
     return this.updatedAt;
   }
-
-  setEnable(status: boolean): void {
-    this.enable = status;
-  }
-
-  getEnable(): boolean {
-    return this.enable;
-  }
+  
 }

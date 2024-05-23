@@ -1,4 +1,4 @@
-import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { IListUsersDTO } from "@Infra/DTOs/users/IListUsersDto";
 import { inject, injectable } from "inversify";
 import {GetObjectCommand} from '@aws-sdk/client-s3';
