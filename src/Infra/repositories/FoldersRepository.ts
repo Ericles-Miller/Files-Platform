@@ -17,8 +17,15 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folder;
   }
 
-  async findFolderPath(path: string): Promise<Folders|null> {
-    const folder = await prisma.folders.findFirst({ where: { path } });
+  async findFolderPath(path: string, userId: string): Promise<Folders|null> {
+    const folder = await prisma.folders.findFirst({ where: { path, userId } });
+    return folder;
+  }
+
+  async folderBelongingUser(userId: string, id: string) : Promise<Folders | null> {
+    const folder = await prisma.folders.findFirst({
+      where: {id, userId },
+    });
     return folder;
   }
   
