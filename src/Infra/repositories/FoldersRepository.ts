@@ -29,5 +29,9 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folder;
   }
   
+  async foldersByUsers(userId: string) : Promise<Folders[]> {
+    const folders = await prisma.folders.findMany({where : { userId }});
+    return folders;
+  }
 
 }
