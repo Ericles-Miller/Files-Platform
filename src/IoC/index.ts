@@ -2,6 +2,7 @@ import { IChildrenRepository } from "@Applications/Interfaces/IChildrenRepositor
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
+import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
 import { ListAllFoldersToUserUseCase } from "@Applications/UseCases/folders/ListAllFoldersToUserUseCase";
 import { UpdateFolderUseCase } from "@Applications/UseCases/folders/UpdateFolderUseCase";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
@@ -39,6 +40,7 @@ container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf();
 container.bind<CreateFolderUseCase>(CreateFolderUseCase).toSelf();
 container.bind<UpdateFolderUseCase>(UpdateFolderUseCase).toSelf();
 container.bind<ListAllFoldersToUserUseCase>(ListAllFoldersToUserUseCase).toSelf();
+container.bind<FindFoldersChildrenUseCase>(FindFoldersChildrenUseCase).toSelf();
 
 ///children
 

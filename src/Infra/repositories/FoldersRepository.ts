@@ -22,6 +22,7 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folder;
   }
 
+
   async folderBelongingUser(userId: string, id: string) : Promise<Folders | null> {
     const folder = await prisma.folders.findFirst({
       where: {id, userId },
@@ -29,8 +30,18 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folder;
   }
   
+  async listFoldersWithoutParent(userId: string) : Promise<Folders[]> {
+    const folders = await prisma.folders.findMany({ where: { parentId : null, userId }});
+    return folders;
+  }
+
   async foldersByUsers(userId: string) : Promise<Folders[]> {
     const folders = await prisma.folders.findMany({where : { userId }});
+    return folders;
+  }
+
+  async findFoldersChildren(parentId: string, userId: string): Promise<Folders[]> {
+    const folders = await prisma.folders.findMany({ where: { parentId, userId }});
     return folders;
   }
 
