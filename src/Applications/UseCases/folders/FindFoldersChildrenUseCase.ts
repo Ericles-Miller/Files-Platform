@@ -4,12 +4,6 @@ import { AppError } from "@Domain/Exceptions/AppError";
 import { Folders, Users } from "@prisma/client";
 import { inject, injectable } from "inversify";
 
-export interface IFindFolderDTO {
-  id?: string;
-  userId: string;
-  path?: string;
-}
-
 @injectable()
 export class FindFoldersChildrenUseCase {
   constructor (
@@ -19,13 +13,13 @@ export class FindFoldersChildrenUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({ userId, id, path }: IFindFolderDTO): Promise<Folders[]> {    
+  async execute(userId: string, id?: string): Promise<Folders[]> {    
     const user: Users = await this.usersRepository.findById(userId);
     if(!user) {
       throw new AppError('userId does not exists!', 404);
     }
 
-    if(id && path == 'false') {
+    if(id) {
       const folder: Folders = await this.foldersRepository.findById(id);
       if(!folder.id) {
         throw new AppError('folderId does not exists!', 404);
