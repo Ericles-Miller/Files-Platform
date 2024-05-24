@@ -1,6 +1,6 @@
 import { CreateFolderController } from "@Api/Controllers/folders/CreateFolderController";
-import { FindFoldersChildrenController } from "@Api/Controllers/folders/FindFoldersChildrenController";
 import { ListAllFoldersToUserController } from "@Api/Controllers/folders/ListAllFoldersToUserController";
+import { SearchFolderController } from "@Api/Controllers/folders/SearchFolderController";
 import { UpdateFolderController } from "@Api/Controllers/folders/UpdateFolderController";
 import { Router } from "express";
 
@@ -9,9 +9,9 @@ export const foldersRoutes = Router();
 const createFolderController = new CreateFolderController();
 const updateFolderController = new UpdateFolderController();
 const listAllFoldersToUserController = new ListAllFoldersToUserController();
-const findFoldersChildrenController = new FindFoldersChildrenController();
+const searchFolderController = new SearchFolderController();
 
 foldersRoutes.post('/', createFolderController.handle);
 foldersRoutes.patch('/:id', updateFolderController.handle);
 foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
-foldersRoutes.get('/', findFoldersChildrenController.handle);
+foldersRoutes.get('/', searchFolderController.handle);
