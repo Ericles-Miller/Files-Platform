@@ -4,6 +4,8 @@ import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
 import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
 import { ListAllFoldersToUserUseCase } from "@Applications/UseCases/folders/ListAllFoldersToUserUseCase";
+import { SearchFolderByNameUseCase } from "@Applications/UseCases/folders/SearchFolderByNameUseCase";
+import { SearchFolderUseCase } from "@Applications/UseCases/folders/SearchFolderUseCase";
 import { UpdateFolderUseCase } from "@Applications/UseCases/folders/UpdateFolderUseCase";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
 import { DeleteUserUseCase } from "@Applications/UseCases/users/DeleteUserUseCase";
@@ -41,6 +43,8 @@ container.bind<CreateFolderUseCase>(CreateFolderUseCase).toSelf();
 container.bind<UpdateFolderUseCase>(UpdateFolderUseCase).toSelf();
 container.bind<ListAllFoldersToUserUseCase>(ListAllFoldersToUserUseCase).toSelf();
 container.bind<FindFoldersChildrenUseCase>(FindFoldersChildrenUseCase).toSelf();
+container.bind<SearchFolderByNameUseCase>(SearchFolderByNameUseCase).toSelf();
+container.bind<SearchFolderUseCase>(SearchFolderUseCase).toSelf();
 
 ///children
 
