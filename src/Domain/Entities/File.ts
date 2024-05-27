@@ -3,22 +3,43 @@ import { Base } from "./shared/Base";
 
 export class File extends Base {
   displayName: string;
-  displayCover: string;
-  type: string;
-  size: number;
-  folderPath: string;
+  fileName: string;
+  type!: string;
+  size!: number;
+  folderPath!: string;
   readonly userId: string;
   readonly folderId: string;
 
-  constructor({ displayCover, displayName, folderId, folderPath, id, size, type, userId }: IFilesParamsDTO) {
+  constructor({ displayName, fileName, folderId, id, userId }: IFilesParamsDTO) {
     super(id)
     this.displayName = displayName;
-    this.displayCover = displayCover;
-    this.type = type;
-    this.size = size;
-    this.folderPath = folderPath;
     this.userId = userId;
-    this.folderId= folderId;
+    this.folderId = folderId;
+    this.fileName = fileName;
   }
 
+  setSize(size: number): void {
+    this.size = size
+  }
+
+  getSize(): number {
+    return this.size;
+  }
+
+  setPath(path: string): void {
+    this.folderPath = path;
+  }
+
+  getPath(): string {
+    return this.folderPath;
+  }
+
+  setType(type: string): void {
+    this.type = type;
+  }
+
+  getType(): string {
+    return this.type;
+  }
+  
 }
