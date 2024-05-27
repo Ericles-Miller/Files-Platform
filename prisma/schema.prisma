@@ -16,10 +16,10 @@ model Files {
   updatedAt    DateTime @default(now())
   type         String
   folderPath   String
-  user         Users    @relation(fields: [userId], references: [id])
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   folderId     String
-  folder       Folders  @relation(fields: [folderId], references: [id])
+  folder       Folders  @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
   @@map("files")
 }
@@ -42,30 +42,20 @@ model Users {
 }
 
 model Folders {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   displayName String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime?  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @default(now())
   size        Float
   path        String
   parentId    String?
-  user        Users      @relation(fields: [userId], references: [id])
+  parent      Folders?  @relation("FoldersToParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Folders[] @relation("FoldersToParent")
+  user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   files       Files[]
-  children    Children[]
 
   @@map("folders")
-}
-
-model Children {
-  id String @id @default(uuid())
-
-  folder    Folders?  @relation(fields: [folderId], references: [id])
-  folderId  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now())
-
-  @@map("children")
 }
 
 model RefreshTokens {
