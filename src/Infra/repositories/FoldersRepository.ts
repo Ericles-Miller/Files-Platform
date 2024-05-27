@@ -46,7 +46,7 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folders;
   }
 
-  async searchFolderByName({ displayName, userId ,parentId }: ISearchFoldersDTO): Promise<Folders[]> {
+  async searchFolderByName({ displayName, userId, parentId }: ISearchFoldersDTO): Promise<Folders[]> {
     if (!parentId) {
       const folders: Folders[] = await prisma.$queryRaw`
         SELECT * FROM "folders"
