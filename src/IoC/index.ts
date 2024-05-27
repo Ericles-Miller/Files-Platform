@@ -2,6 +2,7 @@ import { IChildrenRepository } from "@Applications/Interfaces/IChildrenRepositor
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
+import { DeleteFolderUseCase } from "@Applications/UseCases/folders/DeleteFolderUseCase";
 import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
 import { ListAllFoldersToUserUseCase } from "@Applications/UseCases/folders/ListAllFoldersToUserUseCase";
 import { SearchFolderByNameUseCase } from "@Applications/UseCases/folders/SearchFolderByNameUseCase";
@@ -16,7 +17,7 @@ import { ChildrenRepository } from "@Infra/repositories/ChildrenRepository";
 import { FoldersRepository } from "@Infra/repositories/FoldersRepository";
 import { BaseRepository } from "@Infra/repositories/shared/BaseRepository";
 import { UsersRepository } from "@Infra/repositories/UsersRepository";
-import { Children, Folders, PrismaClient, Users } from "@prisma/client";
+import { Folders, PrismaClient, Users } from "@prisma/client";
 import { Container } from "inversify";
 
 export const container = new Container();
@@ -24,7 +25,6 @@ export const container = new Container();
 /// context
 container.bind<BaseRepository<Users>>('UsersRepository').to(UsersRepository);
 container.bind<BaseRepository<Folders>>('FoldersRepository').to(FoldersRepository);
-container.bind<BaseRepository<Children>>('ChildrenRepository').to(ChildrenRepository);
 container.bind<PrismaClient>('PrismaClient').toConstantValue(prisma);
 
 /// interfaces 
@@ -45,6 +45,7 @@ container.bind<ListAllFoldersToUserUseCase>(ListAllFoldersToUserUseCase).toSelf(
 container.bind<FindFoldersChildrenUseCase>(FindFoldersChildrenUseCase).toSelf();
 container.bind<SearchFolderByNameUseCase>(SearchFolderByNameUseCase).toSelf();
 container.bind<SearchFolderUseCase>(SearchFolderUseCase).toSelf();
+container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
 
 ///children
 
