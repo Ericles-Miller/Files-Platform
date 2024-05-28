@@ -7,9 +7,10 @@ import {GetObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import { s3 } from "@Applications/Services/awsS3";
 import { inject, injectable } from "inversify";
+import { ISearchFileDTO } from "@Infra/DTOs/Files/ISearchFilesDTO";
 
 @injectable()
-export class ListFilesByNameUseCase {
+export class SearchFilesByNameUseCase {
   constructor(
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
@@ -17,9 +18,33 @@ export class ListFilesByNameUseCase {
     private foldersRepository: IFoldersRepository,
   ){ }
 
-  async execute(displayName: string, userId:string, parentId?:string): Promise<Files[]> {
+  async execute({ displayName, userId, parentId }: ISearchFileDTO): Promise<Files[]> {
     if(!parentId) {
-      throw new AppError('folderId is null!', 404);
+      const files = await this.filesRepository.searchFilesByName({ displayName, userId });
+
+      const listFiles = Promise.all(files.map(async (file) => {
+        const getFile = new GetObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: file.displayName,
+        });
+        const url = await getSignedUrl(s3, getFile, { expiresIn : 3600 });
+  
+        const list : IListFiles = {
+          id: file.id,
+          createdAt: file.createdAt,
+          displayName: url,
+          fileName: file.fileName,
+          folderId: file.folderId,
+          folderPath: file.folderPath,
+          size: file.size,
+          type: file.type,
+          updatedAt: file.updatedAt,
+          userId: userId
+        }
+        return list;
+      }));
+
+      return listFiles;
     }
 
     const folder: Files = await this.foldersRepository.findById(parentId);
@@ -27,14 +52,14 @@ export class ListFilesByNameUseCase {
       throw new AppError('folderId does not exists!', 404);
     }
     
-    const files = await this.filesRepository.searchFilesByName(displayName, userId, parentId);
+    const files = await this.filesRepository.searchFilesByName({ displayName, userId, parentId });
 
     const listFiles = Promise.all(files.map(async (file) => {
       const getFile = new GetObjectCommand({
         Bucket: process.env.BUCKET_NAME,
         Key: file.displayName,
       });
-      const url = await getSignedUrl(s3, getFile, {expiresIn : 3600});
+      const url = await getSignedUrl(s3, getFile, { expiresIn : 3600 });
 
       const list : IListFiles = {
         id: file.id,

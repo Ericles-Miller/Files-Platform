@@ -1,4 +1,4 @@
-import { SearchFolderUseCase } from "@Applications/UseCases/folders/SearchFolderUseCase";
+import { SearchFolderUseCase } from "@Applications/UseCases/shared/SearchFolderUseCase";
 import { container } from "@IoC/index";
 import { Request, Response } from "express";
 

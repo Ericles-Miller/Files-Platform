@@ -5,22 +5,23 @@ import {GetObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import { s3 } from "@Applications/Services/awsS3";
 import { IListFiles } from "@Applications/Interfaces/files/IListFiles";
+import { IFindFilesDTO } from "@Infra/DTOs/Files/IFindFilesDTO";
 
 @injectable()
-export class ListFilesChildrenUseCase {
+export class FindFilesChildrenUseCase {
   constructor(
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
-  ){ }
+  ){}
 
-  async execute(userId: string, id: string): Promise<IListFiles[]> {
+  async execute({ id, userId }: IFindFilesDTO): Promise<IListFiles[]> {
     
     const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, id);
     if(!filesBelongingUser) {
-      throw new AppError('that folder does not belong this user or userId is incorrect', 400);
+      throw new AppError('that folder does not belong this user or userId is incorrect!', 400);
     }
 
-    const files = await this.filesRepository.findFilesChildren(id, userId);   
+    const files = await this.filesRepository.findFilesChildren({ userId, id });   
   
     const listFiles = Promise.all(files.map(async (file) => {
       const getFile = new GetObjectCommand({
