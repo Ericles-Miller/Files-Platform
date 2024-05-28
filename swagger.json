@@ -1,0 +1,190 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Files Platform",
+    "description": "Platform to send files in cloud using AWS S3 ",
+    "version": "1.0",
+    "contact": {
+      "email": "ericlesmiller15@gmail.com"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create User",
+        "description": "Create a new User to platform",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "required": ["name", "email", "password"],
+                "example": {
+                  "name": "Your full name",
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "User already exists with email!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "201": {
+            "description": "User Created With Success!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all Users",
+        "description": "List all users to frontEnd",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "enable": {
+                        "type": "boolean"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update User",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "enable": {
+                    "type": "boolean"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "example": {
+                  "name": "Your full name",
+                  "password": "your password",
+                  "enable": "true or false"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204" : {
+            "description": "User Updated with success!"
+          },
+          "404": {
+            "description": "UserId does not exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "400": {
+            "description": "Value invalid to field enable!"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete User",
+        "description": "Delete an existing user by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully!"
+          },
+          "404": {
+            "description": "User not found!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ export class DeleteUserUseCase {
         await s3.send(new DeleteObjectCommand({
           Bucket: process.env.BUCKET_NAME,
           Key: user.fileName,
-        }))
+        }));
       }
   
       await this.usersRepository.delete(userId);
@@ -31,7 +31,8 @@ export class DeleteUserUseCase {
       if(error instanceof AppError) {
         throw error;
       }
-      throw new AppError(`${error}`, 500);
+      console.log(error);      
+      throw new AppError('Unexpected server error!', 500);
     }
   }
 }

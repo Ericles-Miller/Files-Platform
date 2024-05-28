@@ -4,10 +4,11 @@ import express, { NextFunction, Request, Response } from "express";
 import * as path from 'path'; 
 import * as fs from 'fs';
 import * as https from 'https';
-
+import swaggerUi from 'swagger-ui-express';
 import { router } from "./router";
 import cors from "cors";
 import { AppError } from "@Domain/Exceptions/AppError";
+import swaggerFile from '../../../swagger.json';
 
 export const app = express();
 
@@ -23,6 +24,9 @@ const options: https.ServerOptions = {
 app.use(express.json());
 app.use(cors())
 app.use(router);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 
 https.createServer(options, app).listen(3334, ()=> 'Server is running in https');
 
