@@ -1,23 +1,23 @@
-# Domine seus dados com a simplicidade e a segurança da nuvem!
+# Master your data with the simplicity and security of the cloud!!
 
-## Apresentamos a plataforma de armazenamento em nuvem ideal para você e sua equipe. Nossa solução oferece:
+## We present the ideal cloud storage platform for you and your team. Our solution offers:
 
-## Gerenciamento descomplicado:
+## Uncomplicated management:
 
-Cadastro simples de usuários: Crie e gerencie contas de usuários de forma rápida e intuitiva.
-Controle granular de pastas e arquivos: Defina permissões de acesso para cada usuário, garantindo a segurança e a organização dos seus dados.
-Interface amigável: Navegue com facilidade pelos seus arquivos e pastas através de uma interface intuitiva e acessível.
-Armazenamento confiável:
+Simple user registration: Create and manage user accounts quickly and intuitively.
+Granular control of folders and files: Define access permissions for each user, ensuring the security and organization of your data.
+User-friendly interface: Easily navigate your files and folders through an intuitive and accessible interface.
+Reliable Storage:
 
-Segurança robusta: Seus dados são armazenados com segurança na nuvem da AWS, líder mundial em serviços de infraestrutura em nuvem.
-Acessibilidade global: Acesse seus arquivos de qualquer lugar do mundo, a qualquer momento, através de qualquer dispositivo com acesso à internet.
-Escalabilidade ilimitada: A plataforma se adapta às suas necessidades, suportando o crescimento do seu volume de dados sem comprometer o desempenho.
-Benefícios para você e sua equipe:
+Robust security: Your data is securely stored in the AWS cloud, the world leader in cloud infrastructure services.
+Global accessibility: Access your files from anywhere in the world, at any time, through any device with internet access.
+Unlimited scalability: The platform adapts to your needs, supporting the growth of your data volume without compromising performance.
+Benefits for you and your team:
 
-Aumento da produtividade: Colabore em projetos com mais eficiência, compartilhando arquivos e pastas facilmente com seus colegas.
-Redução de custos: Elimine os custos com infraestrutura física de armazenamento e despesas com manutenção.
-Segurança aprimorada: Proteja seus dados contra perda acidental, roubo ou desastres naturais com a segurança robusta da nuvem.
-Acessibilidade 24/7: Trabalhe de onde quiser, quando quiser, com seus arquivos sempre à mão.
-Comece hoje mesmo a desfrutar dos benefícios da nossa plataforma de armazenamento em nuvem!
+Increased productivity: Collaborate on projects more efficiently by easily sharing files and folders with your colleagues.
+Cost reduction: Eliminate costs for physical storage infrastructure and maintenance expenses.
+Enhanced security: Protect your data from accidental loss, theft, or natural disasters with robust cloud security.
+24/7 Accessibility: Work from where you want, when you want, with your files always at hand.
+Start enjoying the benefits of our cloud storage platform today!
 
--- this project is in enviroment . please use the branch develop to test
+-- this project is in environment . please use the develop branch to test
