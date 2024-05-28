@@ -20,10 +20,14 @@ export class DeleteUserUseCase {
       }
   
       if(user.fileName) {
-        await s3.send(new DeleteObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: user.fileName,
-        }));
+        try {
+          await s3.send(new DeleteObjectCommand({
+            Bucket: process.env.BUCKET_NAME,
+            Key: user.fileName,
+          }));
+        } catch (error) {
+          console.log('File does not exists in cloud');
+        }
       }
   
       await this.usersRepository.delete(userId);
