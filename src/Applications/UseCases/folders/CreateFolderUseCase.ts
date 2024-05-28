@@ -13,12 +13,13 @@ export class CreateFolderUseCase {
   ) {}
 
   async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<void> {    
-    const folder = new Folder({displayName, id: null, userId });    
+    try {
+      const folder = new Folder({displayName, id: null, userId });    
        
     if(parentId) {
       const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, parentId);
       if(!folderBelongingUser) {
-        throw new AppError('that folder does not belong this user or userId is incorrect', 400);
+        throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
       }
 
       const parentFolder: Folders = await this.foldersRepository.findById(parentId);
@@ -48,6 +49,13 @@ export class CreateFolderUseCase {
       folder.setSize(0);
       
       await this.foldersRepository.create(folder);
+    }
+    }catch (error) {
+      if(error instanceof AppError) {
+        throw error
+      }
+      console.log(error);
+      throw new AppError(`Unexpected server error!`, 500);
     }
   }
 }

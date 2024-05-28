@@ -14,7 +14,7 @@ const searchFolderController = new SearchFolderController();
 const deleteFolderController = new DeleteFolderController();
 
 foldersRoutes.post('/', createFolderController.handle);
-foldersRoutes.patch('/:id', updateFolderController.handle);
-foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
 foldersRoutes.get('/', searchFolderController.handle);
 foldersRoutes.delete('/', deleteFolderController.handle);
+foldersRoutes.patch('/:id', updateFolderController.handle);
+foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);

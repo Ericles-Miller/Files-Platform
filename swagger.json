@@ -185,6 +185,116 @@
           }
         }
       }
+    },
+
+    "/folders": {
+      "post": {
+        "tags": ["Folders"],
+        "summary": "Create Folder To user",
+        "description": "Create a new Folder in platform",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["displayName", "userId"],
+                "example": {
+                  "displayName": "Your folder name",
+                  "userId": "ebbbce5a-cb12-4c42-82c7-7724f0a33a1f",
+                  "parentId": "et7bce5a-cb12-4c42-222c7-7724f0a33a1f"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Parent folder not found!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderBelongUser": {
+                    "summary": "Folder does not belong to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "folderAlreadyExists": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Folder created with success!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Folders"],
+        "summary": "Delete folder",
+        "description": "Delete an existing folder by userId and folderId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the folder to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Folder deleted successfully!"
+          },
+          "400": {
+            "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
     }
   }
 }
