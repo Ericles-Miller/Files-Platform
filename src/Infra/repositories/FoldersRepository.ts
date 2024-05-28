@@ -25,9 +25,7 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
 
 
   async folderBelongingUser(userId: string, id: string) : Promise<Folders | null> {
-    const folder = await prisma.folders.findFirst({
-      where: {id, userId },
-    });
+    const folder = await prisma.folders.findFirst({ where: {id, userId } });
     return folder;
   }
   
@@ -46,21 +44,21 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     return folders;
   }
 
-  async searchFolderByName({ displayName, userId ,parentId }: ISearchFoldersDTO): Promise<Folders[]> {
+  async searchFolderByName({ displayName, userId, parentId }: ISearchFoldersDTO): Promise<Folders[]> {
     if (!parentId) {
       const folders: Folders[] = await prisma.$queryRaw`
-        SELECT * FROM "folders"
-        WHERE "displayName" ILIKE ${displayName}
-        AND "userId" = ${userId};
+        SELECT * FROM public.folders
+          WHERE "displayName" ILIKE '%' || ${displayName} || '%'
+          and "userId" like ${userId};
       `;
       return folders;
     }      
   
     const folders: Folders[] = await prisma.$queryRaw`
-      SELECT * FROM "folders"
-      WHERE "displayName" ILIKE ${displayName}
-      AND "parentId" = ${parentId}
-      AND "userId" = ${userId}
+      SELECT * FROM public.folders
+        WHERE "displayName" ILIKE '%' || ${displayName} || '%'
+        and "userId" like ${userId}
+        and "parentId" like ${parentId};
     `;
         
     return folders;

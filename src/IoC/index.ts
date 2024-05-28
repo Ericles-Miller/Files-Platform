@@ -2,13 +2,15 @@ import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFilesUseCase } from "@Applications/UseCases/files/CreateFilesUseCase";
+import { FindFilesChildrenUseCase } from "@Applications/UseCases/files/FindFilesChildrenUseCase";
+import { SearchFilesByNameUseCase } from "@Applications/UseCases/files/SearchFilesByNameUseCase";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
 import { DeleteFolderUseCase } from "@Applications/UseCases/folders/DeleteFolderUseCase";
 import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
 import { ListAllFoldersToUserUseCase } from "@Applications/UseCases/folders/ListAllFoldersToUserUseCase";
 import { SearchFolderByNameUseCase } from "@Applications/UseCases/folders/SearchFolderByNameUseCase";
-import { SearchFolderUseCase } from "@Applications/UseCases/folders/SearchFolderUseCase";
 import { UpdateFolderUseCase } from "@Applications/UseCases/folders/UpdateFolderUseCase";
+import { SearchFolderUseCase } from "@Applications/UseCases/shared/SearchFolderUseCase";
 import { CreateUserUseCase } from "@Applications/UseCases/users/CreateUserUseCase";
 import { DeleteUserUseCase } from "@Applications/UseCases/users/DeleteUserUseCase";
 import { ListUsersUseCase } from "@Applications/UseCases/users/ListUserUseCase";
@@ -51,5 +53,8 @@ container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
 
 ///files
 container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
+container.bind<FindFilesChildrenUseCase>(FindFilesChildrenUseCase).toSelf();
+container.bind<SearchFilesByNameUseCase>(SearchFilesByNameUseCase).toSelf();
+
 
 
