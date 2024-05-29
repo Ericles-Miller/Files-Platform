@@ -471,8 +471,7 @@
             "description": "Unexpected server error!"
           }
         }
-      }
-    
+      }  
     },
     "/folders/{userId}": {
       "get": {
@@ -527,6 +526,87 @@
                         "type": "string"
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/{id}": {
+      "patch": {
+        "tags": ["Folders"],
+        "summary": "Update folder",
+        "description": "update path name etc",
+        "parameters": [
+          {
+            "name": "id",
+            "in":"path",
+            "required": true,
+            "description": "folde's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["displayName", "userId"],
+                "example": {
+                  "displayName": "Your folder name",
+                  "userId": "ebbbce5a-cb12-4c42-82c7-7724f0a33a1f",
+                  "parentId": "et7bce5a-cb12-4c42-222c7-7724f0a33a1f"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success!"
+          },
+          "404": {
+            "description": "FolderId does not exists!"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderAlreadyExists": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
                   }
                 }
               }

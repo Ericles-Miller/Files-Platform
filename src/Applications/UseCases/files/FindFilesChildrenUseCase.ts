@@ -18,7 +18,7 @@ export class FindFilesChildrenUseCase {
     
     const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, id);
     if(!filesBelongingUser) {
-      throw new AppError('that folder does not belong this user or userId is incorrect!', 400);
+      throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
     }
 
     const files = await this.filesRepository.findFilesChildren({ userId, id });   
