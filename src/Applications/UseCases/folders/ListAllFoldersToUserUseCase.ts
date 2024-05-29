@@ -11,12 +11,23 @@ export class ListAllFoldersToUserUseCase {
   ) {}
 
   async execute(userId: string) : Promise<Folders[]> {
-    const folders = await this.foldersRepository.foldersByUsers(userId);
-    if(folders.length === 0) { 
-      throw new AppError('does not exists folders to user', 404);
-    }
+    try {
+      if(!userId) {
+        throw new AppError('UserId is required!', 404);
+      }
+      const folders = await this.foldersRepository.foldersByUsers(userId);
+      if(folders.length === 0) { 
+        throw new AppError('does not exists folders to user', 404);
+      }
 
-    return folders;
+      return folders;
+    } catch (error) {
+      if(error instanceof AppError) {
+        throw error;
+      }
+      console.log(error);
+      throw new AppError('Unexpected server error!', 500);
+    }
   }
 
 }
