@@ -23,7 +23,7 @@ Start enjoying the benefits of our cloud storage platform today!
 -- this project is in environment . please use the develop branch to test
 
 
-# Functional Requisits
+# Functional Requirements
 
 -- access "localhost:{port}/api-docs" to show documentation endpoints
 
