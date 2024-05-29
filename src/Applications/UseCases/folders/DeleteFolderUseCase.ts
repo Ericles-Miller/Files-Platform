@@ -1,5 +1,4 @@
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IDeleteFolderDTO } from "@Infra/DTOs/folders/IDeleteFolderDTO";
 import { inject, injectable } from "inversify";
@@ -13,11 +12,19 @@ export class DeleteFolderUseCase {
   ) {}
 
   async execute({ userId, folderId }:IDeleteFolderDTO): Promise<void> {
-    const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, folderId);
-    if(!folderBelongingUser) {
-      throw new AppError('that folder does not belong this user or userId is incorrect', 400);
+    try {     
+      const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, folderId);
+      if(!folderBelongingUser) {
+        throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
+      }
+      
+      await this.foldersRepository.delete(folderId);
+    }catch (error) {
+      if(error instanceof AppError) {
+        throw error
+      }
+      console.log(error);
+      throw new AppError(`Unexpected server error!`, 500);
     }
-    
-    await this.foldersRepository.delete(folderId);
   }
 }

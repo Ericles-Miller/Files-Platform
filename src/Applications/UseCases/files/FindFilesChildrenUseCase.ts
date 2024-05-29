@@ -28,7 +28,7 @@ export class FindFilesChildrenUseCase {
         Bucket: process.env.BUCKET_NAME,
         Key: file.displayName,
       });
-      const url = await getSignedUrl(s3, getFile, {expiresIn : 3600});
+      const url = await getSignedUrl(s3, getFile, { expiresIn : 3600 });
 
       const list : IListFiles = {
         id: file.id,

@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { User } from "Domain/Entities/User";
+import { User } from "@Domain/Entities/User";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
@@ -18,7 +18,7 @@ export class CreateUserUseCase {
     try {
       const userAlreadyExists = await this.usersRepository.checkEmailAlreadyExist(email);
       if(userAlreadyExists) {
-        throw new AppError('user already exists with email!', 400);
+        throw new AppError('User already exists with email!', 400);
       }
 
       const user = new User(name, email, password, null); 
@@ -41,7 +41,8 @@ export class CreateUserUseCase {
       if(error instanceof AppError) {
         throw error
       }
-      throw new AppError(`${error}`, 500);
+      console.log(error);
+      throw new AppError(`Unexpected server error!`, 500);
     }
   }
 }

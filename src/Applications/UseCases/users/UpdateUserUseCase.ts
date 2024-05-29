@@ -11,23 +11,27 @@ import { s3 } from "@Applications/Services/awsS3";
 export class UpdateUserUseCase {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({ enable, id, name, password, file}: IUpdateUserFileDTO) : Promise<void> {
+  async execute({ enable, id, name, password, file }: IUpdateUserFileDTO) : Promise<void> {
     try {  
       const findUser: Users = await this.usersRepository.findById(id);
       if(!findUser) {
-        throw new AppError('UserId does not exists', 404);
+        throw new AppError('UserId does not exists!', 404);
       }    
 
       const user = new User(name, findUser.email, password, id);
       
       if(findUser.fileName) {
-        await s3.send(new DeleteObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: findUser.fileName,
-        }))
+        try {
+          await s3.send(new DeleteObjectCommand({
+            Bucket: process.env.BUCKET_NAME,
+            Key: findUser.fileName,
+          }))
+        } catch (error) {
+          console.log('The image is not in the cloud');
+        }
       }
 
       if(file) {
@@ -43,14 +47,26 @@ export class UpdateUserUseCase {
       }
       
       await user.setPassword(user.password);
-      user.enable = enable;
-      user.update(user);
-      
-      await this.usersRepository.update(id, user);
-    } catch (error) {
-      if(error instanceof AppError) throw error
+      if(enable === 'true') {
+        user.enable = true;
+      } 
 
-      throw new AppError(`${error}`, 500);
+      else if(enable === 'false') {
+        user.enable = false;
+      } else {
+        throw new AppError('Value invalid to field enable!', 400);
+      }
+
+      user.update(user);
+      await this.usersRepository.update(id, user);
+    
+    } catch (error) {
+      if(error instanceof AppError) {
+        throw error
+      }
+      
+      console.log(error);
+      throw new AppError(`Unexpected server error!`, 500);
     }
   }
 }

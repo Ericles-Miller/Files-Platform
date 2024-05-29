@@ -8,9 +8,9 @@ export class CreateUserController {
     const file = request.file;
   
     const createUserUseCase = container.get(CreateUserUseCase);
-    await createUserUseCase.execute({email, name, password, file});
+    await createUserUseCase.execute({ email, name, password, file });
 
-    return response.status(201).send();
+    return response.status(201).json({ message: "User Created With Success!" });
   }
 }
 
