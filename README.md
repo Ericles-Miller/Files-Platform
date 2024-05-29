@@ -25,7 +25,7 @@ Start enjoying the benefits of our cloud storage platform today!
 
 # Functional Requisits
 
--- access localhost:{port}/api-docs to show documentation endpoints
+-- access "localhost:{port}/api-docs" to show documentation endpoints
 
 -- set environment variables present on file .example.env
 
