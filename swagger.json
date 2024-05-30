@@ -617,7 +617,112 @@
           }
         }
       }
-    }
+    },
 
+    "/files": {
+      "post": {
+        "tags": ["Files"],
+        "summary": "Create file",
+        "description": "Create a new file in a folder",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderId": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "required": ["folderId", "userId", "file"],
+                "example": {
+                  "folderId": "Your folder's id",
+                  "userId": "you user's id",
+                  "file": "your file"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderAlreadyExists": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "201": {
+            "description": "File Created and save in cloud With Success!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Files"],
+        "summary": "Delete file",
+        "description": "Delete an existing file by userId and folderId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the user",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the folder to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "File deleted successfully!"
+          },
+          "400": {
+            "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    }
   }
 }

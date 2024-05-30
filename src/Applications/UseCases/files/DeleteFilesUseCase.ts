@@ -16,26 +16,25 @@ export class DeleteFilesUseCase {
     try {
       const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, folderId);
       if(!filesBelongingUser) {
-        throw new AppError('that folder does not belong this user or userId is incorrect!', 400);
+        throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
       }
 
-      const file: Files = await this.filesRepository.findById(folderId);
-
-      if(file.fileName) {
+      if(filesBelongingUser.fileName) {
         try {
           await s3.send(new DeleteObjectCommand({
             Bucket: process.env.BUCKET_NAME,
-            Key: file.fileName,
+            Key: filesBelongingUser.fileName,
           }))
         } catch (error) {
           console.log('The image is not in the cloud');
         }
       }
-      await this.filesRepository.delete(folderId);
+      await this.filesRepository.delete(filesBelongingUser.id);
     } catch (error) {
       if(error instanceof AppError) {
         throw error;
       }
+      console.log(error);      
       throw new AppError('Unexpected server error!', 500);
     }
   }
