@@ -4,12 +4,15 @@ import { Files } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import { s3 } from '@Applications/Services/awsS3';
+import { CalcSizeFoldersUseCase } from '../folders/CalcSizeFoldersUseCase';
 
 @injectable()
 export class DeleteFilesUseCase {
   constructor (
     @inject('FilesRepository')
-    private filesRepository: IFilesRepository
+    private filesRepository: IFilesRepository,
+    @inject(CalcSizeFoldersUseCase)
+    private calcSizeFoldersUseCase : CalcSizeFoldersUseCase
   ) {}
 
   async execute(userId: string, folderId: string, id: string): Promise<void> {
@@ -35,6 +38,10 @@ export class DeleteFilesUseCase {
         }
       }
       await this.filesRepository.delete(file.id);
+
+      /// set size 
+      await this.calcSizeFoldersUseCase.execute(folderId);
+
     } catch (error) {
       if(error instanceof AppError) {
         throw error;

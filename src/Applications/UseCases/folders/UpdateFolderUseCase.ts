@@ -1,15 +1,18 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { Folder } from "@Domain/Entities/Folder";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IUpdateFolderDTO } from "@Infra/DTOs/folders/IUpdateFoldersDTO";
-import { Folders } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
+import { Folder } from '@Domain/Entities/Folder';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IUpdateFolderDTO } from '@Infra/DTOs/folders/IUpdateFoldersDTO';
+import { Folders } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { CalcSizeFoldersUseCase } from './CalcSizeFoldersUseCase';
 
 @injectable()
 export class UpdateFolderUseCase {
   constructor (
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
+    @inject(CalcSizeFoldersUseCase)
+    private calcSizeFoldersUseCase : CalcSizeFoldersUseCase,
   ) {}
 
   async execute({ displayName, id, userId, parentId }: IUpdateFolderDTO): Promise<void> {
@@ -48,6 +51,8 @@ export class UpdateFolderUseCase {
       folder.setUpdatedAt(new Date());
 
       await this.foldersRepository.update(id, folder);
+      this.calcSizeFoldersUseCase.execute(parentId);
+
     } else {
       const folderPath = await this.foldersRepository.findFolderPath(`root/${displayName}`, userId);
       if(folderPath) {

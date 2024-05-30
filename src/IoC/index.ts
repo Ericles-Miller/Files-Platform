@@ -5,6 +5,7 @@ import { CreateFilesUseCase } from "@Applications/UseCases/files/CreateFilesUseC
 import { DeleteFilesUseCase } from "@Applications/UseCases/files/DeleteFilesUseCase";
 import { FindFilesChildrenUseCase } from "@Applications/UseCases/files/FindFilesChildrenUseCase";
 import { SearchFilesByNameUseCase } from "@Applications/UseCases/files/SearchFilesByNameUseCase";
+import { CalcSizeFoldersUseCase } from "@Applications/UseCases/folders/CalcSizeFoldersUseCase";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
 import { DeleteFolderUseCase } from "@Applications/UseCases/folders/DeleteFolderUseCase";
 import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
@@ -44,6 +45,8 @@ container.bind<UpdateUserUseCase>(UpdateUserUseCase).toSelf();
 container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf(); 
 
 /// folders
+container.bind<CalcSizeFoldersUseCase>(CalcSizeFoldersUseCase).toSelf();
+
 container.bind<CreateFolderUseCase>(CreateFolderUseCase).toSelf();
 container.bind<UpdateFolderUseCase>(UpdateFolderUseCase).toSelf();
 container.bind<ListAllFoldersToUserUseCase>(ListAllFoldersToUserUseCase).toSelf();

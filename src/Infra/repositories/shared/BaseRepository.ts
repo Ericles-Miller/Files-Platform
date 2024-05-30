@@ -44,4 +44,9 @@ export class BaseRepository<T extends Users | Files | Folders | RefreshTokens> i
   async delete(id: string) : Promise<void> {
     await this.repository.delete({ where: { id }}); 
   }
+
+  async findManyById(id: string): Promise<T[]> {
+    const context = await this.repository.findMany({ where: { id }});
+    return context;
+  }
 }
