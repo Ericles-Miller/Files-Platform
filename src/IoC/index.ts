@@ -2,6 +2,7 @@ import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
 import { CreateFilesUseCase } from "@Applications/UseCases/files/CreateFilesUseCase";
+import { DeleteFilesUseCase } from "@Applications/UseCases/files/DeleteFilesUseCase";
 import { FindFilesChildrenUseCase } from "@Applications/UseCases/files/FindFilesChildrenUseCase";
 import { SearchFilesByNameUseCase } from "@Applications/UseCases/files/SearchFilesByNameUseCase";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
@@ -55,6 +56,7 @@ container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
 container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
 container.bind<FindFilesChildrenUseCase>(FindFilesChildrenUseCase).toSelf();
 container.bind<SearchFilesByNameUseCase>(SearchFilesByNameUseCase).toSelf();
+container.bind<DeleteFilesUseCase>(DeleteFilesUseCase).toSelf();
 
 
 
