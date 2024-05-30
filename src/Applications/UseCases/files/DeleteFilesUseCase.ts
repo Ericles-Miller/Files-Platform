@@ -12,24 +12,29 @@ export class DeleteFilesUseCase {
     private filesRepository: IFilesRepository
   ) {}
 
-  async execute(userId: string, folderId: string): Promise<void> {
+  async execute(userId: string, folderId: string, id: string): Promise<void> {
     try {
       const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, folderId);
       if(!filesBelongingUser) {
         throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
       }
 
-      if(filesBelongingUser.fileName) {
+      const file: Files = await this.filesRepository.findById(id);
+      if(!file) {
+        throw new AppError('Id the file does not exists!', 404);
+      }
+
+      if(file.fileName) {
         try {
           await s3.send(new DeleteObjectCommand({
             Bucket: process.env.BUCKET_NAME,
-            Key: filesBelongingUser.fileName,
+            Key: file.fileName,
           }))
         } catch (error) {
           console.log('The image is not in the cloud');
         }
       }
-      await this.filesRepository.delete(filesBelongingUser.id);
+      await this.filesRepository.delete(file.id);
     } catch (error) {
       if(error instanceof AppError) {
         throw error;

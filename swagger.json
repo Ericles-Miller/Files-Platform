@@ -709,6 +709,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "ID of the file to delete",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -717,6 +726,9 @@
           },
           "400": {
             "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "404": {
+            "description": "Id the file does not exists!"
           },
           "500": {
             "description": "Unexpected server error!"
