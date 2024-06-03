@@ -1,14 +1,18 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IDeleteFolderDTO } from "@Infra/DTOs/folders/IDeleteFolderDTO";
-import { inject, injectable } from "inversify";
+import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IDeleteFolderDTO } from '@Infra/DTOs/folders/IDeleteFolderDTO';
+import { inject, injectable } from 'inversify';
+import { CalcSizeFoldersUseCase } from './CalcSizeFoldersUseCase';
+import { Folders } from '@prisma/client';
 
 
 @injectable()
 export class DeleteFolderUseCase {
   constructor (
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
+    @inject(CalcSizeFoldersUseCase)
+    private calcSizeFoldersUseCase : CalcSizeFoldersUseCase,
   ) {}
 
   async execute({ userId, folderId }:IDeleteFolderDTO): Promise<void> {
@@ -19,7 +23,11 @@ export class DeleteFolderUseCase {
       }
       
       await this.foldersRepository.delete(folderId);
-    }catch (error) {
+      if(folderBelongingUser.parentId) {
+        const parentFolder: Folders = await this.foldersRepository.findById(folderBelongingUser.parentId);
+        this.calcSizeFoldersUseCase.execute(parentFolder.id);
+      }
+    } catch (error) {
       if(error instanceof AppError) {
         throw error
       }
