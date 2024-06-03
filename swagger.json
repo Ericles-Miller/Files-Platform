@@ -186,6 +186,75 @@
         }
       }
     },
+    "/sessions/user": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Authenticated user",
+        "description":"Authenticated user with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"],
+                "example": {
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Email or password is incorrect!"
+          },
+          "200": {
+            "description": "Token generated with success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "refreshToken": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "type": "number"
+                          },
+                          "userId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/folders": {
       "post": {

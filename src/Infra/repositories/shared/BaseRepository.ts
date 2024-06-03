@@ -21,8 +21,9 @@ export class BaseRepository<T extends Users | Files | Folders | RefreshTokens> i
     return context;
   }
 
-  async create(data: T): Promise<void> {
-    await this.repository.create({ data });
+  async create<T>(data: T): Promise<T> {
+    const context = await this.repository.create({ data });
+    return context;
   }
 
   async listAll(): Promise<T[]> {
