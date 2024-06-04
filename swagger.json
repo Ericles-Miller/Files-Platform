@@ -8,6 +8,15 @@
       "email": "ericlesmiller15@gmail.com"
     }
   },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
   "paths": {
     "/users": {
       "post": {
@@ -108,6 +117,9 @@
       "patch": {
         "tags": ["Users"],
         "summary": "Update User",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -162,6 +174,9 @@
         "tags": ["Users"],
         "summary": "Delete User",
         "description": "Delete an existing user by ID",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -186,12 +201,84 @@
         }
       }
     },
+    "/sessions/user": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Authenticated user",
+        "description":"Authenticated user with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"],
+                "example": {
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Email or password is incorrect!"
+          },
+          "200": {
+            "description": "Token generated with success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "refreshToken": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "type": "number"
+                          },
+                          "userId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/folders": {
       "post": {
         "tags": ["Folders"],
         "summary": "Create Folder To user",
         "description": "Create a new Folder in platform",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -263,6 +350,9 @@
         "tags": ["Folders"],
         "summary": "Delete folder",
         "description": "Delete an existing folder by userId and folderId",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -299,6 +389,9 @@
         "tags": ["Folders", "Files"],
         "summary": "Search folders and files",
         "description": "Search folders and files of the user. The endpoint finds the files and folders in the platform.",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -542,6 +635,9 @@
         "tags": ["Folders"],
         "summary": "Update folder",
         "description": "update path name etc",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
             "name": "id",
@@ -624,6 +720,9 @@
         "tags": ["Files"],
         "summary": "Create file",
         "description": "Create a new file in a folder",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -691,6 +790,9 @@
         "tags": ["Files"],
         "summary": "Delete file",
         "description": "Delete an existing file by userId and folderId",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
             "name": "userId",
@@ -732,6 +834,66 @@
           },
           "500": {
             "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/sessions/refreshToken": {
+      "post": {
+        "tags": ["Refresh Token"],
+        "summary": "Refresh token",
+        "description": "refreshToken id to authenticated new token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "required": true
+                  }
+                },
+                "example": {
+                  "refreshToken": "you refresh token"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Token invalid!"
+          },
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"                      
+                    },
+                    "newRefreshToken": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "expiresIn": {
+                          "type": "number"
+                        },
+                        "userId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
