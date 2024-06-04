@@ -1,8 +1,8 @@
-import { IRefreshTokenRepository } from "@Applications/Interfaces/auth/IRefreshTokenRepository";
-import { RefreshToken } from "@Domain/Entities/RefresToken";
-import { RefreshTokens } from "@prisma/client";
+import { IRefreshTokenRepository } from '@Applications/Interfaces/auth/IRefreshTokenRepository';
+import { RefreshToken } from '@Domain/Entities/RefreshToken';
+import { RefreshTokens } from '@prisma/client';
 import { addMinutes, getTime } from 'date-fns'
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class GenerateRefreshToken {

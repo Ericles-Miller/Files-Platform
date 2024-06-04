@@ -22,6 +22,6 @@ export async function ensureAuthenticated(
       throw new AppError('Invalid token!', 401);
     }
   } else {
-    throw new AppError('secret token is missing on file .env', 500);
+    throw new AppError('Secret token is missing on file .env', 500);
   }
 }
