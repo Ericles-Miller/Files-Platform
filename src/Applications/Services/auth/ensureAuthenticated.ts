@@ -4,9 +4,7 @@ import { verify } from 'jsonwebtoken';
 
 
 export async function ensureAuthenticated(
-  request: Request,
-  response: Response,
-  next: NextFunction,
+  request: Request, response: Response, next: NextFunction,
 ) {
   const authToken = request.headers.authorization; // recebe o dado via header
   if (!authToken) {

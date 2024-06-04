@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 export class RefreshTokenUserController {
   async handle(request: Request, response: Response) : Promise<Response> {
-    const {refreshToken} = request.body;
+    const { refreshToken } = request.body;
 
     const refreshTokenUserUseCase = container.get(RefreshTokenUserUseCase);
 
