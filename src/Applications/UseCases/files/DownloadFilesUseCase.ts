@@ -1,13 +1,10 @@
 import { IFilesRepository } from '@Applications/Interfaces/IFilesRepository';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { inject, injectable } from 'inversify';
-import {GetObjectCommand} from '@aws-sdk/client-s3';
-import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from '@Applications/Services/awsS3';
-import fs from 'fs';
-import path from 'path';
-import axios from 'axios';
 import { Files } from '@prisma/client';
+import { streamToBuffer } from '@Applications/Services/stream';
 
 @injectable()
 export class DownloadFilesUseCase {
@@ -16,7 +13,7 @@ export class DownloadFilesUseCase {
     private filesRepository: IFilesRepository,
   ) {}
 
-  async execute(userId: string, fileId: string) : Promise<string> {
+  async execute(userId: string, fileId: string) : Promise<any> {
     
     const file: Files = await this.filesRepository.findById(fileId);
     if (!file) {
@@ -34,28 +31,12 @@ export class DownloadFilesUseCase {
 
     const response = await s3.send(getFile)
     
-  }
+    const fileData = {
+      body: await streamToBuffer(response.Body),
+      fileName: file.fileName,
+      contentType: response.ContentType,
+    };
 
-  private async downloadFile(url: string, filename: string): Promise<string> {
-    const filePath = path.join(__dirname, '../../../../assets/downloads', filename);
-
-    if (!fs.existsSync(path.dirname(filePath))) {
-      fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    }
-
-    const writer = fs.createWriteStream(filePath);
-
-    const response = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream',
-    });
-
-    response.data.pipe(writer);
-
-    return new Promise((resolve, reject) => {
-      writer.on('finish', () => resolve(filePath));
-      writer.on('error', reject);
-    });
+    return fileData;
   }
 }
