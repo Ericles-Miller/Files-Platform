@@ -31,10 +31,9 @@ export class DownloadFilesUseCase {
       Bucket: process.env.BUCKET_NAME,
       Key: file.fileName,
     });
-    const url = await getSignedUrl(s3, getFile, { expiresIn: 3600 });
-    const filePath = await this.downloadFile(url, file.fileName);
 
-    return filePath;
+    const response = await s3.send(getFile)
+    
   }
 
   private async downloadFile(url: string, filename: string): Promise<string> {
