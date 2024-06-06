@@ -838,6 +838,47 @@
         }
       }
     },
+    "/files/download": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Download file",
+        "description": "using the endpoint on browser to do download file",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required":true,
+            "description": "User's ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "query",
+            "required": true,
+            "description": "file's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download file make with success!"
+          },
+          "400": {
+            "description": "That file does not belong this user or userId is incorrect!"
+          },
+          "404": {
+            "description": "UserId does not exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
 
     "/sessions/refreshToken": {
       "post": {
