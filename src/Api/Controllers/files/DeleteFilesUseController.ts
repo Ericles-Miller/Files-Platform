@@ -1,6 +1,6 @@
-import { DeleteFilesUseCase } from "@Applications/UseCases/files/DeleteFilesUseCase";
-import { container } from "@IoC/index";
-import { Request, Response } from "express";
+import { DeleteFilesUseCase } from '@Applications/UseCases/files/DeleteFilesUseCase';
+import { container } from '@IoC/index';
+import { Request, Response } from 'express';
 
 
 export class DeleteFilesController {

@@ -7,6 +7,7 @@ import { AuthenticateUserUseCase } from "@Applications/UseCases/auth/Authenticat
 import { RefreshTokenUserUseCase } from "@Applications/UseCases/auth/RefreshTokenUserUseCase";
 import { CreateFilesUseCase } from "@Applications/UseCases/files/CreateFilesUseCase";
 import { DeleteFilesUseCase } from "@Applications/UseCases/files/DeleteFilesUseCase";
+import { DownloadFilesUseCase } from "@Applications/UseCases/files/DownloadFilesUseCase";
 import { FindFilesChildrenUseCase } from "@Applications/UseCases/files/FindFilesChildrenUseCase";
 import { SearchFilesByNameUseCase } from "@Applications/UseCases/files/SearchFilesByNameUseCase";
 import { CalcSizeFoldersUseCase } from "@Applications/UseCases/folders/CalcSizeFoldersUseCase";
@@ -67,6 +68,7 @@ container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
 container.bind<FindFilesChildrenUseCase>(FindFilesChildrenUseCase).toSelf();
 container.bind<SearchFilesByNameUseCase>(SearchFilesByNameUseCase).toSelf();
 container.bind<DeleteFilesUseCase>(DeleteFilesUseCase).toSelf();
+container.bind<DownloadFilesUseCase>(DownloadFilesUseCase).toSelf();
 
 /// refreshToken
 container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase).toSelf();

@@ -1,6 +1,6 @@
-import { CreateFilesUseCase } from "@Applications/UseCases/files/CreateFilesUseCase";
-import { container } from "@IoC/index";
-import { Request, Response } from "express";
+import { CreateFilesUseCase } from '@Applications/UseCases/files/CreateFilesUseCase';
+import { container } from '@IoC/index';
+import { Request, Response } from 'express';
 
 
 export class CreateFilesController {
