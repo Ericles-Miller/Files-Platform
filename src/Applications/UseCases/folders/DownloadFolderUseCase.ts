@@ -4,11 +4,18 @@ import { AppError } from "@Domain/Exceptions/AppError";
 import { inject, injectable } from "inversify";
 import { FindFoldersChildrenUseCase } from "./FindFoldersChildrenUseCase";
 import { FindFilesChildrenUseCase } from "../files/FindFilesChildrenUseCase";
-import { Files, Folders, Users } from "@prisma/client";
+import { Users } from "@prisma/client";
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from "@Applications/Services/awsS3";
 import * as fs from 'fs';
 import * as path from 'path';
+import * as archiver from 'archiver';
+
+export interface ISaveFilesDTO {
+  userId: string,
+  folderId: string,
+  parentDir: string,
+}
 
 @injectable()
 export class DownloadFolderUseCase {
@@ -21,10 +28,9 @@ export class DownloadFolderUseCase {
     private findFoldersChildrenUseCase : FindFoldersChildrenUseCase,
     @inject(FindFilesChildrenUseCase)
     private findFilesChildrenUseCase : FindFilesChildrenUseCase,
-    
   ) {}
 
-  async execute(userId: string, folderId: string) : Promise<any> {
+  async execute(userId: string, folderId: string): Promise<string> {
     const user: Users = await this.usersRepository.findById(userId);
     if (!user) {
       throw new AppError('UserId does not exists!', 404);
@@ -35,21 +41,20 @@ export class DownloadFolderUseCase {
       throw new AppError('That folder does not belong this user or userId is incorrect', 400);
     }
 
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'download-'));
+    await this.downloadAndSaveFolder({ userId, folderId, parentDir: tempDir });
+
+    const zipFilePath = path.join(tempDir, 'folder.zip');
+    await this.createZip(tempDir, zipFilePath);
+
+    return zipFilePath;
+  }
+
+  private async downloadAndSaveFolder({ userId, folderId, parentDir } : ISaveFilesDTO) {
     const folders = await this.findFoldersChildrenUseCase.execute({ userId, id: folderId });
     const files = await this.findFilesChildrenUseCase.execute({ userId, id: folderId });
 
-    files.map(async (file) => {
-      await this.downloadAndSaveFile(folderId, file);
-    });
-
-    folders.map(async (folder) => {
-      await this.downloadAndSaveFile(folder);
-    })
-
-  }
-
-  private async downloadAndSaveFile(folder: Folders, file?: Files) {
-    if(file) {
+    for (const file of files) {
       const getFile = new GetObjectCommand({
         Bucket: process.env.BUCKET_NAME,
         Key: file.fileName,
@@ -57,42 +62,38 @@ export class DownloadFolderUseCase {
   
       const response = await s3.send(getFile);
   
-      // Ensure the directory exists
-      fs.mkdirSync(path.dirname(file.folderPath), { recursive: true });
+      const filePath = path.join(parentDir, file.folderPath, file.fileName);
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
   
-      // Write file to the local file system
-      const fileStream = fs.createWriteStream(file.folderPath);
+      const fileStream = fs.createWriteStream(filePath);
       await new Promise((resolve, reject) => {
-      if(response.Body) {
-        response.Body.pipe(fileStream);
-        response.Body.on('end', resolve);
-        response.Body.on('error', reject);
-      }
+        if (response.Body) {
+          response.Body.pipe(fileStream);
+          response.Body.on('end', resolve);
+          response.Body.on('error', reject);
+        } else {
+          reject(new Error('Response body is empty'));
+        }
       });
-    } else {
-      const files = await this.findFilesChildrenUseCase.execute({ userId: folder.userId, id: folder.id });
-
-      files.map(async (file) => {
-        const getFile = new GetObjectCommand({
-          Bucket: process.env.BUCKET_NAME,
-          Key: file.fileName,
-        });
-    
-        const response = await s3.send(getFile);
-    
-        // Ensure the directory exists
-        fs.mkdirSync(path.dirname(file.folderPath), { recursive: true });
-    
-        // Write file to the local file system
-        const fileStream = fs.createWriteStream(file.folderPath);
-        await new Promise((resolve, reject) => {
-          if(response.Body) {
-            response.Body.pipe(fileStream);
-            response.Body.on('end', resolve);
-            response.Body.on('error', reject);
-          }
-        });
-      })
     }
+
+    for (const folder of folders) {
+      const folderPath = path.join(parentDir, folder.path);
+      fs.mkdirSync(folderPath, { recursive: true });
+      await this.downloadAndSaveFolder({ userId: folder.userId, folderId: folder.id, parentDir: folderPath });
+    }
+  }
+
+  private createZip(sourceDir: string, outPath: string): Promise<void> {
+    const output = fs.createWriteStream(outPath);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    return new Promise((resolve, reject) => {
+      output.on('close', resolve);
+      archive.on('error', reject);
+      archive.pipe(output);
+      archive.directory(sourceDir, false);
+      archive.finalize();
+    });
   }
 }
