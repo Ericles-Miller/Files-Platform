@@ -1,4 +1,4 @@
-import { IFilesRepository } from '@Applications/Interfaces/IFilesRepository';
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { inject, injectable } from 'inversify';
 import { GetObjectCommand } from '@aws-sdk/client-s3';

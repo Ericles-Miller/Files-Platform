@@ -1,4 +1,4 @@
-import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
+import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { inject, injectable } from "inversify";
 import {GetObjectCommand} from '@aws-sdk/client-s3';
@@ -6,17 +6,20 @@ import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import { s3 } from "@Applications/Services/awsS3";
 import { IListFiles } from "@Applications/Interfaces/files/IListFiles";
 import { IFindFilesDTO } from "@Infra/DTOs/Files/IFindFilesDTO";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 
 @injectable()
 export class FindFilesChildrenUseCase {
   constructor(
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
+    @inject('FoldersRepository')
+    private foldersRepository: IFoldersRepository
   ){}
 
   async execute({ id, userId }: IFindFilesDTO): Promise<IListFiles[]> {
     
-    const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, id);
+    const filesBelongingUser = await this.foldersRepository.folderBelongingUser(userId, id);
     if(!filesBelongingUser) {
       throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
     }

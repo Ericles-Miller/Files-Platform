@@ -1,5 +1,5 @@
 import { IListFiles } from "@Applications/Interfaces/files/IListFiles";
-import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
+import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { Files } from "@prisma/client";

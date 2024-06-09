@@ -1,6 +1,6 @@
 import { Files, Folders, PrismaClient } from "@prisma/client";
 import { BaseRepository } from "./shared/BaseRepository";
-import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
+import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
 import { inject, injectable } from "inversify";
 import { prisma } from "@Infra/Database/database";
 import { IFindFilesDTO } from "@Infra/DTOs/Files/IFindFilesDTO";

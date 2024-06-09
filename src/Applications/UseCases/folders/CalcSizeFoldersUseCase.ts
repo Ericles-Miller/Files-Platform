@@ -1,4 +1,4 @@
-import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
+import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
 import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
 import { Folder } from "@Domain/Entities/Folder";
 import { AppError } from "@Domain/Exceptions/AppError";

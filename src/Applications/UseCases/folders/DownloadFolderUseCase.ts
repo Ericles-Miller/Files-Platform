@@ -1,5 +1,4 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { inject, injectable } from "inversify";
 import { FindFoldersChildrenUseCase } from "./FindFoldersChildrenUseCase";
@@ -9,13 +8,16 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from "@Applications/Services/awsS3";
 import * as fs from 'fs';
 import * as path from 'path';
-import * as archiver from 'archiver';
+import archiver from 'archiver'; 
+import * as os from 'os'; 
+import { promisify } from "util";
+import { pipeline } from "stream";
+import { ISaveFiles } from "@Applications/Interfaces/files/ISaveFiles";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 
-export interface ISaveFilesDTO {
-  userId: string,
-  folderId: string,
-  parentDir: string,
-}
+
+const streamPipeline = promisify(pipeline);
+
 
 @injectable()
 export class DownloadFolderUseCase {
@@ -50,7 +52,7 @@ export class DownloadFolderUseCase {
     return zipFilePath;
   }
 
-  private async downloadAndSaveFolder({ userId, folderId, parentDir } : ISaveFilesDTO) {
+  private async downloadAndSaveFolder({ userId, folderId, parentDir } : ISaveFiles) {
     const folders = await this.findFoldersChildrenUseCase.execute({ userId, id: folderId });
     const files = await this.findFilesChildrenUseCase.execute({ userId, id: folderId });
 
@@ -61,20 +63,16 @@ export class DownloadFolderUseCase {
       });
   
       const response = await s3.send(getFile);
-  
+    
+      if (!response.Body) {
+        throw new Error('Response body is empty');
+      }
+
       const filePath = path.join(parentDir, file.folderPath, file.fileName);
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  
+
       const fileStream = fs.createWriteStream(filePath);
-      await new Promise((resolve, reject) => {
-        if (response.Body) {
-          response.Body.pipe(fileStream);
-          response.Body.on('end', resolve);
-          response.Body.on('error', reject);
-        } else {
-          reject(new Error('Response body is empty'));
-        }
-      });
+      await streamPipeline(response.Body as NodeJS.ReadableStream, fileStream);
     }
 
     for (const folder of folders) {

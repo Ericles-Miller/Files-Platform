@@ -1,23 +1,26 @@
-import { IFilesRepository } from '@Applications/Interfaces/IFilesRepository';
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { Files } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import {DeleteObjectCommand} from '@aws-sdk/client-s3';
 import { s3 } from '@Applications/Services/awsS3';
 import { CalcSizeFoldersUseCase } from '../folders/CalcSizeFoldersUseCase';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 @injectable()
 export class DeleteFilesUseCase {
   constructor (
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
+    @inject('FoldersRepository')
+    private foldersRepository: IFoldersRepository,
     @inject(CalcSizeFoldersUseCase)
     private calcSizeFoldersUseCase : CalcSizeFoldersUseCase
   ) {}
 
   async execute(userId: string, folderId: string, id: string): Promise<void> {
     try {
-      const filesBelongingUser = await this.filesRepository.filesBelongingUser(userId, folderId);
+      const filesBelongingUser = await this.foldersRepository.folderBelongingUser(userId, folderId);
       if(!filesBelongingUser) {
         throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
       }

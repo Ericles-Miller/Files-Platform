@@ -6,7 +6,6 @@ import * as fs from 'fs';
 export class DownloadFoldersController {
   async handle(request: Request, response: Response) : Promise<any> {
     const { userId, folderId } = request.query;
-    console.log(userId, folderId);
     
     const downloadFolderUseCase = container.get(DownloadFolderUseCase);
 
