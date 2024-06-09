@@ -1,4 +1,4 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { ISearchFoldersDTO } from "@Infra/DTOs/folders/ISearchFoldersDTO";
 import { Folders } from "@prisma/client";

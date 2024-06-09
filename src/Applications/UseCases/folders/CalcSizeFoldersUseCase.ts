@@ -1,5 +1,5 @@
 import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 import { Folder } from "@Domain/Entities/Folder";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { Folders } from "@prisma/client";

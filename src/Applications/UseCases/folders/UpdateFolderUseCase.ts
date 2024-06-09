@@ -1,10 +1,10 @@
-import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
 import { Folder } from '@Domain/Entities/Folder';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { IUpdateFolderDTO } from '@Infra/DTOs/folders/IUpdateFoldersDTO';
 import { Folders } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { CalcSizeFoldersUseCase } from './CalcSizeFoldersUseCase';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 @injectable()
 export class UpdateFolderUseCase {

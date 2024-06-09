@@ -1,6 +1,6 @@
 import { IRefreshTokenRepository } from "@Applications/Interfaces/auth/IRefreshTokenRepository";
 import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { GenerateRefreshToken } from "@Applications/Services/auth/middlewares/GenerateRefreshToken";
 import { AuthenticateUserUseCase } from "@Applications/UseCases/auth/AuthenticatedUseCase";

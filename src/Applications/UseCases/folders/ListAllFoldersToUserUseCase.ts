@@ -1,4 +1,4 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { Folders } from "@prisma/client";
 import { inject, injectable } from "inversify";
