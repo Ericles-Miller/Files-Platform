@@ -1,9 +1,9 @@
-import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
 import { BaseRepository } from './shared/BaseRepository';
 import { Folders, PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { prisma } from '@Infra/Database/database';
 import { ISearchFoldersDTO } from '@Infra/DTOs/folders/ISearchFoldersDTO';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 
 @injectable()
