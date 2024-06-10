@@ -714,6 +714,69 @@
         }
       }
     },
+    "/folders/prepare/download": {
+      "get": {
+        "summary": "Download Folder",
+        "tags": ["Folders"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required":true,
+            "description": "User's ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "description": "folder's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download folder make with success!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId does not exists!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "Response body is empty!"
+                  },
+                  "folderBelongUser": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
 
     "/files": {
       "post": {
