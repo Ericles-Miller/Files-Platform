@@ -1,5 +1,5 @@
-import { IFolderParamsDTO } from "@Infra/DTOs/folders/IFolderParamsDTO";
-import { Base } from "./shared/Base";
+import { IFolderParamsDTO } from '@Infra/DTOs/folders/IFolderParamsDTO';
+import { Base } from './shared/Base';
 
 export class Folder extends Base {
   displayName: string;

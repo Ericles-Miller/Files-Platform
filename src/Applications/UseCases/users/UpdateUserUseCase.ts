@@ -1,11 +1,11 @@
-import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
-import { User } from "@Domain/Entities/User";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IUpdateUserFileDTO } from "@Infra/DTOs/users/IUpdateUserFileDTO";
-import { inject, injectable } from "inversify";
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
+import { User } from '@Domain/Entities/User';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IUpdateUserFileDTO } from '@Infra/DTOs/users/IUpdateUserFileDTO';
+import { inject, injectable } from 'inversify';
 import {PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
-import { Users } from "@prisma/client";
-import { s3 } from "@Applications/Services/awsS3";
+import { Users } from '@prisma/client';
+import { s3 } from '@Applications/Services/awsS3';
 
 @injectable()
 export class UpdateUserUseCase {

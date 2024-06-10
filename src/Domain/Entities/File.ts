@@ -1,5 +1,5 @@
-import { IFilesParamsDTO } from "@Infra/DTOs/Files/IFilesParamsDTO";
-import { Base } from "./shared/Base";
+import { IFilesParamsDTO } from '@Infra/DTOs/Files/IFilesParamsDTO';
+import { Base } from './shared/Base';
 
 export class File extends Base {
   displayName: string;

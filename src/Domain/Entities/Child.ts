@@ -1,4 +1,4 @@
-import { Base } from "./shared/Base";
+import { Base } from './shared/Base';
 
 export class Child extends Base {
   folderId: string;

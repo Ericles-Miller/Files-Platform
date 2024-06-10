@@ -1,6 +1,6 @@
-import { IUpdateUserDTO } from "@Infra/DTOs/users/IUpdateUserDTO";
-import { Base } from "./shared/Base";
-import { hash } from "bcryptjs";
+import { IUpdateUserDTO } from '@Infra/DTOs/users/IUpdateUserDTO';
+import { Base } from './shared/Base';
+import { hash } from 'bcryptjs';
 
 export class User extends Base {
   name: string;

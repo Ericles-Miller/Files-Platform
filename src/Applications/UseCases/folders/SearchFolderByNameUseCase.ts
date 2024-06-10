@@ -1,13 +1,13 @@
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { ISearchFoldersDTO } from "@Infra/DTOs/folders/ISearchFoldersDTO";
-import { Folders } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { ISearchFoldersDTO } from '@Infra/DTOs/folders/ISearchFoldersDTO';
+import { Folders } from '@prisma/client';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class SearchFolderByNameUseCase {
   constructor (
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
   ) {}
 

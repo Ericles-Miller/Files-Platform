@@ -1,10 +1,10 @@
-import { Files, Folders, PrismaClient } from "@prisma/client";
-import { BaseRepository } from "./shared/BaseRepository";
-import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
-import { inject, injectable } from "inversify";
-import { prisma } from "@Infra/Database/database";
-import { IFindFilesDTO } from "@Infra/DTOs/Files/IFindFilesDTO";
-import { ISearchFileDTO } from "@Infra/DTOs/Files/ISearchFilesDTO";
+import { Files, Folders, PrismaClient } from '@prisma/client';
+import { BaseRepository } from './shared/BaseRepository';
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { inject, injectable } from 'inversify';
+import { prisma } from '@Infra/Database/database';
+import { IFindFilesDTO } from '@Infra/DTOs/Files/IFindFilesDTO';
+import { ISearchFileDTO } from '@Infra/DTOs/Files/ISearchFilesDTO';
 
 
 @injectable()
@@ -37,16 +37,16 @@ export class FilesRepository extends BaseRepository<Files> implements IFilesRepo
     if(!parentId) {
       const files: Files[] = await prisma.$queryRaw`
         SELECT * FROM public.files
-            WHERE "displayName" ILIKE '%' || ${displayName} || '%'
-            and "userId" like ${userId};
+            WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
+            and 'userId' like ${userId};
         `;
       return files;
     }
     const files: Files[] = await prisma.$queryRaw`
       SELECT * FROM public.files
-        WHERE "displayName" ILIKE '%' || ${displayName} || '%'
-        and "userId" like ${userId}
-        and "folderId" like ${parentId};
+        WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
+        and 'userId' like ${userId}
+        and 'folderId' like ${parentId};
     `;
     return files;
   }

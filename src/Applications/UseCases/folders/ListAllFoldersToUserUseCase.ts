@@ -1,12 +1,12 @@
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { Folders } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { Folders } from '@prisma/client';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class ListAllFoldersToUserUseCase {
   constructor (
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
   ) {}
 

@@ -1,5 +1,5 @@
-import { AppError } from "@Domain/Exceptions/AppError";
-import { sign } from "jsonwebtoken";
+import { AppError } from '@Domain/Exceptions/AppError';
+import { sign } from 'jsonwebtoken';
 
 export class GenerateTokenProvider {
   async execute(userId: string) : Promise<string> {
@@ -9,7 +9,7 @@ export class GenerateTokenProvider {
     }
     const token = sign({}, secretToken, { 
       subject: userId,
-      expiresIn: "5m",
+      expiresIn: '5m',
     });
 
     return token;

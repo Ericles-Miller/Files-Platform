@@ -1,8 +1,8 @@
-import { inject, injectable } from "inversify";
-import { BaseRepository } from "../shared/BaseRepository";
-import { PrismaClient, RefreshTokens } from "@prisma/client";
-import { IRefreshTokenRepository } from "@Applications/Interfaces/auth/IRefreshTokenRepository";
-import { prisma } from "@Infra/Database/database";
+import { inject, injectable } from 'inversify';
+import { BaseRepository } from '../shared/BaseRepository';
+import { PrismaClient, RefreshTokens } from '@prisma/client';
+import { IRefreshTokenRepository } from '@Applications/Interfaces/auth/IRefreshTokenRepository';
+import { prisma } from '@Infra/Database/database';
 
 
 @injectable()

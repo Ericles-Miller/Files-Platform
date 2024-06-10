@@ -1,9 +1,9 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { BaseRepository } from "./shared/BaseRepository";
-import { Folders, PrismaClient } from "@prisma/client";
-import { inject, injectable } from "inversify";
-import { prisma } from "@Infra/Database/database";
-import { ISearchFoldersDTO } from "@Infra/DTOs/folders/ISearchFoldersDTO";
+import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
+import { BaseRepository } from './shared/BaseRepository';
+import { Folders, PrismaClient } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { prisma } from '@Infra/Database/database';
+import { ISearchFoldersDTO } from '@Infra/DTOs/folders/ISearchFoldersDTO';
 
 
 @injectable()
@@ -48,17 +48,17 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
     if (!parentId) {
       const folders: Folders[] = await prisma.$queryRaw`
         SELECT * FROM public.folders
-          WHERE "displayName" ILIKE '%' || ${displayName} || '%'
-          and "userId" like ${userId};
+          WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
+          and 'userId' like ${userId};
       `;
       return folders;
     }      
   
     const folders: Folders[] = await prisma.$queryRaw`
       SELECT * FROM public.folders
-        WHERE "displayName" ILIKE '%' || ${displayName} || '%'
-        and "userId" like ${userId}
-        and "parentId" like ${parentId};
+        WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
+        and 'userId' like ${userId}
+        and 'parentId' like ${parentId};
     `;
         
     return folders;

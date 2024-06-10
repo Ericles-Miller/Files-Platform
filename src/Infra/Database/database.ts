@@ -1,4 +1,4 @@
-import { Files, PrismaClient, Users, Folders, RefreshTokens } from "@prisma/client";
+import { Files, PrismaClient, Users, Folders, RefreshTokens } from '@prisma/client';
 
 
 export const {users, files, folders, refreshTokens } = new PrismaClient();

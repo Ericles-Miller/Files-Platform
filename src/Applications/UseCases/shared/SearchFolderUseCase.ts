@@ -1,23 +1,23 @@
-import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { container } from "@IoC/index";
-import { Folders, Users } from "@prisma/client";
-import { inject, injectable } from "inversify";
-import { FindFoldersChildrenUseCase } from "../folders/FindFoldersChildrenUseCase";
-import { SearchFolderByNameUseCase } from "../folders/SearchFolderByNameUseCase";
-import { IRequestSearchFolderDTO } from "@Infra/DTOs/folders/IRequestSearchFolderDTO";
-import { SearchFilesByNameUseCase } from "../files/SearchFilesByNameUseCase";
-import { FindFilesChildrenUseCase } from "../files/FindFilesChildrenUseCase";
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
-import { IResponseSearchFilesFolders } from "@Applications/Interfaces/repositories/shared/IResponseSearchFilesFolders";
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { container } from '@IoC/index';
+import { Folders, Users } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { FindFoldersChildrenUseCase } from '../folders/FindFoldersChildrenUseCase';
+import { SearchFolderByNameUseCase } from '../folders/SearchFolderByNameUseCase';
+import { IRequestSearchFolderDTO } from '@Infra/DTOs/folders/IRequestSearchFolderDTO';
+import { SearchFilesByNameUseCase } from '../files/SearchFilesByNameUseCase';
+import { FindFilesChildrenUseCase } from '../files/FindFilesChildrenUseCase';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { IResponseSearchFilesFolders } from '@Applications/Interfaces/repositories/shared/IResponseSearchFilesFolders';
 
 
 @injectable()
 export class SearchFolderUseCase {
   constructor (
-    @inject("UsersRepository")
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
   ) {}
 
