@@ -44,9 +44,15 @@ export class DownloadFolderUseCase {
     }
 
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'download-'));
-    await this.downloadAndSaveFolder({ userId, folderId, parentDir: tempDir });
-
-    const zipFilePath = path.join(tempDir, 'folder.zip');
+    const folderPath = path.join(tempDir, folderBelongingUser.displayName);
+    fs.mkdirSync(folderPath, { recursive: true });
+    
+    await this.downloadAndSaveFolder({ 
+      userId, folderId, parentDir: `${tempDir}/${folderBelongingUser.displayName}`
+    });
+    
+    const dirPath = fs.mkdtempSync(path.join(os.tmpdir(), 'download-'));
+    const zipFilePath = path.join(dirPath, `${folderBelongingUser.displayName}.zip`);
     await this.createZip(tempDir, zipFilePath);
 
     return zipFilePath;
@@ -65,24 +71,24 @@ export class DownloadFolderUseCase {
       const response = await s3.send(getFile);
     
       if (!response.Body) {
-        throw new Error('Response body is empty');
+        throw new AppError('Response body is empty', 404);
       }
 
-      const filePath = path.join(parentDir, file.folderPath, file.fileName);
-      fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
-      const fileStream = fs.createWriteStream(filePath);
+      const fileStream = fs.createWriteStream(path.join(parentDir, file.fileName));
       await streamPipeline(response.Body as NodeJS.ReadableStream, fileStream);
     }
 
     for (const folder of folders) {
-      const folderPath = path.join(parentDir, folder.path);
+      const folderPath = path.join(parentDir, folder.displayName);
       fs.mkdirSync(folderPath, { recursive: true });
-      await this.downloadAndSaveFolder({ userId: folder.userId, folderId: folder.id, parentDir: folderPath });
+
+      await this.downloadAndSaveFolder({ 
+        userId: folder.userId, folderId: folder.id, parentDir: folderPath 
+      });
     }
   }
 
-  private createZip(sourceDir: string, outPath: string): Promise<void> {
+  private async createZip(sourceDir: string, outPath: string): Promise<void> {
     const output = fs.createWriteStream(outPath);
     const archive = archiver('zip', { zlib: { level: 9 } });
 
