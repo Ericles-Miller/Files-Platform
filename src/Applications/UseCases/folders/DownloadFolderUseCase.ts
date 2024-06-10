@@ -1,19 +1,19 @@
-import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { inject, injectable } from "inversify";
-import { FindFoldersChildrenUseCase } from "./FindFoldersChildrenUseCase";
-import { FindFilesChildrenUseCase } from "../files/FindFilesChildrenUseCase";
-import { Users } from "@prisma/client";
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { inject, injectable } from 'inversify';
+import { FindFoldersChildrenUseCase } from './FindFoldersChildrenUseCase';
+import { FindFilesChildrenUseCase } from '../files/FindFilesChildrenUseCase';
+import { Users } from '@prisma/client';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
-import { s3 } from "@Applications/Services/awsS3";
+import { s3 } from '@Applications/Services/awsS3';
 import * as fs from 'fs';
 import * as path from 'path';
 import archiver from 'archiver'; 
 import * as os from 'os'; 
-import { promisify } from "util";
-import { pipeline } from "stream";
-import { ISaveFiles } from "@Applications/Interfaces/files/ISaveFiles";
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
+import { promisify } from 'util';
+import { pipeline } from 'stream';
+import { ISaveFiles } from '@Applications/Interfaces/files/ISaveFiles';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 
 const streamPipeline = promisify(pipeline);
@@ -22,9 +22,9 @@ const streamPipeline = promisify(pipeline);
 @injectable()
 export class DownloadFolderUseCase {
   constructor (
-    @inject("UsersRepository")
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
     @inject(FindFoldersChildrenUseCase)
     private findFoldersChildrenUseCase : FindFoldersChildrenUseCase,

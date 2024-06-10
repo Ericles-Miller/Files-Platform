@@ -1,6 +1,6 @@
-import { DownloadFolderUseCase } from "@Applications/UseCases/folders/DownloadFolderUseCase";
-import { container } from "@IoC/index";
-import { Request, Response } from "express";
+import { DownloadFolderUseCase } from '@Applications/UseCases/folders/DownloadFolderUseCase';
+import { container } from '@IoC/index';
+import { Request, Response } from 'express';
 import * as fs from 'fs';
 
 export class DownloadFoldersController {
