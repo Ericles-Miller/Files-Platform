@@ -21,4 +21,4 @@ foldersRoutes.get('/',ensureAuthenticated, searchFolderController.handle);
 foldersRoutes.delete('/', ensureAuthenticated, deleteFolderController.handle);
 foldersRoutes.patch('/:id',ensureAuthenticated, updateFolderController.handle);
 foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
-foldersRoutes.get('/prepare/download', downloadFoldersController.handle);
+foldersRoutes.get('/prepare/download',ensureAuthenticated, downloadFoldersController.handle);
