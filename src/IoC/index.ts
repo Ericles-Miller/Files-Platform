@@ -1,7 +1,7 @@
 import { IRefreshTokenRepository } from "@Applications/Interfaces/auth/IRefreshTokenRepository";
-import { IFilesRepository } from "@Applications/Interfaces/IFilesRepository";
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
+import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { GenerateRefreshToken } from "@Applications/Services/auth/middlewares/GenerateRefreshToken";
 import { AuthenticateUserUseCase } from "@Applications/UseCases/auth/AuthenticatedUseCase";
 import { RefreshTokenUserUseCase } from "@Applications/UseCases/auth/RefreshTokenUserUseCase";
@@ -13,6 +13,7 @@ import { SearchFilesByNameUseCase } from "@Applications/UseCases/files/SearchFil
 import { CalcSizeFoldersUseCase } from "@Applications/UseCases/folders/CalcSizeFoldersUseCase";
 import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
 import { DeleteFolderUseCase } from "@Applications/UseCases/folders/DeleteFolderUseCase";
+import { DownloadFolderUseCase } from "@Applications/UseCases/folders/DownloadFolderUseCase";
 import { FindFoldersChildrenUseCase } from "@Applications/UseCases/folders/FindFoldersChildrenUseCase";
 import { ListAllFoldersToUserUseCase } from "@Applications/UseCases/folders/ListAllFoldersToUserUseCase";
 import { SearchFolderByNameUseCase } from "@Applications/UseCases/folders/SearchFolderByNameUseCase";
@@ -62,6 +63,7 @@ container.bind<FindFoldersChildrenUseCase>(FindFoldersChildrenUseCase).toSelf();
 container.bind<SearchFolderByNameUseCase>(SearchFolderByNameUseCase).toSelf();
 container.bind<SearchFolderUseCase>(SearchFolderUseCase).toSelf();
 container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
+container.bind<DownloadFolderUseCase>(DownloadFolderUseCase).toSelf();
 
 ///files
 container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
@@ -69,6 +71,7 @@ container.bind<FindFilesChildrenUseCase>(FindFilesChildrenUseCase).toSelf();
 container.bind<SearchFilesByNameUseCase>(SearchFilesByNameUseCase).toSelf();
 container.bind<DeleteFilesUseCase>(DeleteFilesUseCase).toSelf();
 container.bind<DownloadFilesUseCase>(DownloadFilesUseCase).toSelf();
+
 
 /// refreshToken
 container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase).toSelf();

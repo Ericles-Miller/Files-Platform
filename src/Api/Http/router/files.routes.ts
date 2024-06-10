@@ -16,4 +16,4 @@ const upload = multer({storage: storage})
 
 filesRouters.post('/',ensureAuthenticated, upload.single('file'), createFilesController.handle);
 filesRouters.delete('/',ensureAuthenticated, deleteFilesController.handle);
-filesRouters.get('/download', downloadFileController.handle);
+filesRouters.get('/download',ensureAuthenticated, downloadFileController.handle);

@@ -1,4 +1,4 @@
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { User } from "@Domain/Entities/User";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IUpdateUserFileDTO } from "@Infra/DTOs/users/IUpdateUserFileDTO";

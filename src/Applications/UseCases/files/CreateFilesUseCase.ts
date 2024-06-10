@@ -1,12 +1,12 @@
-import { IFoldersRepository } from '@Applications/Interfaces/IFoldersRepository';
 import { File } from '@Domain/Entities/File';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { inject, injectable } from 'inversify';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { s3 } from '@Applications/Services/awsS3'
-import { IFilesRepository } from '@Applications/Interfaces/IFilesRepository';
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { ICreateFileDTO } from '@Infra/DTOs/Files/ICreateFileDTO';
 import { CalcSizeFoldersUseCase } from '../folders/CalcSizeFoldersUseCase';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 
 @injectable()

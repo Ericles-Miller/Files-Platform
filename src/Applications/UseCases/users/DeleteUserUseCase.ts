@@ -1,4 +1,4 @@
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { Users } from "@prisma/client";
 import { inject, injectable } from "inversify";

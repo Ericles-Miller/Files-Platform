@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { User } from "@Domain/Entities/User";
-import { IUsersRepository } from "@Applications/Interfaces/IUsersRepository";
+import { IUsersRepository } from "@Applications/Interfaces/repositories/IUsersRepository";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
 import { PutObjectCommand } from '@aws-sdk/client-s3';

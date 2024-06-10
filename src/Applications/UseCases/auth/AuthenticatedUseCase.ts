@@ -1,4 +1,4 @@
-import { IUsersRepository } from '@Applications/Interfaces/IUsersRepository';
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/GenerateRefreshToken';
 import { GenerateTokenProvider } from '@Applications/Services/auth/middlewares/GenerateTokenProvider';
 import { AppError } from '@Domain/Exceptions/AppError';

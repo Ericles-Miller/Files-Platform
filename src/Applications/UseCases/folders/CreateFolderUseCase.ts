@@ -1,4 +1,4 @@
-import { IFoldersRepository } from "@Applications/Interfaces/IFoldersRepository";
+import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
 import { Folder } from "@Domain/Entities/Folder";
 import { AppError } from "@Domain/Exceptions/AppError";
 import { IRequestFoldersDTO } from "@Infra/DTOs/folders/IRequestFoldersDTO";
