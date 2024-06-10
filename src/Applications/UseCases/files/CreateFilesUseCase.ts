@@ -34,7 +34,7 @@ export class CreateFilesUseCase {
 
         newFile.setSize(file.size);
         newFile.setType(file.mimetype);
-        newFile.setPath(`${folderBelongingUser.path}/${file.originalname}`);
+        newFile.setPath(`${folderBelongingUser.path}`);
 
         const filePath = await this.filesRepository.findPathWitSameName(newFile.folderPath, userId);
         if(filePath){

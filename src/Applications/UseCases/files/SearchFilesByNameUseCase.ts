@@ -1,20 +1,20 @@
-import { IListFiles } from "@Applications/Interfaces/files/IListFiles";
-import { IFilesRepository } from "@Applications/Interfaces/repositories/IFilesRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { Files } from "@prisma/client";
+import { IListFiles } from '@Applications/Interfaces/files/IListFiles';
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { Files } from '@prisma/client';
 import {GetObjectCommand} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
-import { s3 } from "@Applications/Services/awsS3";
-import { inject, injectable } from "inversify";
-import { ISearchFileDTO } from "@Infra/DTOs/Files/ISearchFilesDTO";
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
+import { s3 } from '@Applications/Services/awsS3';
+import { inject, injectable } from 'inversify';
+import { ISearchFileDTO } from '@Infra/DTOs/Files/ISearchFilesDTO';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 @injectable()
 export class SearchFilesByNameUseCase {
   constructor(
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
   ){ }
 
