@@ -1,14 +1,14 @@
-import { IFoldersRepository } from "@Applications/Interfaces/repositories/IFoldersRepository";
-import { Folder } from "@Domain/Entities/Folder";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IRequestFoldersDTO } from "@Infra/DTOs/folders/IRequestFoldersDTO";
-import { Folders } from "@prisma/client";
-import { inject, injectable } from "inversify";
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { Folder } from '@Domain/Entities/Folder';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IRequestFoldersDTO } from '@Infra/DTOs/folders/IRequestFoldersDTO';
+import { Folders } from '@prisma/client';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CreateFolderUseCase {
   constructor (
-    @inject("FoldersRepository")
+    @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
   ) {}
 
