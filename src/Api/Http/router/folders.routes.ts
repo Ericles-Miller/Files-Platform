@@ -6,8 +6,13 @@ import { SearchFolderController } from '@Api/Controllers/folders/SearchFolderCon
 import { UpdateFolderController } from '@Api/Controllers/folders/UpdateFolderController';
 import { ensureAuthenticated } from '@Applications/Services/auth/ensureAuthenticated';
 import { DownloadFoldersController } from '@Api/Controllers/folders/DownloadFoldersController';
+import multer from 'multer';
+import upload from '@Applications/Services/FolderUpload';
 
 export const foldersRoutes = Router();
+
+const folderUpload = multer(upload.upload('./tmp'));
+
 
 const createFolderController = new CreateFolderController();
 const updateFolderController = new UpdateFolderController();
@@ -22,3 +27,4 @@ foldersRoutes.delete('/', ensureAuthenticated, deleteFolderController.handle);
 foldersRoutes.patch('/:id',ensureAuthenticated, updateFolderController.handle);
 foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
 foldersRoutes.get('/prepare/download',ensureAuthenticated, downloadFoldersController.handle);
+foldersRoutes.post('/upload', ensureAuthenticated, folderUpload.single('folderZip'));
