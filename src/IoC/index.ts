@@ -18,6 +18,7 @@ import { FindFoldersChildrenUseCase } from '@Applications/UseCases/folders/FindF
 import { ListAllFoldersToUserUseCase } from '@Applications/UseCases/folders/ListAllFoldersToUserUseCase';
 import { SearchFolderByNameUseCase } from '@Applications/UseCases/folders/SearchFolderByNameUseCase';
 import { UpdateFolderUseCase } from '@Applications/UseCases/folders/UpdateFolderUseCase';
+import { UploadFolderUseCase } from '@Applications/UseCases/folders/UploadFolderUseCase';
 import { SearchFolderUseCase } from '@Applications/UseCases/shared/SearchFolderUseCase';
 import { CreateUserUseCase } from '@Applications/UseCases/users/CreateUserUseCase';
 import { DeleteUserUseCase } from '@Applications/UseCases/users/DeleteUserUseCase';
@@ -64,6 +65,7 @@ container.bind<SearchFolderByNameUseCase>(SearchFolderByNameUseCase).toSelf();
 container.bind<SearchFolderUseCase>(SearchFolderUseCase).toSelf();
 container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
 container.bind<DownloadFolderUseCase>(DownloadFolderUseCase).toSelf();
+container.bind<UploadFolderUseCase>(UploadFolderUseCase).toSelf();
 
 ///files
 container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
