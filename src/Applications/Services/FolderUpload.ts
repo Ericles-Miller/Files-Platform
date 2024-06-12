@@ -1,3 +1,4 @@
+import { AppError } from "@Domain/Exceptions/AppError";
 import multer from "multer";
 import { resolve } from "path";
 
@@ -9,9 +10,11 @@ export default {
           callback(null, resolve(__dirname, "../../../", folder));
         },
         filename: (request, file, callback) => {
+          if (file.mimetype !== 'application/zip') {
+            throw new AppError('The file must be of the zip type!', 400);
+          }
+          
           const fileName = `${file.originalname}`;
-          console.log("File Name:", fileName);
-
           return callback(null, fileName);
         },
       }),
