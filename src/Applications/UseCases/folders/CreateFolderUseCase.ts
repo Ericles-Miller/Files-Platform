@@ -12,7 +12,7 @@ export class CreateFolderUseCase {
     private foldersRepository: IFoldersRepository,
   ) {}
 
-  async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<void> {    
+  async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<Folders> {    
     try {
       const folder = new Folder({displayName, id: null, userId });    
        
@@ -36,7 +36,8 @@ export class CreateFolderUseCase {
       folder.setPath(`${parentFolder.path}/${displayName}`);
       folder.setSize(0);
 
-      await this.foldersRepository.create(folder);      
+      const newFolder : Folders = await this.foldersRepository.create(folder);
+      return newFolder;
       
     } else {
       const folderPath = await this.foldersRepository.findFolderPath(`/root/${displayName}`, userId);
@@ -48,7 +49,8 @@ export class CreateFolderUseCase {
       folder.setPath(`/root/${displayName}`);
       folder.setSize(0);
       
-      await this.foldersRepository.create(folder);
+      const newFolder = await this.foldersRepository.create(folder);
+      return newFolder;
     }
     }catch (error) {
       if(error instanceof AppError) {

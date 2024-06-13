@@ -49,10 +49,7 @@ export class CreateFilesUseCase {
         }));
 
         await this.filesRepository.create(newFile);
-        
-        // set size to folders
         this.calcSizeFoldersUseCase.execute(folderId);
-
       } 
     } catch (error) {
       if(error instanceof AppError) {
