@@ -9,7 +9,7 @@ export class GenerateTokenProvider {
     }
     const token = sign({}, secretToken, { 
       subject: userId,
-      expiresIn: '5m',
+      expiresIn: '15m',
     });
 
     return token;

@@ -795,19 +795,15 @@
                   "folderId": {
                     "type": "string"
                   },
-                  "userId": {
-                    "type": "string"
-                  },
                   "file": {
                     "type": "string",
                     "format": "binary",
                     "description": "The file to upload"
                   }
                 },
-                "required": ["folderId", "userId", "file"],
+                "required": ["folderId", "file"],
                 "example": {
                   "folderId": "Your folder's id",
-                  "userId": "you user's id",
                   "file": "your file"
                 }
               }

@@ -13,7 +13,7 @@ export class GenerateRefreshToken {
 
   async execute(userId: string) : Promise<RefreshTokens> {
     const now = new Date();
-    const futureTime = addMinutes(now, 5);
+    const futureTime = addMinutes(now, 15);
     const expiresIn = getTime(futureTime) / 1000; 
 
     const refreshToken = new RefreshToken(userId, expiresIn);

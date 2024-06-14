@@ -2,6 +2,9 @@ import { AppError } from '@Domain/Exceptions/AppError';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
+interface IPayload {
+  sub: string;
+}
 
 export async function ensureAuthenticated(
   request: Request, response: Response, next: NextFunction,
@@ -16,7 +19,11 @@ export async function ensureAuthenticated(
   if (secretToken) {
     try {
       // verifico se o token e valido
-      verify(token, secretToken); // chave de criptografia
+      const { sub } = verify(token, secretToken) as IPayload; // chave de criptografia
+
+      request.userId = sub;
+
+
       return next();
     } catch (error) {
       throw new AppError('Invalid token!', 401);

@@ -23,7 +23,7 @@ const deleteFolderController = new DeleteFolderController();
 const downloadFoldersController = new DownloadFoldersController();
 const uploadFolderController = new UploadFolderController()
 
-foldersRoutes.post('/', createFolderController.handle);
+foldersRoutes.post('/', ensureAuthenticated, createFolderController.handle);
 foldersRoutes.get('/', searchFolderController.handle);
 foldersRoutes.delete('/', deleteFolderController.handle);
 foldersRoutes.patch('/:id', updateFolderController.handle);
