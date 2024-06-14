@@ -26,7 +26,6 @@ export class UploadFolderUseCase {
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       await unzip(displayName);
-
       const [nameFolder, ] = displayName.split('.');
 
       await this.uploadFoldersAndFiles(nameFolder, userId, parentId); // erro de permissao em win
@@ -72,6 +71,7 @@ export class UploadFolderUseCase {
           folderId: folder.id,
           userId,
           displayName: file,
+          displayName: file,
           id: null,
           fileName: file,
         });
@@ -82,6 +82,7 @@ export class UploadFolderUseCase {
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
+          Key: `${folder.path}/${file}`,  
           Key: `${folder.path}/${file}`,  
           Body: content,
           ContentType: file
