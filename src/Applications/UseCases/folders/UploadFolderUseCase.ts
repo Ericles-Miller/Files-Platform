@@ -25,9 +25,11 @@ export class UploadFolderUseCase {
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       await unzip(displayName);
+      // deletar o arquivo zip
       const [nameFolder, ] = displayName.split('.');
 
       await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+      // deletar a pasta 
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -61,26 +63,25 @@ export class UploadFolderUseCase {
         const { size } = fs.statSync(filepath);
 
         const array = file.split('.');
-        let displayNameFile = array.slice(0, -1).join('.');
         let type = array.pop();
 
         const createFile = new File({
           folderId: folder.id,
           userId,
-          displayName: displayNameFile,
+          displayName: file,
           id: null,
-          fileName: displayNameFile
+          fileName: file
         });
 
-        createFile.setPath(`${folder.path}/${displayNameFile}`);
+        createFile.setPath(`${folder.path}/${file}`);
         createFile.setSize(size);
         createFile.setType(type as string);
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: `${folder.path}/${displayNameFile}`,  
+          Key: `${folder.path}/${file}`,  
           Body: content,
-          ContentType: `application/${type}`,
+          ContentType: `application/${type}`, //
         }));
 
         await this.filesRepository.create(createFile);
