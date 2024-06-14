@@ -23,10 +23,10 @@ const deleteFolderController = new DeleteFolderController();
 const downloadFoldersController = new DownloadFoldersController();
 const uploadFolderController = new UploadFolderController()
 
-foldersRoutes.post('/', ensureAuthenticated, createFolderController.handle);
-foldersRoutes.get('/',ensureAuthenticated, searchFolderController.handle);
-foldersRoutes.delete('/', ensureAuthenticated, deleteFolderController.handle);
-foldersRoutes.patch('/:id',ensureAuthenticated, updateFolderController.handle);
+foldersRoutes.post('/', createFolderController.handle);
+foldersRoutes.get('/', searchFolderController.handle);
+foldersRoutes.delete('/', deleteFolderController.handle);
+foldersRoutes.patch('/:id', updateFolderController.handle);
 foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
-foldersRoutes.get('/prepare/download',ensureAuthenticated, downloadFoldersController.handle);
+foldersRoutes.get('/prepare/download', downloadFoldersController.handle);
 foldersRoutes.post('/upload', folderUpload.single('folderZip'), uploadFolderController.handle);

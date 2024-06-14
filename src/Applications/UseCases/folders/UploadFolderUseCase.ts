@@ -11,6 +11,7 @@ import { AppError } from '@Domain/Exceptions/AppError';
 import { Folders } from '@prisma/client';
 import { CalcSizeFoldersUseCase } from './CalcSizeFoldersUseCase';
 
+
 @injectable()
 export class UploadFolderUseCase {
   constructor(
@@ -25,9 +26,14 @@ export class UploadFolderUseCase {
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       await unzip(displayName);
+
       const [nameFolder, ] = displayName.split('.');
 
-      await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+      await this.uploadFoldersAndFiles(nameFolder, userId, parentId); // erro de permissao em win
+      
+      const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${nameFolder}`);
+      fs.unlinkSync(pathFolder);
+
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -57,30 +63,28 @@ export class UploadFolderUseCase {
 
       for (const file of files) {
         const filepath = path.join(pathFolder, file);
-        const content = await fs.promises.readFile(filepath); // path folder + name
+        const content = await fs.promises.readFile(filepath); 
         const { size } = fs.statSync(filepath);
-
-        const array = file.split('.');
-        let displayNameFile = array.slice(0, -1).join('.');
-        let type = array.pop();
+        const type = path.extname(filepath);
+       
 
         const createFile = new File({
           folderId: folder.id,
           userId,
-          displayName: displayNameFile,
+          displayName: file,
           id: null,
-          fileName: displayNameFile
+          fileName: file,
         });
 
-        createFile.setPath(`${folder.path}/${displayNameFile}`);
+        createFile.setPath(`${folder.path}`);
         createFile.setSize(size);
         createFile.setType(type as string);
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: `${folder.path}/${displayNameFile}`,  
+          Key: `${folder.path}/${file}`,  
           Body: content,
-          ContentType: `application/${type}`,
+          ContentType: file
         }));
 
         await this.filesRepository.create(createFile);

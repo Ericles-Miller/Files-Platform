@@ -1,2 +1,0 @@
-# boilerplateTsWithPrisma
-# boilerplateTsWithPrisma

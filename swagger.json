@@ -38,7 +38,7 @@
                   "password": {
                     "type": "string"
                   },
-                  "file": {
+                  "avatar": {
                     "type": "string",
                     "format": "binary",
                     "description": "The file to upload"
