@@ -129,9 +129,6 @@
                   "name": {
                     "type": "string"
                   },
-                  "id": {
-                    "type": "string"
-                  },
                   "password": {
                     "type": "string"
                   },
@@ -169,24 +166,13 @@
         }
       }
     },
-    "/users/{userId}": {
+    "/users/": {
       "delete": {
         "tags": ["Users"],
         "summary": "Delete User",
         "description": "Delete an existing user by ID",
         "security": [
           { "bearerAuth": []}
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "ID of the user to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "204": {
