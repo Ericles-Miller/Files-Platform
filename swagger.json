@@ -854,15 +854,6 @@
         ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "description": "ID of the user",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "folderId",
             "in": "query",
             "required": true,
@@ -902,19 +893,13 @@
         "tags": ["Files"],
         "summary": "Download file",
         "description": "using the endpoint on browser to do download file",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required":true,
-            "description": "User's ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "fileId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "description": "file's id",
             "schema": {

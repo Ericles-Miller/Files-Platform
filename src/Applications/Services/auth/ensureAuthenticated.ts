@@ -22,8 +22,6 @@ export async function ensureAuthenticated(
       const { sub } = verify(token, secretToken) as IPayload; // chave de criptografia
 
       request.userId = sub;
-
-
       return next();
     } catch (error) {
       throw new AppError('Invalid token!', 401);
