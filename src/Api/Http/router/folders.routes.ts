@@ -24,9 +24,9 @@ const downloadFoldersController = new DownloadFoldersController();
 const uploadFolderController = new UploadFolderController()
 
 foldersRoutes.post('/', ensureAuthenticated, createFolderController.handle);
-foldersRoutes.get('/', searchFolderController.handle);
-foldersRoutes.delete('/', deleteFolderController.handle);
-foldersRoutes.patch('/:id', updateFolderController.handle);
-foldersRoutes.get('/:userId', listAllFoldersToUserController.handle);
-foldersRoutes.get('/prepare/download', downloadFoldersController.handle);
-foldersRoutes.post('/upload', folderUpload.single('folderZip'), uploadFolderController.handle);
+foldersRoutes.get('/',ensureAuthenticated, searchFolderController.handle);
+foldersRoutes.delete('/:folderId',ensureAuthenticated, deleteFolderController.handle);
+foldersRoutes.patch('/:id',ensureAuthenticated, updateFolderController.handle);
+foldersRoutes.get('/listAllFoldersByUser',ensureAuthenticated, listAllFoldersToUserController.handle);
+foldersRoutes.get('/download/:folderId',ensureAuthenticated, downloadFoldersController.handle);
+foldersRoutes.post('/upload', folderUpload.single('folderZip'), uploadFolderController.handle); //without router in swagger

@@ -5,11 +5,14 @@ import * as fs from 'fs';
 
 export class DownloadFoldersController {
   async handle(request: Request, response: Response) : Promise<any> {
-    const { userId, folderId } = request.query;
+    const { folderId } = request.params;
+    const userId = request.userId;
+    console.log(folderId, userId);
     
+
     const downloadFolderUseCase = container.get(DownloadFolderUseCase);
 
-    const zipFilePath = await downloadFolderUseCase.execute(userId as string, folderId as string);
+    const zipFilePath = await downloadFolderUseCase.execute(userId, folderId);
 
     response.download(zipFilePath, 'folder.zip', (err) => {
       if (err) {
