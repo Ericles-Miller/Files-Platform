@@ -18,5 +18,5 @@ const upload = multer({storage: storage});
 
 usersRoutes.post('/',upload.single('avatar'), createUserController.handle);
 usersRoutes.get('/', listUserController.handle);
-usersRoutes.patch('/', upload.single('avatar'), updateUserController.handle);
-usersRoutes.delete('/:userId',  deleteUserController.handle);
+usersRoutes.patch('/',ensureAuthenticated, upload.single('avatar'), updateUserController.handle);
+usersRoutes.delete('/', ensureAuthenticated,  deleteUserController.handle);

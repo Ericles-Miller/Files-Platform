@@ -5,8 +5,9 @@ import { Request, Response } from 'express';
 
 export class UploadFolderController {
   async handle(request: Request, response: Response) : Promise<Response> {
-    const { userId, parentId } = request.body;
+    const { parentId } = request.body;
     const folder = request.file;
+    const userId = request.userId;
 
     const uploadFolderUseCase = container.get(UploadFolderUseCase);
     const displayName = folder?.filename;

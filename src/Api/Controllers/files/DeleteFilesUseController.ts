@@ -5,11 +5,12 @@ import { Request, Response } from 'express';
 
 export class DeleteFilesController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { userId, folderId, id } = request.query;
+    const { folderId, id } = request.query;
+    const userId = request.userId;
 
     const deleteFilesUseCase = container.get(DeleteFilesUseCase);
 
-    await deleteFilesUseCase.execute(userId as string, folderId as string, id as string);
+    await deleteFilesUseCase.execute(userId, folderId as string, id as string);
 
     return response.status(204).send();
   }

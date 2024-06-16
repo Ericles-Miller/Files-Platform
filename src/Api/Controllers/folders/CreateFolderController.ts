@@ -1,11 +1,12 @@
-import { CreateFolderUseCase } from "@Applications/UseCases/folders/CreateFolderUseCase";
-import { container } from "@IoC/index";
-import { Request, Response } from "express";
+import { CreateFolderUseCase } from '@Applications/UseCases/folders/CreateFolderUseCase';
+import { container } from '@IoC/index';
+import { Request, Response } from 'express';
 
 
 export class CreateFolderController {
   async handle(request: Request, response: Response) : Promise<Response> {
-    const { displayName, parentId, userId } = request.body;
+    const { displayName, parentId } = request.body;
+    const userId = request.userId;
 
     const createFolderUseCase = container.get(CreateFolderUseCase);
 

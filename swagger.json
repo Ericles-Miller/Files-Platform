@@ -129,9 +129,6 @@
                   "name": {
                     "type": "string"
                   },
-                  "id": {
-                    "type": "string"
-                  },
                   "password": {
                     "type": "string"
                   },
@@ -169,24 +166,13 @@
         }
       }
     },
-    "/users/{userId}": {
+    "/users/": {
       "delete": {
         "tags": ["Users"],
         "summary": "Delete User",
         "description": "Delete an existing user by ID",
         "security": [
           { "bearerAuth": []}
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "ID of the user to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "204": {
@@ -288,17 +274,13 @@
                   "displayName": {
                     "type": "string"
                   },
-                  "userId": {
-                    "type": "string"
-                  },
                   "parentId": {
                     "type": "string"
                   }
                 },
-                "required": ["displayName", "userId"],
+                "required": ["displayName"],
                 "example": {
                   "displayName": "Your folder name",
-                  "userId": "ebbbce5a-cb12-4c42-82c7-7724f0a33a1f",
                   "parentId": "et7bce5a-cb12-4c42-222c7-7724f0a33a1f"
                 }
               }
@@ -346,45 +328,6 @@
           }
         }
       },
-      "delete": {
-        "tags": ["Folders"],
-        "summary": "Delete folder",
-        "description": "Delete an existing folder by userId and folderId",
-        "security": [
-          { "bearerAuth": []}
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "description": "ID of the user",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "folderId",
-            "in": "query",
-            "required": true,
-            "description": "ID of the folder to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Folder deleted successfully!"
-          },
-          "400": {
-            "description": "That folder does not belong to this user or userId is incorrect!"
-          },
-          "500": {
-            "description": "Unexpected server error!"
-          }
-        }
-      },
       "get": {
         "tags": ["Folders", "Files"],
         "summary": "Search folders and files",
@@ -393,15 +336,6 @@
           { "bearerAuth": []}
         ],
         "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "description": "User's ID",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "folderId",
             "in": "query",
@@ -566,21 +500,45 @@
         }
       }  
     },
-    "/folders/{userId}": {
-      "get": {
+    "/folders/{folderId}" : {
+      "delete": {
         "tags": ["Folders"],
-        "summary": "List all Folders",
-        "description": "List all folders to aux frontEnd",
+        "summary": "Delete folder",
+        "description": "Delete an existing folder by userId and folderId",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
-            "name": "userId",
+            "name": "folderId",
             "in": "path",
             "required": true,
-            "description": "ID of the user to delete",
+            "description": "ID of the folder to delete",
             "schema": {
               "type": "string"
             }
           }
+        ],
+        "responses": {
+          "204": {
+            "description": "Folder deleted successfully!"
+          },
+          "400": {
+            "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/ListAllFoldersByUser": {
+      "get": {
+        "tags": ["Folders"],
+        "summary": "List all Folders",
+        "description": "List all folders to aux frontEnd",
+        "security": [
+          { "bearerAuth": []}
         ],
         "responses": {
           "200": {
@@ -658,9 +616,6 @@
                   "displayName": {
                     "type": "string"
                   },
-                  "userId": {
-                    "type": "string"
-                  },
                   "parentId": {
                     "type": "string"
                   }
@@ -714,23 +669,17 @@
         }
       }
     },
-    "/folders/prepare/download": {
+    "/folders/download/{folderId}": {
       "get": {
         "summary": "Download Folder",
         "tags": ["Folders"],
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required":true,
-            "description": "User's ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "folderId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "description": "folder's id",
             "schema": {
@@ -795,19 +744,15 @@
                   "folderId": {
                     "type": "string"
                   },
-                  "userId": {
-                    "type": "string"
-                  },
                   "file": {
                     "type": "string",
                     "format": "binary",
                     "description": "The file to upload"
                   }
                 },
-                "required": ["folderId", "userId", "file"],
+                "required": ["folderId", "file"],
                 "example": {
                   "folderId": "Your folder's id",
-                  "userId": "you user's id",
                   "file": "your file"
                 }
               }
@@ -858,15 +803,6 @@
         ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "description": "ID of the user",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "folderId",
             "in": "query",
             "required": true,
@@ -906,19 +842,13 @@
         "tags": ["Files"],
         "summary": "Download file",
         "description": "using the endpoint on browser to do download file",
+        "security": [
+          { "bearerAuth": []}
+        ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required":true,
-            "description": "User's ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "fileId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "description": "file's id",
             "schema": {

@@ -5,14 +5,14 @@ import { Request, Response } from 'express';
 
 export class CreateFilesController {
   async handle(request:Request, response: Response):Promise<Response> {
-    const { folderId, userId } = request.body;
+    const { folderId } = request.body;
+    const userId = request.userId;
     const file = request.file;
-
+    
     const createFileUseCase = container.get(CreateFilesUseCase);
 
-    await createFileUseCase.execute({folderId, userId, file});
+    await createFileUseCase.execute({ folderId, userId, file });
 
     return response.status(201).send();
-
   }
 }
