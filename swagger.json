@@ -56,7 +56,45 @@
         },
         "responses": {
           "400": {
-            "description": "User already exists with email!"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "emailError": {
+                    "summary": "email error",
+                    "value": {
+                      "message": "User already exists with email!"
+                    }
+                  },
+                  "password error": {
+                    "summary": "passwordInvalid",
+                    "value": {
+                      "message": "The field password contains incorrect characters, or the number of characters is greater than 8!"
+                    }
+                  },
+                  "name error": {
+                    "summary": "name error",
+                    "value": {
+                      "message": "The field name contains characters incorrect, number of characters is greater than 255, or number of names is equal to one!"
+                    }
+                  },
+                  "email error": {
+                    "summary": "email error validation",
+                    "value": {
+                      "message": "The field email contains incorrect characters!"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unexpected server error!"
@@ -161,7 +199,45 @@
             "description": "Unexpected server error!"
           },
           "400": {
-            "description": "Value invalid to field enable!"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "enable error": {
+                    "summary": "email error",
+                    "value": {
+                      "message": "Value invalid to field enable!"
+                    }
+                  },
+                  "password error": {
+                    "summary": "passwordInvalid",
+                    "value": {
+                      "message": "The field password contains incorrect characters, or the number of characters is greater than 8!"
+                    }
+                  },
+                  "name error": {
+                    "summary": "name error",
+                    "value": {
+                      "message": "The field name contains characters incorrect, number of characters is greater than 255, or number of names is equal to one!"
+                    }
+                  },
+                  "email error": {
+                    "summary": "email error validation",
+                    "value": {
+                      "message": "The field email contains incorrect characters!"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

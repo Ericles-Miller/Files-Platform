@@ -6,6 +6,7 @@ import { inject, injectable } from 'inversify';
 import {PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
 import { Users } from '@prisma/client';
 import { s3 } from '@Applications/Services/awsS3';
+import { validationsFields } from '@Applications/Services/users/validateFields';
 
 @injectable()
 export class UpdateUserUseCase {
@@ -15,7 +16,8 @@ export class UpdateUserUseCase {
   ) {}
 
   async execute({ enable, id, name, password, file }: IUpdateUserFileDTO) : Promise<void> {
-    try {  
+    try { 
+      validationsFields({ name, password });
       const findUser: Users = await this.usersRepository.findById(id);
       if(!findUser) {
         throw new AppError('UserId does not exists!', 404);
@@ -37,7 +39,7 @@ export class UpdateUserUseCase {
       if(file) {
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: file.originalname,
+          Key: `/root/${user.id}/avatars/file.originalname`,
           Body: file.buffer,
           ContentType: file.mimetype
         }));
