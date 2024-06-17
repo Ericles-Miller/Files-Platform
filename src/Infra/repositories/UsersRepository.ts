@@ -6,7 +6,6 @@ import { PrismaClient, Users } from '@prisma/client';
 
 import { BaseRepository } from './shared/BaseRepository';
 
-
 @injectable()
 export class UsersRepository extends BaseRepository<Users> implements IUsersRepository {
   constructor(

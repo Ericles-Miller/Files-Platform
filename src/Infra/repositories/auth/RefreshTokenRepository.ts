@@ -6,7 +6,6 @@ import { PrismaClient, RefreshTokens } from '@prisma/client';
 
 import { BaseRepository } from '../shared/BaseRepository';
 
-
 @injectable()
 export class RefreshTokenRepository extends BaseRepository<RefreshTokens> implements IRefreshTokenRepository {
   constructor(
