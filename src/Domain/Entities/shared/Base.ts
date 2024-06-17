@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export class Base {
   id!: string;
@@ -7,7 +7,7 @@ export class Base {
   enable!: boolean;
 
   constructor(id: string | null) {
-    if(!id) {
+    if (!id) {
       this.id = uuid();
       this.createdAt = new Date();
       this.updatedAt = null;
@@ -23,5 +23,4 @@ export class Base {
   getUpdatedAt(): Date | null {
     return this.updatedAt;
   }
-  
 }

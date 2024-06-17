@@ -1,11 +1,12 @@
+import { inject, injectable } from 'inversify';
+
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
+import { s3 } from '@Applications/Services/awsS3';
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { IUpdateUserFileDTO } from '@Infra/DTOs/users/IUpdateUserFileDTO';
-import { inject, injectable } from 'inversify';
-import {PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
 import { Users } from '@prisma/client';
-import { s3 } from '@Applications/Services/awsS3';
 
 @injectable()
 export class UpdateUserUseCase {
@@ -14,44 +15,44 @@ export class UpdateUserUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({ enable, id, name, password, file }: IUpdateUserFileDTO) : Promise<void> {
-    try {  
+  async execute({
+    enable, id, name, password, file,
+  }: IUpdateUserFileDTO) : Promise<void> {
+    try {
       const findUser: Users = await this.usersRepository.findById(id);
-      if(!findUser) {
+      if (!findUser) {
         throw new AppError('UserId does not exists!', 404);
-      }    
+      }
 
       const user = new User(name, findUser.email, password, id);
-      
-      if(findUser.fileName) {
+
+      if (findUser.fileName) {
         try {
           await s3.send(new DeleteObjectCommand({
             Bucket: process.env.BUCKET_NAME,
             Key: findUser.fileName,
-          }))
+          }));
         } catch (error) {
           console.log('The image is not in the cloud');
         }
       }
 
-      if(file) {
+      if (file) {
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
           Key: file.originalname,
           Body: file.buffer,
-          ContentType: file.mimetype
+          ContentType: file.mimetype,
         }));
-        
+
         user.setAvatar(file.originalname);
         user.setFileName(file.originalname);
       }
-      
-      await user.setPassword(user.password);
-      if(enable === 'true') {
-        user.enable = true;
-      } 
 
-      else if(enable === 'false') {
+      await user.setPassword(user.password);
+      if (enable === 'true') {
+        user.enable = true;
+      } else if (enable === 'false') {
         user.enable = false;
       } else {
         throw new AppError('Value invalid to field enable!', 400);
@@ -59,17 +60,14 @@ export class UpdateUserUseCase {
 
       user.update(user);
       await this.usersRepository.update(id, user);
-    
     } catch (error) {
-      if(error instanceof AppError) {
-        throw error
+      if (error instanceof AppError) {
+        throw error;
       }
-      
+
       console.log(error);
       throw new AppError(`Unexpected server error!`, 500);
     }
   }
 }
-
-
 

@@ -1,4 +1,5 @@
 import { IFilesParamsDTO } from '@Infra/DTOs/Files/IFilesParamsDTO';
+
 import { Base } from './shared/Base';
 
 export class File extends Base {
@@ -10,8 +11,10 @@ export class File extends Base {
   readonly userId: string;
   readonly folderId: string;
 
-  constructor({ displayName, fileName, folderId, id, userId }: IFilesParamsDTO) {
-    super(id)
+  constructor({
+    displayName, fileName, folderId, id, userId,
+  }: IFilesParamsDTO) {
+    super(id);
     this.displayName = displayName;
     this.userId = userId;
     this.folderId = folderId;
@@ -19,7 +22,7 @@ export class File extends Base {
   }
 
   setSize(size: number): void {
-    this.size = size
+    this.size = size;
   }
 
   getSize(): number {
@@ -41,5 +44,4 @@ export class File extends Base {
   getType(): string {
     return this.type;
   }
-  
 }

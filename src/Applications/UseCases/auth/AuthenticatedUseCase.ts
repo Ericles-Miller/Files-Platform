@@ -1,10 +1,11 @@
+import { compare } from 'bcryptjs';
+import { inject, injectable } from 'inversify';
+
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/GenerateRefreshToken';
 import { GenerateTokenProvider } from '@Applications/Services/auth/middlewares/GenerateTokenProvider';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { container } from '@IoC/index';
-import { compare } from 'bcryptjs';
-import { inject, injectable } from 'inversify';
 
 interface IResponse {
   refreshToken: {
@@ -37,16 +38,16 @@ export class AuthenticateUserUseCase {
       const generateTokenProvider = new GenerateTokenProvider();
       const token = await generateTokenProvider.execute(user.id);
 
-      const generateRefreshToken =  container.get(GenerateRefreshToken);
+      const generateRefreshToken = container.get(GenerateRefreshToken);
       const refreshToken = await generateRefreshToken.execute(user.id);
-      
+
       return { token, refreshToken };
     } catch (error) {
-      if(error instanceof AppError) {
+      if (error instanceof AppError) {
         throw error;
       }
       console.log(error);
-      throw new AppError('Unexpected server error!', 500); 
+      throw new AppError('Unexpected server error!', 500);
     }
   }
 }

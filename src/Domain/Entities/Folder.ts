@@ -1,4 +1,6 @@
+/* eslint-disable no-use-before-define */
 import { IFolderParamsDTO } from '@Infra/DTOs/folders/IFolderParamsDTO';
+
 import { Base } from './shared/Base';
 
 export class Folder extends Base {
@@ -24,7 +26,7 @@ export class Folder extends Base {
   }
 
   setChildren(folder: Folder) : void {
-    this.children.push(folder)
+    this.children.push(folder);
   }
 
   getChildren(): Folder[] {
@@ -38,7 +40,7 @@ export class Folder extends Base {
   getSize(): number | null {
     return this.size;
   }
-  
+
   setPath(path: string): void {
     this.path = path;
   }

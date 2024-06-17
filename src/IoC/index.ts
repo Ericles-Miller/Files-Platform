@@ -1,3 +1,5 @@
+import { Container } from 'inversify';
+
 import { IRefreshTokenRepository } from '@Applications/Interfaces/auth/IRefreshTokenRepository';
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
@@ -30,8 +32,9 @@ import { FilesRepository } from '@Infra/repositories/FilesRepository';
 import { FoldersRepository } from '@Infra/repositories/FoldersRepository';
 import { BaseRepository } from '@Infra/repositories/shared/BaseRepository';
 import { UsersRepository } from '@Infra/repositories/UsersRepository';
-import { Files, Folders, PrismaClient, RefreshTokens, Users } from '@prisma/client';
-import { Container } from 'inversify';
+import {
+  Files, Folders, PrismaClient, RefreshTokens, Users,
+} from '@prisma/client';
 
 export const container = new Container();
 
@@ -42,7 +45,7 @@ container.bind<BaseRepository<Files>>('FilesRepository').to(FilesRepository);
 container.bind<BaseRepository<RefreshTokens>>('RefreshTokenRepository').to(RefreshTokenRepository);
 container.bind<PrismaClient>('PrismaClient').toConstantValue(prisma);
 
-/// interfaces 
+/// interfaces
 container.bind<IUsersRepository>(UsersRepository).toSelf().inSingletonScope();
 container.bind<IFoldersRepository>(FoldersRepository).toSelf().inSingletonScope();
 container.bind<IFilesRepository>(FilesRepository).toSelf().inSingletonScope();
@@ -51,8 +54,8 @@ container.bind<IRefreshTokenRepository>(RefreshTokenRepository).toSelf().inSingl
 /// users
 container.bind<ListUsersUseCase>(ListUsersUseCase).toSelf();
 container.bind<CreateUserUseCase>(CreateUserUseCase).toSelf();
-container.bind<UpdateUserUseCase>(UpdateUserUseCase).toSelf(); 
-container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf(); 
+container.bind<UpdateUserUseCase>(UpdateUserUseCase).toSelf();
+container.bind<DeleteUserUseCase>(DeleteUserUseCase).toSelf();
 
 /// folders
 container.bind<CalcSizeFoldersUseCase>(CalcSizeFoldersUseCase).toSelf();
@@ -67,7 +70,7 @@ container.bind<DeleteFolderUseCase>(DeleteFolderUseCase).toSelf();
 container.bind<DownloadFolderUseCase>(DownloadFolderUseCase).toSelf();
 container.bind<UploadFolderUseCase>(UploadFolderUseCase).toSelf();
 
-///files
+/// files
 container.bind<CreateFilesUseCase>(CreateFilesUseCase).toSelf();
 container.bind<FindFilesChildrenUseCase>(FindFilesChildrenUseCase).toSelf();
 container.bind<SearchFilesByNameUseCase>(SearchFilesByNameUseCase).toSelf();

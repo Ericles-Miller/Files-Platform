@@ -1,14 +1,15 @@
-import { DownloadFolderUseCase } from '@Applications/UseCases/folders/DownloadFolderUseCase';
-import { container } from '@IoC/index';
 import { Request, Response } from 'express';
 import * as fs from 'fs';
+
+import { DownloadFolderUseCase } from '@Applications/UseCases/folders/DownloadFolderUseCase';
+import { container } from '@IoC/index';
 
 export class DownloadFoldersController {
   async handle(request: Request, response: Response) : Promise<any> {
     const { folderId } = request.params;
-    const userId = request.userId;
+    const { userId } = request;
     console.log(folderId, userId);
-    
+
 
     const downloadFolderUseCase = container.get(DownloadFolderUseCase);
 

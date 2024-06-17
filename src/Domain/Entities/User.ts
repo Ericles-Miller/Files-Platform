@@ -1,6 +1,8 @@
-import { IUpdateUserDTO } from '@Infra/DTOs/users/IUpdateUserDTO';
-import { Base } from './shared/Base';
 import { hash } from 'bcryptjs';
+
+import { IUpdateUserDTO } from '@Infra/DTOs/users/IUpdateUserDTO';
+
+import { Base } from './shared/Base';
 
 export class User extends Base {
   name: string;
@@ -17,7 +19,9 @@ export class User extends Base {
     this.password = password;
   }
 
-  update({ id, avatar, email, enable, name, password }: IUpdateUserDTO) {
+  update({
+    id, avatar, email, enable, name, password,
+  }: IUpdateUserDTO) {
     this.id = id;
     this.name = name;
     this.email = email;
@@ -28,22 +32,22 @@ export class User extends Base {
   }
 
   setAvatar(avatar: string | null): void {
-    if(avatar) {
+    if (avatar) {
       this.avatar = avatar;
     }
   }
 
-  getAvatar() : string | null{
+  getAvatar() : string | null {
     return this.avatar;
   }
 
   setFileName(fileName: string | null): void {
-    if(fileName) {
+    if (fileName) {
       this.fileName = fileName;
     }
   }
 
-  getFileName() : string | null{
+  getFileName() : string | null {
     return this.fileName;
   }
 
