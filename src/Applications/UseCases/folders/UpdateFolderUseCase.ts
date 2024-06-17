@@ -61,7 +61,7 @@ export class UpdateFolderUseCase {
         this.calcSizeFoldersUseCase.execute(parentId);
 
       } else {
-        const folderPath = await this.foldersRepository.findFolderPath(`root/${displayName}`, userId);
+        const folderPath = await this.foldersRepository.findFolderPath(`root/${userId}/${displayName}`, userId);
         if (folderPath) {
           throw new AppError('The folder name already exists in dir. Please choose another name!', 400);
         }
@@ -69,7 +69,7 @@ export class UpdateFolderUseCase {
         const folder = new Folder({id, displayName, userId });
         
         folder.setParentFolder(null);
-        folder.setPath(`root/${displayName}`);
+        folder.setPath(`root/${userId}/${displayName}`);
         folder.setSize(findFolder.size);
         folder.setUpdatedAt(new Date());
 
