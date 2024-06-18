@@ -45,8 +45,8 @@ export class CreateFilesUseCase {
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: file.originalname,
-          Body: file.buffer,
+          Key: `${folderBelongingUser.path}/${file.originalname}`,
+          Body:file.buffer,
           ContentType: file.mimetype,
         }));
 

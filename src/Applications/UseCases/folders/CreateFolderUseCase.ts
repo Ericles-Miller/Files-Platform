@@ -15,13 +15,13 @@ export class CreateFolderUseCase {
 
   async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<Folders> {
     try {
-      const folder = new Folder({ displayName, id: null, userId });
-
-      if (parentId) {
-        const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, parentId);
-        if (!folderBelongingUser) {
-          throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
-        }
+      const folder = new Folder({ displayName, id: null, userId });    
+       
+    if(parentId) {
+      const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, parentId);
+      if(!folderBelongingUser) {
+        throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
+      }
 
         const parentFolder: Folders = await this.foldersRepository.findById(parentId);
         if (!parentFolder) {
@@ -40,13 +40,13 @@ export class CreateFolderUseCase {
         const newFolder : Folders = await this.foldersRepository.create(folder);
         return newFolder;
       }
-      const folderPath = await this.foldersRepository.findFolderPath(`/root/${displayName}`, userId);
+      const folderPath = await this.foldersRepository.findFolderPath(`/root/${userId}/${displayName}`, userId);
       if (folderPath) {
         throw new AppError('The folder name already exists in dir. Please choose another name!', 400);
       }
 
       folder.setParentFolder(null);
-      folder.setPath(`/root/${displayName}`);
+      folder.setPath(`/root/${userId}/${displayName}`);
       folder.setSize(0);
 
       const newFolder = await this.foldersRepository.create(folder);
