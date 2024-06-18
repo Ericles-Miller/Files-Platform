@@ -1,6 +1,8 @@
-import {S3Client} from '@aws-sdk/client-s3';
-import { AppError } from '@Domain/Exceptions/AppError';
 import dotenv from 'dotenv';
+
+import { S3Client } from '@aws-sdk/client-s3';
+import { AppError } from '@Domain/Exceptions/AppError';
+
 dotenv.config();
 
 const region = process.env.BUCKET_REGION;
@@ -13,10 +15,10 @@ if (!region || !accessKeyId || !secretAccessKey) {
 }
 
 export const s3 = new S3Client({
-  region: region,
+  region,
   credentials: {
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-  }
+    accessKeyId,
+    secretAccessKey,
+  },
 });
 

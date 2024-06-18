@@ -1,6 +1,7 @@
-import { AppError } from '@Domain/Exceptions/AppError';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
+
+import { AppError } from '@Domain/Exceptions/AppError';
 
 interface IPayload {
   sub: string;

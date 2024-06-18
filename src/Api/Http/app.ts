@@ -1,18 +1,21 @@
-import "reflect-metadata";
-import "express-async-errors";
-import express, { NextFunction, Request, Response } from "express";
-import * as path from 'path'; 
+import 'reflect-metadata';
+import 'express-async-errors';
+import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
 import * as fs from 'fs';
 import * as https from 'https';
+import * as path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import { router } from "./router";
-import cors from "cors";
-import { AppError } from "@Domain/Exceptions/AppError";
+
+import { AppError } from '@Domain/Exceptions/AppError';
+
 import swaggerFile from '../../../swagger.json';
+import { router } from './router';
+
 
 export const app = express();
 
-const certPath = path.resolve(__dirname, '../Http/SSL/code.crt'); 
+const certPath = path.resolve(__dirname, '../Http/SSL/code.crt');
 const keyPath = path.resolve(__dirname, '../Http/SSL/code.key');
 
 const options: https.ServerOptions = {
@@ -22,13 +25,13 @@ const options: https.ServerOptions = {
 
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 app.use(router);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 
-https.createServer(options, app).listen(3334, ()=> 'Server is running in https');
+https.createServer(options, app).listen(3334, () => 'Server is running in https');
 
 
 app.use(
@@ -39,7 +42,7 @@ app.use(
       });
     }
     return response.status(500).json({
-      status: "error",
+      status: 'error',
       message: `Internal server error - ${err.message}`,
     });
   },
