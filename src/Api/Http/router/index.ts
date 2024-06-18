@@ -1,8 +1,9 @@
+/* eslint-disable import-helpers/order-imports */
 import { Router } from 'express';
 
-import { authenticateRoutes } from './authenticated.routes';
 import { filesRouters } from './files.routes';
 import { foldersRoutes } from './folders.routes';
+import { authenticateRoutes } from './authenticated.routes';
 import { usersRoutes } from './users.routes';
 
 export const router = Router();

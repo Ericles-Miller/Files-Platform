@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata';
 import 'express-async-errors';
 import cors from 'cors';
@@ -32,7 +33,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 
 https.createServer(options, app).listen(3334, () => 'Server is running in https');
-
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
