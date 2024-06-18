@@ -49,19 +49,15 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
   async searchFolderByName({ displayName, userId, parentId }: ISearchFoldersDTO): Promise<Folders[]> {
     if (!parentId) {
       const folders: Folders[] = await prisma.$queryRaw`
-        SELECT * FROM public.folders
-          WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
-          and 'userId' like ${userId};
+        SELECT * FROM public.folders WHERE "displayName" ILIKE '%' || ${displayName} || '%' AND "userId" = ${userId};
       `;
       return folders;
     }
 
     const folders: Folders[] = await prisma.$queryRaw`
       SELECT * FROM public.folders
-        WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
-        and 'userId' like ${userId}
-        and 'parentId' like ${parentId};
-    `;
+        WHERE "displayName" ILIKE '%' || ${displayName} || '%' and "userId" = ${userId} AND "parentId" = ${parentId};
+      `;
 
     return folders;
   }

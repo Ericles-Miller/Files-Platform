@@ -38,17 +38,13 @@ export class FilesRepository extends BaseRepository<Files> implements IFilesRepo
   ) : Promise<Files[]> {
     if (!parentId) {
       const files: Files[] = await prisma.$queryRaw`
-        SELECT * FROM public.files
-            WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
-            and 'userId' like ${userId};
-        `;
+        SELECT * FROM public.files WHERE "displayName" ILIKE '%' || ${displayName} || '%' AND "userId" = ${userId};
+      `;
       return files;
     }
     const files: Files[] = await prisma.$queryRaw`
-      SELECT * FROM public.files
-        WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
-        and 'userId' like ${userId}
-        and 'folderId' like ${parentId};
+      SELECT * FROM public.files WHERE "displayName" ILIKE '%' || ${displayName} || '%' AND "userId" = ${userId} 
+        AND "folderId" = ${parentId};
     `;
     return files;
   }
