@@ -1,6 +1,7 @@
+import { Request, Response } from 'express';
+
 import { AuthenticateUserUseCase } from '@Applications/UseCases/auth/AuthenticatedUseCase';
 import { container } from '@IoC/index';
-import { Request, Response } from 'express';
 
 export class AuthenticateUserController {
   async handle(request: Request, response: Response): Promise<Response> {

@@ -1,15 +1,17 @@
-import { unzip } from '@Applications/Services/unzip';
-import { inject, injectable } from 'inversify';
-import { CreateFolderUseCase } from './CreateFolderUseCase';
-import path from 'path';
 import fs from 'fs';
-import { File } from '@Domain/Entities/File';
-import { s3 } from '@Applications/Services/awsS3';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { inject, injectable } from 'inversify';
+import path from 'path';
+
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { s3 } from '@Applications/Services/awsS3';
+import { unzip } from '@Applications/Services/unzip';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { File } from '@Domain/Entities/File';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { Folders } from '@prisma/client';
+
 import { CalcSizeFoldersUseCase } from './CalcSizeFoldersUseCase';
+import { CreateFolderUseCase } from './CreateFolderUseCase';
 
 
 @injectable()
@@ -26,13 +28,12 @@ export class UploadFolderUseCase {
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       await unzip(displayName);
-      const [nameFolder, ] = displayName.split('.');
+      const [nameFolder] = displayName.split('.');
 
       await this.uploadFoldersAndFiles(nameFolder, userId, parentId); // erro de permissao em win
-      
+
       const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${nameFolder}`);
       fs.unlinkSync(pathFolder);
-
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -54,18 +55,18 @@ export class UploadFolderUseCase {
       const rootPath = '/root';
       let pathFolder = folder.path.replace(rootPath, '');
       pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
-      
+
       const items = fs.readdirSync(pathFolder);
 
-      const folders = items.filter(item => fs.lstatSync(path.join(pathFolder, item)).isDirectory());
-      const files = items.filter(item => fs.lstatSync(path.join(pathFolder, item)).isFile());
+      const folders = items.filter((item) => fs.lstatSync(path.join(pathFolder, item)).isDirectory());
+      const files = items.filter((item) => fs.lstatSync(path.join(pathFolder, item)).isFile());
 
-      for (const file of files) {
+      files.map(async (file) => {
         const filepath = path.join(pathFolder, file);
-        const content = await fs.promises.readFile(filepath); 
+        const content = await fs.promises.readFile(filepath);
         const { size } = fs.statSync(filepath);
         const type = path.extname(filepath);
-       
+
 
         const createFile = new File({
           folderId: folder.id,
@@ -81,19 +82,19 @@ export class UploadFolderUseCase {
 
         await s3.send(new PutObjectCommand({
           Bucket: process.env.BUCKET_NAME,
-          Key: `${folder.path}/${file}`,  
+          Key: `${folder.path}/${file}`,
           Body: content,
-          ContentType: file
+          ContentType: file,
         }));
 
         await this.filesRepository.create(createFile);
         this.calcSizeFoldersUseCase.execute(folder.id);
-      }
+      });
 
-      for (const subFolder of folders) {
+      folders.map(async (subFolder) => {
         const subFolderName = path.basename(subFolder);
         await this.uploadFoldersAndFiles(subFolderName, userId, folder.id);
-      }
+      });
     } catch (error) {
       if (error instanceof AppError) {
         throw error;

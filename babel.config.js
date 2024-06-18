@@ -8,9 +8,9 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          "@Api": "./src/Api",
-          "@Applications": "./src/Applications",
-          "@Domain": "./src/Domain",
+          '@Api': './src/Api',
+          '@Applications': './src/Applications',
+          '@Domain': './src/Domain',
           '@Infra': './src/Infra',
           '@IoC': './src/IoC',
           '@UnitTests': './src/UnitTests',
@@ -22,9 +22,9 @@ module.exports = {
     ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],
   ignore: [
-    '**/*.spec.ts'
+    '**/*.spec.ts',
   ],
   overrides: [
     // ...
-  ]
+  ],
 };

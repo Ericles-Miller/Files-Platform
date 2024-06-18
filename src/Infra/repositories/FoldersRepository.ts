@@ -1,20 +1,22 @@
-import { BaseRepository } from './shared/BaseRepository';
-import { Folders, PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
+
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 import { prisma } from '@Infra/Database/database';
 import { ISearchFoldersDTO } from '@Infra/DTOs/folders/ISearchFoldersDTO';
-import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { Folders, PrismaClient } from '@prisma/client';
+
+import { BaseRepository } from './shared/BaseRepository';
 
 
 @injectable()
 export class FoldersRepository extends BaseRepository<Folders> implements IFoldersRepository {
   constructor(
     @inject('PrismaClient')
-    prisma: PrismaClient,
-  ) { super(prisma.folders) }
+      prisma: PrismaClient,
+  ) { super(prisma.folders); }
 
   async checkNameFolderAlreadyExits(displayName: string): Promise<Folders | null> {
-    const folder = await prisma.folders.findFirst({where : { displayName }});
+    const folder = await prisma.folders.findFirst({ where: { displayName } });
     return folder;
   }
 
@@ -25,22 +27,22 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
 
 
   async folderBelongingUser(userId: string, id: string) : Promise<Folders | null> {
-    const folder = await prisma.folders.findFirst({ where: {id, userId } });
+    const folder = await prisma.folders.findFirst({ where: { id, userId } });
     return folder;
   }
-  
+
   async listFoldersWithoutParent(userId: string) : Promise<Folders[]> {
-    const folders = await prisma.folders.findMany({ where: { parentId : null, userId }});
+    const folders = await prisma.folders.findMany({ where: { parentId: null, userId } });
     return folders;
   }
 
-  async foldersByUsers(userId: string) : Promise<Folders[]> { /// list all folders to frontEnd
-    const folders = await prisma.folders.findMany({where : { userId }});
+  async foldersByUsers(userId: string) : Promise<Folders[]> {
+    const folders = await prisma.folders.findMany({ where: { userId } });
     return folders;
   }
 
   async findFoldersChildren(parentId: string, userId: string): Promise<Folders[]> {
-    const folders = await prisma.folders.findMany({ where: { parentId, userId }});
+    const folders = await prisma.folders.findMany({ where: { parentId, userId } });
     return folders;
   }
 
@@ -52,15 +54,15 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
           and 'userId' like ${userId};
       `;
       return folders;
-    }      
-  
+    }
+
     const folders: Folders[] = await prisma.$queryRaw`
       SELECT * FROM public.folders
         WHERE 'displayName' ILIKE '%' || ${displayName} || '%'
         and 'userId' like ${userId}
         and 'parentId' like ${parentId};
     `;
-        
+
     return folders;
   }
 }

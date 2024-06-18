@@ -1,14 +1,15 @@
-import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
-import { IListUsersDTO } from '@Infra/DTOs/users/IListUsersDto';
 import { inject, injectable } from 'inversify';
-import {GetObjectCommand} from '@aws-sdk/client-s3';
-import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
+
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { s3 } from '@Applications/Services/awsS3';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { AppError } from '@Domain/Exceptions/AppError';
+import { IListUsersDTO } from '@Infra/DTOs/users/IListUsersDto';
 
 
 @injectable()
-export class ListUsersUseCase { 
+export class ListUsersUseCase {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -19,13 +20,13 @@ export class ListUsersUseCase {
       const users = await this.usersRepository.listAll();
 
       const listAllUsers = Promise.all(users.map(async (user) => {
-        if(user.avatar) {
+        if (user.avatar) {
           const getAvatar = new GetObjectCommand({
             Bucket: process.env.BUCKET_NAME,
             Key: user.avatar,
           });
-    
-          const url = await getSignedUrl(s3, getAvatar, {expiresIn : 3600});
+
+          const url = await getSignedUrl(s3, getAvatar, { expiresIn: 3600 });
           const listUser : IListUsersDTO = {
             id: user.id,
             createdAt: user.createdAt,
@@ -33,9 +34,9 @@ export class ListUsersUseCase {
             enable: user.enable,
             updatedAt: user.updatedAt,
             name: user.name,
-            avatar: url
-          }
-          return listUser
+            avatar: url,
+          };
+          return listUser;
         }
 
         const listUser : IListUsersDTO = {
@@ -45,16 +46,16 @@ export class ListUsersUseCase {
           enable: user.enable,
           updatedAt: user.updatedAt,
           name: user.name,
-          avatar: ''
+          avatar: '',
         };
 
-        return listUser
-      }))
+        return listUser;
+      }));
 
       return listAllUsers;
     } catch (error) {
-      if(error instanceof AppError) {
-        throw error
+      if (error instanceof AppError) {
+        throw error;
       }
       console.log(error);
       throw new AppError(`Unexpected server error!`, 500);

@@ -1,13 +1,16 @@
 import { injectable } from 'inversify';
-import { Files, Folders, RefreshTokens, Users, } from '@prisma/client';
-import { RepositoryType } from '@Infra/Database/database';
+
 import { IBaseRepository } from '@Applications/Interfaces/repositories/shared/IBaseRepository';
+import { RepositoryType } from '@Infra/Database/database';
+import {
+  Files, Folders, RefreshTokens, Users,
+} from '@prisma/client';
 
 @injectable()
 export class BaseRepository<T extends Users | Files | Folders | RefreshTokens> implements IBaseRepository<T> {
   protected readonly repository: RepositoryType<T>;
 
-  constructor(repository: RepositoryType<T> ) {  
+  constructor(repository: RepositoryType<T>) {
     this.repository = repository;
   }
 
@@ -43,11 +46,11 @@ export class BaseRepository<T extends Users | Files | Folders | RefreshTokens> i
   }
 
   async delete(id: string) : Promise<void> {
-    await this.repository.delete({ where: { id }}); 
+    await this.repository.delete({ where: { id } });
   }
 
   async findManyById(id: string): Promise<T[]> {
-    const context = await this.repository.findMany({ where: { id }});
+    const context = await this.repository.findMany({ where: { id } });
     return context;
   }
 }

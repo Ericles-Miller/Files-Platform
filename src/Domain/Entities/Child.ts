@@ -4,7 +4,7 @@ export class Child extends Base {
   folderId: string;
 
   constructor(folderId : string, id: string | null) {
-    super(id)
+    super(id);
     this.folderId = folderId;
   }
 }

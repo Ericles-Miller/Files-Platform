@@ -1,35 +1,37 @@
+import { inject, injectable } from 'inversify';
+
+import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
+import { s3 } from '@Applications/Services/awsS3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { File } from '@Domain/Entities/File';
 import { AppError } from '@Domain/Exceptions/AppError';
-import { inject, injectable } from 'inversify';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { s3 } from '@Applications/Services/awsS3'
-import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { ICreateFileDTO } from '@Infra/DTOs/Files/ICreateFileDTO';
+
 import { CalcSizeFoldersUseCase } from '../folders/CalcSizeFoldersUseCase';
-import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 
 
 @injectable()
 export class CreateFilesUseCase {
-  constructor (
+  constructor(
     @inject('FoldersRepository')
     private foldersRepository: IFoldersRepository,
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
     @inject(CalcSizeFoldersUseCase)
-    private calcSizeFoldersUseCase : CalcSizeFoldersUseCase
+    private calcSizeFoldersUseCase : CalcSizeFoldersUseCase,
   ) {}
 
   async execute({ file, folderId, userId }: ICreateFileDTO) : Promise<void> {
-      try {
-        if(folderId && file) {
+    try {
+      if (folderId && file) {
         const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, folderId);
-        if(!folderBelongingUser) {
+        if (!folderBelongingUser) {
           throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
         }
-        
-        const newFile = new File({ 
-          displayName: file.originalname, fileName:file.originalname, folderId, id: null, userId 
+
+        const newFile = new File({
+          displayName: file.originalname, fileName: file.originalname, folderId, id: null, userId,
         });
 
         newFile.setSize(file.size);
@@ -37,7 +39,7 @@ export class CreateFilesUseCase {
         newFile.setPath(`${folderBelongingUser.path}`);
 
         const filePath = await this.filesRepository.findPathWitSameName(newFile.folderPath, userId);
-        if(filePath){
+        if (filePath) {
           throw new AppError('The file name already exists in dir. Please choose another name!', 400);
         }
 
@@ -50,9 +52,9 @@ export class CreateFilesUseCase {
 
         await this.filesRepository.create(newFile);
         this.calcSizeFoldersUseCase.execute(folderId);
-      } 
+      }
     } catch (error) {
-      if(error instanceof AppError) {
+      if (error instanceof AppError) {
         throw error;
       }
       throw new AppError('Unexpected server error!', 500);
