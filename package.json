@@ -18,6 +18,7 @@
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/file-type": "^10.9.1",
+    "@types/inversify": "^2.0.33",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
     "@types/multer-s3": "^3.0.3",
