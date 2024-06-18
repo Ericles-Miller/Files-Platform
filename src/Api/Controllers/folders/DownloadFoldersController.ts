@@ -8,8 +8,6 @@ export class DownloadFoldersController {
   async handle(request: Request, response: Response) : Promise<any> {
     const { folderId } = request.params;
     const { userId } = request;
-    console.log(folderId, userId);
-
 
     const downloadFolderUseCase = container.get(DownloadFolderUseCase);
 

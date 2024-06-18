@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 
+import { IFileData } from '@Applications/Interfaces/files/IFileData';
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { s3 } from '@Applications/Services/awsS3';
 import { streamToBuffer } from '@Applications/Services/stream';
@@ -14,7 +15,7 @@ export class DownloadFilesUseCase {
     private filesRepository: IFilesRepository,
   ) {}
 
-  async execute(userId: string, fileId: string) : Promise<any> {
+  async execute(userId: string, fileId: string) : Promise<IFileData> {
     try {
       const file: Files = await this.filesRepository.findById(fileId);
       if (!file) {
