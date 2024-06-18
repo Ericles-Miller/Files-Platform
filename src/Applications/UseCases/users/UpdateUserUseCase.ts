@@ -2,13 +2,13 @@ import { inject, injectable } from 'inversify';
 
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { s3 } from '@Applications/Services/awsS3';
+import { validationsFields } from '@Applications/Services/users/validateFields';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { IUpdateUserFileDTO } from '@Infra/DTOs/users/IUpdateUserFileDTO';
 import { Users } from '@prisma/client';
-import { s3 } from '@Applications/Services/awsS3';
-import { validationsFields } from '@Applications/Services/users/validateFields';
+
 
 @injectable()
 export class UpdateUserUseCase {
@@ -17,8 +17,10 @@ export class UpdateUserUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({ enable, id, name, password, file }: IUpdateUserFileDTO) : Promise<void> {
-    try { 
+  async execute({
+    enable, id, name, password, file,
+  }: IUpdateUserFileDTO) : Promise<void> {
+    try {
       validationsFields({ name, password });
       const findUser: Users = await this.usersRepository.findById(id);
       if (!findUser) {
