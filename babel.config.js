@@ -13,7 +13,7 @@ module.exports = {
           '@Domain': './src/Domain',
           '@Infra': './src/Infra',
           '@IoC': './src/IoC',
-          '@UnitTests': './src/UnitTests',
+          '@Tests': './src/Tests',
         },
       },
     ],

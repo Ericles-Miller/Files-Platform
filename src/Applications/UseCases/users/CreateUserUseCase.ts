@@ -42,7 +42,7 @@ export class CreateUserUseCase {
       }
 
       await user.setPassword(user.password);
-      await this.usersRepository.create(user);
+      const newUser = await this.usersRepository.create(user);
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
