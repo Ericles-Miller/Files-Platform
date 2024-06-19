@@ -7,6 +7,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { IRequestDTO } from '@Infra/DTOs/users/IRequestDTO';
+import { addEmailToQueue } from '@Jobs/producer';
 
 
 @injectable()
@@ -43,6 +44,8 @@ export class CreateUserUseCase {
 
       await user.setPassword(user.password);
       await this.usersRepository.create(user);
+
+      addEmailToQueue(email);
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
