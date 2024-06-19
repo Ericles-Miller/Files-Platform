@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
+import { IPayload } from '@Applications/Interfaces/auth/IPayload';
 import { AppError } from '@Domain/Exceptions/AppError';
 
-interface IPayload {
-  sub: string;
-}
 
 export async function ensureAuthenticated(
   request: Request, response: Response, next: NextFunction,
 ) {
-  const authToken = request.headers.authorization; // recebe o dado via header
+  const authToken = request.headers.authorization;
   if (!authToken) {
     return response.status(401).json({ message: 'Token is missing!' });
   }
@@ -19,8 +17,7 @@ export async function ensureAuthenticated(
   const secretToken = process.env.SECRET_TOKEN_USER;
   if (secretToken) {
     try {
-      // verifico se o token e valido
-      const { sub } = verify(token, secretToken) as IPayload; // chave de criptografia
+      const { sub } = verify(token, secretToken) as IPayload;
 
       request.userId = sub;
       return next();

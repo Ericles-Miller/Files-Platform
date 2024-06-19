@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { s3 } from '@Applications/Services/awsS3';
+import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfimationToken';
 import { validationsFields } from '@Applications/Services/users/validateFields';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';
@@ -43,9 +44,11 @@ export class CreateUserUseCase {
       }
 
       await user.setPassword(user.password);
-      await this.usersRepository.create(user);
+      const newUser = await this.usersRepository.create(user);
 
-      addEmailToQueue(email);
+      const token = generateConfirmationToken(newUser.id);
+
+      addEmailToQueue({ email, name, token });
     } catch (error) {
       if (error instanceof AppError) {
         throw error;

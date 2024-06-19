@@ -7,6 +7,7 @@ import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRe
 import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/GenerateRefreshToken';
 import { AuthenticateUserUseCase } from '@Applications/UseCases/auth/AuthenticatedUseCase';
 import { RefreshTokenUserUseCase } from '@Applications/UseCases/auth/RefreshTokenUserUseCase';
+import { ConfirmEmailUseCase } from '@Applications/UseCases/email/ConfirmEmailUseCase';
 import { CreateFilesUseCase } from '@Applications/UseCases/files/CreateFilesUseCase';
 import { DeleteFilesUseCase } from '@Applications/UseCases/files/DeleteFilesUseCase';
 import { DownloadFilesUseCase } from '@Applications/UseCases/files/DownloadFilesUseCase';
@@ -82,4 +83,5 @@ container.bind<DownloadFilesUseCase>(DownloadFilesUseCase).toSelf();
 container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase).toSelf();
 container.bind<GenerateRefreshToken>(GenerateRefreshToken).toSelf();
 container.bind<RefreshTokenUserUseCase>(RefreshTokenUserUseCase).toSelf();
+container.bind<ConfirmEmailUseCase>(ConfirmEmailUseCase).toSelf();
 

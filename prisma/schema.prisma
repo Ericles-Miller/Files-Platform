@@ -31,7 +31,7 @@ model Users {
   password      String
   createdAt     DateTime        @default(now())
   updatedAt     DateTime?       @default(now())
-  enable        Boolean         @default(true)
+  enable        Boolean         @default(false)
   avatar        String?
   fileName      String?
   files         Files[]

@@ -1,7 +1,7 @@
 import amqp from 'amqplib';
 
 import { IEmailMessage } from '@Applications/Interfaces/email/IEmailMessage';
-import { sendEmail } from '@Applications/Services/users/SendEmail';
+import { sendEmail } from '@Applications/Services/email/SendEmail';
 
 export async function receiveMessages(): Promise<void> {
   try {
@@ -14,11 +14,10 @@ export async function receiveMessages(): Promise<void> {
 
     channel.consume(queue, async (msg) => {
       if (msg !== null) {
-        const { email } = JSON.parse(msg.content.toString()) as IEmailMessage;
+        const { email, name, token } = JSON.parse(msg.content.toString()) as IEmailMessage;
         console.log(' [x] Received \'%s\'', email);
 
-        await sendEmail(email);
-
+        await sendEmail(email, name, token);
         channel.ack(msg);
       }
     });
