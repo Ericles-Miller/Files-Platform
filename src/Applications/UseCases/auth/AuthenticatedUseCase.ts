@@ -4,10 +4,10 @@ import { inject, injectable } from 'inversify';
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/GenerateRefreshToken';
 import { GenerateTokenProvider } from '@Applications/Services/auth/middlewares/GenerateTokenProvider';
+import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { container } from '@IoC/index';
 import { addEmailToQueue } from '@Jobs/producer';
-import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
 
 interface IResponse {
   refreshToken: {
