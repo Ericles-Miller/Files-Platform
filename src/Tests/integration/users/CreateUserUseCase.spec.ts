@@ -14,13 +14,16 @@ import { CreateUserUseCase } from '@Applications/UseCases/users/CreateUserUseCas
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
+import { UsersRepository } from '@Infra/repositories/UsersRepository';
+import { PrismaClient } from '@prisma/client';
 
 vi.mock('@Applications/Services/awsS3');
-
+vi.mock('@Infra/repositories/UsersRepository');
 
 describe('Users UseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   let usersRepository: IUsersRepository;
+
 
   beforeEach(() => {
     usersRepository = mock<IUsersRepository>();
@@ -37,18 +40,17 @@ describe('Users UseCase', () => {
     const user = new User('Test User', 'test@example.com', 'password123', null);
 
     user.setAvatar('avatar.png');
-    user.setEnable(false);
+    user.setEnable(true);
     user.setFileName('avatar.png');
     user.setPassword(user.password);
 
     when(usersRepository.checkEmailAlreadyExist(user.email)).thenResolve(null);
-    when(usersRepository.create(expect.anything())).thenResolve();
+    when(usersRepository.create(expect.objectContaining(user))).thenResolve(User);
 
-    await createUserUseCase.execute(user);
+    await createUserUseCase.execute({ email: user.email, name: user.name, password: user.password });
 
-    verify(usersRepository.checkEmailAlreadyExist(user.email)).once(); // chamado exatamente uma vez com o argumento
-    // verify(usersRepository.create(expect.anything())).once(); // Verifica se o método create do mock
-    /// usersRepository foi chamado exatamente uma vez com qualquer argumento.
+    verify(usersRepository.checkEmailAlreadyExist(user.email)).once(); // chamado exatamente uma vez com o argumento once
+    verify(usersRepository.create(expect.objectContaining(user))).once();
 
     if (file?.buffer) {
       expect(PutObjectCommand).toHaveBeenCalledWith({
@@ -58,6 +60,12 @@ describe('Users UseCase', () => {
         ContentType: file.mimetype,
       });
     }
+
+    const [createdUser] = capture(usersRepository.create).last();
+    expect(createdUser).toBeInstanceOf(User);
+    expect(createdUser.email).toBe(user.email);
+    expect(createdUser.name).toBe(user.name);
+    expect(createdUser.password).not.toBe(user.password);
   });
 
   it('should throw an error if user already exists', async () => {

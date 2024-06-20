@@ -26,8 +26,10 @@ export class CreateUserUseCase {
       if (userAlreadyExists) {
         throw new AppError('User already exists with email!', 400);
       }
+      console.log('1');
 
       const user = new User(name, email, password, null);
+      console.log('2');
 
       if (file) {
         user.setAvatar(file.originalname);
@@ -40,6 +42,7 @@ export class CreateUserUseCase {
           ContentType: file.mimetype,
         }));
       }
+      console.log(3);
 
       await user.setPassword(user.password);
       const newUser = await this.usersRepository.create(user);
