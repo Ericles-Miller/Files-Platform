@@ -6,6 +6,8 @@ import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/Ge
 import { GenerateTokenProvider } from '@Applications/Services/auth/middlewares/GenerateTokenProvider';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { container } from '@IoC/index';
+import { addEmailToQueue } from '@Jobs/producer';
+import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
 
 interface IResponse {
   refreshToken: {
@@ -35,6 +37,11 @@ export class AuthenticateUserUseCase {
         throw new AppError('Email or password is incorrect!', 404);
       }
 
+      if (!user.enable) {
+        this.ActiveAccount(user.email, user.name, user.id);
+        throw new AppError('Your account is disable. Please confirm in your email to active account!', 400);
+      }
+
       const generateTokenProvider = new GenerateTokenProvider();
       const token = await generateTokenProvider.execute(user.id);
 
@@ -49,5 +56,10 @@ export class AuthenticateUserUseCase {
       console.log(error);
       throw new AppError('Unexpected server error!', 500);
     }
+  }
+
+  private ActiveAccount(email: string, name: string, id: string): void {
+    const token = generateConfirmationToken(id);
+    addEmailToQueue({ email, name, token });
   }
 }

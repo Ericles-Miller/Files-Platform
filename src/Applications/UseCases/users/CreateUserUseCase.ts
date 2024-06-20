@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { s3 } from '@Applications/Services/awsS3';
-import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfimationToken';
+import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
 import { validationsFields } from '@Applications/Services/users/validateFields';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { User } from '@Domain/Entities/User';

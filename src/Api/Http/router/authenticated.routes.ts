@@ -12,4 +12,4 @@ const confirmEmailController = new ConfirmEmailController();
 
 authenticateRoutes.post('/refreshToken', refreshTokenController.handle);
 authenticateRoutes.post('/user', authenticateUserController.handle);
-authenticateRoutes.get('accountsConfirm/:token', confirmEmailController.handle);
+authenticateRoutes.get('/accountsConfirm/:token', confirmEmailController.handle);
