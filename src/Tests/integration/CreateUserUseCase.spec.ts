@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import 'reflect-metadata';
 import 'express-async-errors';
 
@@ -5,7 +6,7 @@ import {
   mock, instance, when, verify, reset, capture,
 } from 'ts-mockito';
 import {
-  test, expect, describe, vi, afterEach, it, beforeEach,
+  expect, describe, vi, afterEach, it, beforeEach,
 } from 'vitest';
 
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
@@ -47,7 +48,7 @@ describe('Users UseCase', () => {
 
     verify(usersRepository.checkEmailAlreadyExist(user.email)).once(); // chamado exatamente uma vez com o argumento
     // verify(usersRepository.create(expect.anything())).once(); // Verifica se o método create do mock
-    // usersRepository foi chamado exatamente uma vez com qualquer argumento.
+    /// usersRepository foi chamado exatamente uma vez com qualquer argumento.
 
     if (file?.buffer) {
       expect(PutObjectCommand).toHaveBeenCalledWith({
