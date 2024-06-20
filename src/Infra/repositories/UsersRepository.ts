@@ -20,4 +20,8 @@ export class UsersRepository extends BaseRepository<Users> implements IUsersRepo
 
     return user;
   }
+
+  async setUserTrue(id: string): Promise<void> {
+    await prisma.users.update({ where: { id }, data: { enable: true } });
+  }
 }
