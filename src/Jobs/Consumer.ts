@@ -1,6 +1,7 @@
 import amqp from 'amqplib';
 
 import { IEmailMessage } from '@Applications/Interfaces/email/IEmailMessage';
+import { resetPasswordByEmail } from '@Applications/Services/email/resetPasswordByEmail';
 import { sendEmail } from '@Applications/Services/email/SendEmail';
 
 export async function receiveMessages(): Promise<void> {
@@ -14,11 +15,16 @@ export async function receiveMessages(): Promise<void> {
 
     channel.consume(queue, async (msg) => {
       if (msg !== null) {
-        const { email, name, token } = JSON.parse(msg.content.toString()) as IEmailMessage;
+        const {
+          email, name, token, method,
+        } = JSON.parse(msg.content.toString()) as IEmailMessage;
         console.log(' [x] Received \'%s\'', email);
-
-        await sendEmail(email, name, token);
-        channel.ack(msg);
+        if (method !== 'Reset Password') {
+          await sendEmail(email, name, token);
+          channel.ack(msg);
+        } else {
+          resetPasswordByEmail({ email, name, token });
+        }
       }
     });
   } catch (error) {
