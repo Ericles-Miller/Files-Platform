@@ -16,13 +16,10 @@ export class GenerateRefreshToken {
     const now = new Date();
     const futureTime = addMinutes(now, 15);
     const expiresIn = getTime(futureTime) / 1000;
-    console.log((1));
 
     const refreshToken = new RefreshToken(userId, expiresIn);
-    console.log(2);
 
     const generateRefreshToken = await this.refreshTokenRepository.create(refreshToken);
-    console.log(3, generateRefreshToken);
 
     return generateRefreshToken;
   }
