@@ -51,7 +51,7 @@ export class CreateUserUseCase {
 
       const token = generateConfirmationToken(newUser.id);
 
-      addEmailToQueue({ email, name, token });
+      // addEmailToQueue({ email, name, token });
     } catch (error) {
       if (error instanceof AppError) {
         throw error;

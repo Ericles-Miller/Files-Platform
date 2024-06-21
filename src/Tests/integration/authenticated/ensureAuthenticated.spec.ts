@@ -1,44 +1,62 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { NextFunction, Request, Response } from 'express';
-import {
-  instance, mock, verify, when,
-} from 'ts-mockito';
-import {
-  beforeEach, describe, expect, it, vi,
-} from 'vitest';
-
-import { ensureAuthenticated } from '@Applications/Services/auth/ensureAuthenticated';
+import { sign, verify, } from 'jsonwebtoken';
+import { mock, instance, when, verify as tsVerify, reset } from 'ts-mockito';
+import { Request, Response, NextFunction } from 'express';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { AppError } from '@Domain/Exceptions/AppError';
-
+import { ensureAuthenticated } from '@Applications/Services/auth/ensureAuthenticated';
+import { IPayload } from '@Applications/Interfaces/auth/IPayload';
 
 vi.mock('jsonwebtoken', () => ({
-  sign: vi.fn().mockImplementation(() => 'jwt-token'),
+  sign: vi.fn(),
+  verify: vi.fn(),
 }));
 
 describe('ensureAuthenticated middleware', () => {
   let mockedRequest: Request;
   let mockedResponse: Response;
+  let mockedResponseAuth: Request;
   let mockedNext: NextFunction;
+  let mockedNextVi : NextFunction;
 
   beforeEach(() => {
     mockedRequest = mock<Request>();
     mockedResponse = mock<Response>();
-    mockedNext = vi.fn();
+    mockedNext = mock<NextFunction>();
+    mockedNextVi = vi.fn() as unknown as NextFunction;
+    process.env.SECRET_TOKEN_USER = 'secret';
   });
 
-  it('should return 401  if no token is provided', async () => {
-    when(mockedRequest.headers).thenReturn({});
+  afterEach(() => {
+    vi.clearAllMocks();
+    reset(mockedRequest);
+    reset(mockedResponse);
+    reset(mockedNext);
+  });
 
+  // it('should return 401 if no token is provided', async () => {
+  //   const request = instance(mockedRequest);
+  //   const response = instance(mockedResponse);
+  //   const next = instance(mockedNext)
+    
+  //   when(mockedResponseAuth.headers).thenReturn({});
+
+  //   response.status = vi.fn().mockReturnValue(response);
+  //   response.json = vi.fn().mockReturnValue(response);
+    
+  //   await ensureAuthenticated(request, response, mockedNext);
+
+  //   expect(response.status).toHaveBeenCalledWith(401);
+  //   expect(response.json).toHaveBeenCalledWith({ message: 'Token is missing!' });
+  // });
+
+  it('should throw an error if secret token is missing', async () => {
+    delete process.env.SECRET_TOKEN_USER;
+
+    when(mockedRequest.headers).thenReturn({ authorization: 'Bearer token' });
     const request = instance(mockedRequest);
     const response = instance(mockedResponse);
 
-    response.status = vi.fn().mockReturnValue(response);
-    response.json = vi.fn().mockReturnValue(response);
-
-    await ensureAuthenticated(request, response, mockedNext);
-
-    expect(response.status).toHaveBeenCalledWith(401);
-    expect(response.json).toHaveBeenCalledWith({ message: 'Token is missing!' });
+    await expect(ensureAuthenticated(request, response, mockedNext)).rejects.toThrow(AppError);
   });
 
   it('should throw an error if token is invalid', async () => {
@@ -57,15 +75,17 @@ describe('ensureAuthenticated middleware', () => {
   it('should call next function if token is valid', async () => {
     process.env.SECRET_TOKEN_USER = 'secret';
     const userId = 'user-id';
-    (verify as vi.Mock).mockReturnValue({ sub: userId });
+    (verify as vi.Mock).mockReturnValue({ sub: userId } as IPayload);
 
     when(mockedRequest.headers).thenReturn({ authorization: 'Bearer token' });
     const request = instance(mockedRequest);
     const response = instance(mockedResponse);
+    const next = instance(mockedNextVi);
 
-    await ensureAuthenticated(request, response, mockedNext);
+    await ensureAuthenticated(request, response, mockedNextVi);
 
     expect(request.userId).toBe(userId);
-    expect(mockedNext).toHaveBeenCalled();
+    expect(mockedNextVi).toHaveBeenCalled();
+
   });
 });

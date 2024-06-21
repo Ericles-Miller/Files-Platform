@@ -12,9 +12,11 @@ export async function ensureAuthenticated(
   if (!authToken) {
     return response.status(401).json({ message: 'Token is missing!' });
   }
+  console.log(authToken);
 
   const [, token] = authToken.split(' ');
   const secretToken = process.env.SECRET_TOKEN_USER;
+
   if (secretToken) {
     try {
       const { sub } = verify(token, secretToken) as IPayload;
