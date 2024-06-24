@@ -802,7 +802,82 @@
         }
       }
     },
-
+    "/folders/upload": {
+      "post": {
+        "summary": "Upload Folder",
+        "tags": ["Folders"],
+        "description": "Upload folder by zip file",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "folderZip": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload",
+                    "encoding": {
+                      "folderZip": {
+                        "contentType": "application/zip"
+                      }
+                    }
+                  }
+                },
+                "required": ["folderZip"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderBelongUser": {
+                    "summary": "Folder does not belong to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "folderAlreadyExists": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "file different zip": {
+                    "value": "The file must be of the zip type!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "200": {
+            "description": "Upload completed successfully!"
+          }
+        }
+      }
+    },
     "/files": {
       "post": {
         "tags": ["Files"],
