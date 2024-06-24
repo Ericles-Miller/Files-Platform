@@ -4,6 +4,7 @@ import path from 'path';
 import rimraf from 'rimraf';
 
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 import { s3 } from '@Applications/Services/awsS3';
 import { unzip } from '@Applications/Services/unzip';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
@@ -24,6 +25,8 @@ export class UploadFolderUseCase {
     private createFolderUseCase: CreateFolderUseCase,
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
+    @inject('FoldersRepository')
+    private foldersRepository: IFoldersRepository,
   ) {}
 
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
@@ -47,15 +50,26 @@ export class UploadFolderUseCase {
   private async uploadFoldersAndFiles(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       let folder : Folders;
+      let rootPath;
+      let pathFolder;
+
       if (parentId) {
+        const parentFolder: Folders = await this.foldersRepository.findById(parentId);
+        if (!parentFolder) {
+          throw new AppError('The folderId does not exists', 404);
+        }
+
         folder = await this.createFolderUseCase.execute({ displayName, parentId, userId });
+        rootPath = `/root/${userId}/${parentFolder.displayName}`;
+        pathFolder = folder.path.replace(rootPath, `/${userId}`);
+        pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
       } else {
         folder = await this.createFolderUseCase.execute({ displayName, userId, parentId: null });
+        rootPath = `/root`;
+        pathFolder = folder.path.replace(rootPath, '');
+        pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
       }
 
-      const rootPath = `/root`;
-      let pathFolder = folder.path.replace(rootPath, '');
-      pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
 
       const items = fs.readdirSync(pathFolder);
 
