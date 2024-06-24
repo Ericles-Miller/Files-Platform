@@ -30,4 +30,8 @@ foldersRoutes.delete('/:folderId', ensureAuthenticated, deleteFolderController.h
 foldersRoutes.patch('/:id', ensureAuthenticated, updateFolderController.handle);
 foldersRoutes.get('/listAllFoldersByUser', ensureAuthenticated, listAllFoldersToUserController.handle);
 foldersRoutes.get('/download/:folderId', ensureAuthenticated, downloadFoldersController.handle);
-foldersRoutes.post('/upload', folderUpload.single('folderZip'), uploadFolderController.handle); // without router in swagger
+foldersRoutes.post('/upload',
+  ensureAuthenticated,
+  folderUpload.single('folderZip'),
+  uploadFolderController.handle,
+); // without router in swagger
