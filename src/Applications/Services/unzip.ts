@@ -6,12 +6,12 @@ import * as path from 'path';
 import { AppError } from '@Domain/Exceptions/AppError';
 
 
-export async function unzip(nameFile: string): Promise<void> {
+export async function unzip(nameFile: string, userId: string): Promise<void> {
   try {
     const dirZip = path.join(__dirname, `../../../tmp/${nameFile}`);
     const zip = new admZip(dirZip);
 
-    const outputDir = path.join(__dirname, '../../../tmp/unzipFolders');
+    const outputDir = path.join(__dirname, `../../../tmp/unzipFolders/${userId}`);
     zip.extractAllTo(outputDir, true);
 
     fs.unlink(dirZip, (err) => {

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { inject, injectable } from 'inversify';
 import path from 'path';
+import rimraf from 'rimraf';
 
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
 import { s3 } from '@Applications/Services/awsS3';
@@ -27,13 +28,13 @@ export class UploadFolderUseCase {
 
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
-      await unzip(displayName);
+      await unzip(displayName, userId);
       const [nameFolder] = displayName.split('.');
 
-      await this.uploadFoldersAndFiles(nameFolder, userId, parentId); // erro de permissao em win
+      await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
 
-      const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${nameFolder}`);
-      fs.unlinkSync(pathFolder);
+      const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${nameFolder}`);
+      rimraf.sync(pathFolder);
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -52,7 +53,7 @@ export class UploadFolderUseCase {
         folder = await this.createFolderUseCase.execute({ displayName, userId, parentId: null });
       }
 
-      const rootPath = '/root';
+      const rootPath = `/root`;
       let pathFolder = folder.path.replace(rootPath, '');
       pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
 
@@ -61,7 +62,7 @@ export class UploadFolderUseCase {
       const folders = items.filter((item) => fs.lstatSync(path.join(pathFolder, item)).isDirectory());
       const files = items.filter((item) => fs.lstatSync(path.join(pathFolder, item)).isFile());
 
-      files.map(async (file) => {
+      await Promise.all(files.map(async (file) => {
         const filepath = path.join(pathFolder, file);
         const content = await fs.promises.readFile(filepath);
         const { size } = fs.statSync(filepath);
@@ -89,12 +90,12 @@ export class UploadFolderUseCase {
 
         await this.filesRepository.create(createFile);
         this.calcSizeFoldersUseCase.execute(folder.id);
-      });
+      }));
 
-      folders.map(async (subFolder) => {
+      await Promise.all(folders.map(async (subFolder) => {
         const subFolderName = path.basename(subFolder);
         await this.uploadFoldersAndFiles(subFolderName, userId, folder.id);
-      });
+      }));
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
