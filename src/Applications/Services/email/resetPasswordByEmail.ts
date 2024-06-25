@@ -4,7 +4,7 @@ import { AppError } from '@Domain/Exceptions/AppError';
 import { Mailer } from '@Jobs/Mailer';
 
 export async function resetPasswordByEmail({ email, name, token } : IEmailMessage) : Promise<void> {
-  const url = `${process.env.PATH_RESET_PASSWORD}${token}`;
+  const url = `${process.env.PATH_RESET_PASSWORD}/${token}`;
   const subject = 'Reset your password on All Safe Cloud Platform';
   const from = process.env.EMAIL_LOGIN;
   const to = email;
@@ -12,7 +12,7 @@ export async function resetPasswordByEmail({ email, name, token } : IEmailMessag
     <p>We have received a request to reset your account password on <strong>All Safe Cloud Platform</strong>.</p>
     
     <p>To reset your password:</p>
-    <p>Click the following link: <a href="${url}>Reset Password</a></p>
+    <p>Click the following link: <a href="${url}">Reset Password</a></p>
     <p>Follow the on-screen instructions to create a new password.</p>
     
     <p>Why did you receive this email?</p>

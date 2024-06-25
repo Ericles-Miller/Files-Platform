@@ -5,13 +5,23 @@ import { container } from '@IoC/index';
 
 
 export class ResetPasswordController {
-  async handle(request: Request, response: Response) : Promise<Response> {
-    const { email } = request.params;
+  async handle(request: Request, response: Response): Promise<Response> {
+    const { email, password, confirmPassword } = request.body;
 
     const resetPasswordUseCase = container.get(ResetPasswordUseCase);
 
-    await resetPasswordUseCase.execute(email);
+    await resetPasswordUseCase.execute(email, password, confirmPassword);
 
-    return response.status(200).send();
+    return response.status(201).send();
+  }
+
+  async getResetPassword(request: Request, response: Response): Promise<Response> {
+    const { userId } = request;
+
+    const resetPasswordUseCase = container.get(ResetPasswordUseCase);
+
+    await resetPasswordUseCase.getReset(userId);
+
+    return response.json({ status: true });
   }
 }

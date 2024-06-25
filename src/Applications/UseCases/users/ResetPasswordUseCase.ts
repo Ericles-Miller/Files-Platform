@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
-import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
+import { validationsFields } from '@Applications/Services/users/validateFields';
+import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
-import { addEmailToQueue } from '@Jobs/producer';
-
+import { Users } from '@prisma/client';
 
 @injectable()
 export class ResetPasswordUseCase {
@@ -13,16 +13,32 @@ export class ResetPasswordUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute(email: string) : Promise<void> {
+  async execute(email: string, password: string, confirmPassword: string): Promise<void> {
     const findUser = await this.usersRepository.checkEmailAlreadyExist(email);
     if (!findUser) {
-      throw new AppError('The email does not exists.Please check if address email exists!', 404);
+      throw new AppError('The email is incorrect or user does not exists!', 404);
     }
 
-    const token = generateConfirmationToken(findUser.id);
+    if (password !== confirmPassword) {
+      throw new AppError('The password field does no same equals', 400);
+    }
 
-    addEmailToQueue({
-      email: findUser.email, name: findUser.name, token, method: 'Reset Password',
-    });
+    validationsFields({ name: findUser.name, password, email });
+
+    const user = new User(findUser.name, findUser.email, password, findUser.id);
+
+    await user.setPassword(user.password);
+
+    await this.usersRepository.update(findUser.id, user);
+  }
+
+  async getReset(userId: string): Promise<true> {
+    const user: Users = await this.usersRepository.findById(userId);
+
+    if (!user) {
+      throw new AppError('The userId does not exists or does not belongs to user', 404);
+    }
+
+    return true;
   }
 }

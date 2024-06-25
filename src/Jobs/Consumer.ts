@@ -2,7 +2,7 @@ import amqp from 'amqplib';
 
 import { IEmailMessage } from '@Applications/Interfaces/email/IEmailMessage';
 import { resetPasswordByEmail } from '@Applications/Services/email/resetPasswordByEmail';
-import { sendEmail } from '@Applications/Services/email/SendEmail';
+import { sendEmailConfirmAccount } from '@Applications/Services/email/sendEmailConfirmAccount';
 
 export async function receiveMessages(): Promise<void> {
   try {
@@ -19,8 +19,8 @@ export async function receiveMessages(): Promise<void> {
           email, name, token, method,
         } = JSON.parse(msg.content.toString()) as IEmailMessage;
         console.log(' [x] Received \'%s\'', email);
-        if (method !== 'Reset Password') {
-          await sendEmail(email, name, token);
+        if (method !== 'Forgot Password') {
+          await sendEmailConfirmAccount(email, name, token);
           channel.ack(msg);
         } else {
           resetPasswordByEmail({ email, name, token });

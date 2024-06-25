@@ -1,5 +1,5 @@
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IValidateDTO } from "@Infra/DTOs/users/IValidateDTO";
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IValidateDTO } from '@Infra/DTOs/users/IValidateDTO';
 
 export function validationsFields({ name, password, email }: IValidateDTO): void {
   const regexName = /[^A-Za-zÀ-üÜ\s.']/g;
@@ -17,9 +17,9 @@ export function validationsFields({ name, password, email }: IValidateDTO): void
     throw new AppError('The field password contains incorrect characters, or the number of characters is greater than 8!', 400);
   }
 
-  if(email) {
+  if (email) {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if(!emailRegex.test(email)) {
+    if (!emailRegex.test(email)) {
       throw new AppError('The field email contains incorrect characters!', 400);
     }
   }
