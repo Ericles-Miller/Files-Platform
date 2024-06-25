@@ -31,13 +31,27 @@ export class UploadFolderUseCase {
 
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
-      await unzip(displayName, userId);
-      const [nameFolder] = displayName.split('.');
+      if (parentId) {
+        const parentFolder: Folders = await this.foldersRepository.findById(parentId);
+        if (!parentFolder) {
+          throw new AppError('The folderId does not exists', 404);
+        }
+        await unzip(displayName, userId, parentFolder.displayName);
 
-      await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+        const [nameFolder] = displayName.split('.');
+        await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
 
-      const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${nameFolder}`);
-      rimraf.sync(pathFolder);
+        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${parentFolder.displayName}`);
+        rimraf.sync(pathFolder);
+      } else {
+        await unzip(displayName, userId);
+
+        const [nameFolder] = displayName.split('.');
+        await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+
+        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${nameFolder}`);
+        rimraf.sync(pathFolder);
+      }
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -50,26 +64,16 @@ export class UploadFolderUseCase {
   private async uploadFoldersAndFiles(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       let folder : Folders;
-      let rootPath;
-      let pathFolder;
 
       if (parentId) {
-        const parentFolder: Folders = await this.foldersRepository.findById(parentId);
-        if (!parentFolder) {
-          throw new AppError('The folderId does not exists', 404);
-        }
-
         folder = await this.createFolderUseCase.execute({ displayName, parentId, userId });
-        rootPath = `/root/${userId}/${parentFolder.displayName}`;
-        pathFolder = folder.path.replace(rootPath, `/${userId}`);
-        pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
       } else {
         folder = await this.createFolderUseCase.execute({ displayName, userId, parentId: null });
-        rootPath = `/root`;
-        pathFolder = folder.path.replace(rootPath, '');
-        pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
       }
 
+      const rootPath = `/root`;
+      let pathFolder = folder.path.replace(rootPath, '');
+      pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${pathFolder}`);
 
       const items = fs.readdirSync(pathFolder);
 
