@@ -4,6 +4,7 @@ import path from 'path';
 import rimraf from 'rimraf';
 
 import { IFilesRepository } from '@Applications/Interfaces/repositories/IFilesRepository';
+import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFoldersRepository';
 import { s3 } from '@Applications/Services/awsS3';
 import { unzip } from '@Applications/Services/unzip';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
@@ -24,17 +25,33 @@ export class UploadFolderUseCase {
     private createFolderUseCase: CreateFolderUseCase,
     @inject('FilesRepository')
     private filesRepository: IFilesRepository,
+    @inject('FoldersRepository')
+    private foldersRepository: IFoldersRepository,
   ) {}
 
   async execute(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
-      await unzip(displayName, userId);
-      const [nameFolder] = displayName.split('.');
+      if (parentId) {
+        const parentFolder: Folders = await this.foldersRepository.findById(parentId);
+        if (!parentFolder) {
+          throw new AppError('The folderId does not exists', 404);
+        }
+        await unzip(displayName, userId, parentFolder.displayName);
 
-      await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+        const [nameFolder] = displayName.split('.');
+        await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
 
-      const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${nameFolder}`);
-      rimraf.sync(pathFolder);
+        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${parentFolder.displayName}/${nameFolder}`);
+        rimraf.sync(pathFolder);
+      } else {
+        await unzip(displayName, userId);
+
+        const [nameFolder] = displayName.split('.');
+        await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
+
+        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${nameFolder}`);
+        rimraf.sync(pathFolder);
+      }
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
@@ -47,6 +64,7 @@ export class UploadFolderUseCase {
   private async uploadFoldersAndFiles(displayName: string, userId: string, parentId?: string): Promise<void> {
     try {
       let folder : Folders;
+
       if (parentId) {
         folder = await this.createFolderUseCase.execute({ displayName, parentId, userId });
       } else {
@@ -77,7 +95,7 @@ export class UploadFolderUseCase {
           fileName: file,
         });
 
-        createFile.setPath(`${folder.path}`);
+        createFile.setPath(`${folder.path}/${file}`);
         createFile.setSize(size);
         createFile.setType(type as string);
 

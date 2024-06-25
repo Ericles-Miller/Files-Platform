@@ -28,7 +28,7 @@ export class DownloadFilesUseCase {
 
       const getFile = new GetObjectCommand({
         Bucket: process.env.BUCKET_NAME,
-        Key: file.fileName,
+        Key: file.folderPath,
       });
 
       const response = await s3.send(getFile);

@@ -34,4 +34,4 @@ foldersRoutes.post('/upload',
   ensureAuthenticated,
   folderUpload.single('folderZip'),
   uploadFolderController.handle,
-); // without router in swagger
+);
