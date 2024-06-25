@@ -41,7 +41,7 @@ export class UploadFolderUseCase {
         const [nameFolder] = displayName.split('.');
         await this.uploadFoldersAndFiles(nameFolder, userId, parentId);
 
-        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${parentFolder.displayName}`);
+        const pathFolder = path.join(__dirname, `../../../../tmp/unzipFolders/${userId}/${parentFolder.displayName}/${nameFolder}`);
         rimraf.sync(pathFolder);
       } else {
         await unzip(displayName, userId);
@@ -95,7 +95,7 @@ export class UploadFolderUseCase {
           fileName: file,
         });
 
-        createFile.setPath(`${folder.path}`);
+        createFile.setPath(`${folder.path}/${file}`);
         createFile.setSize(size);
         createFile.setType(type as string);
 

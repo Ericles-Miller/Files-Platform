@@ -71,10 +71,10 @@ export class DownloadFolderUseCase {
     const folders = await this.findFoldersChildrenUseCase.execute({ userId, id: folderId });
     const files = await this.findFilesChildrenUseCase.execute({ userId, id: folderId });
 
-    files.map(async (file) => {
+    await Promise.all(files.map(async (file) => {
       const getFile = new GetObjectCommand({
         Bucket: process.env.BUCKET_NAME,
-        Key: file.fileName,
+        Key: `${file.folderPath}`,
       });
 
       const response = await s3.send(getFile);
@@ -85,16 +85,16 @@ export class DownloadFolderUseCase {
 
       const fileStream = fs.createWriteStream(path.join(parentDir, file.fileName));
       await streamPipeline(response.Body as NodeJS.ReadableStream, fileStream);
-    });
+    }));
 
-    folders.map(async (folder) => {
+    await Promise.all(folders.map(async (folder) => {
       const folderPath = path.join(parentDir, folder.displayName);
       fs.mkdirSync(folderPath, { recursive: true });
 
       await this.downloadAndSaveFolder({
         userId: folder.userId, folderId: folder.id, parentDir: folderPath,
       });
-    });
+    }));
   }
 
   private async createZip(sourceDir: string, outPath: string): Promise<void> {
