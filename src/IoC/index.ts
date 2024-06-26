@@ -6,6 +6,7 @@ import { IFoldersRepository } from '@Applications/Interfaces/repositories/IFolde
 import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
 import { GenerateRefreshToken } from '@Applications/Services/auth/middlewares/GenerateRefreshToken';
 import { AuthenticateUserUseCase } from '@Applications/UseCases/auth/AuthenticatedUseCase';
+import { LogoutUserUseCase } from '@Applications/UseCases/auth/LogoutUserUseCase';
 import { RefreshTokenUserUseCase } from '@Applications/UseCases/auth/RefreshTokenUserUseCase';
 import { ConfirmEmailUseCase } from '@Applications/UseCases/email/ConfirmEmailUseCase';
 import { CreateFilesUseCase } from '@Applications/UseCases/files/CreateFilesUseCase';
@@ -84,4 +85,5 @@ container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase).toSelf();
 container.bind<GenerateRefreshToken>(GenerateRefreshToken).toSelf();
 container.bind<RefreshTokenUserUseCase>(RefreshTokenUserUseCase).toSelf();
 container.bind<ConfirmEmailUseCase>(ConfirmEmailUseCase).toSelf();
+container.bind<LogoutUserUseCase>(LogoutUserUseCase).toSelf();
 
