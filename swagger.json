@@ -332,6 +332,38 @@
         }
       }
     },
+    "/sessions/logout": {
+      "patch": {
+        "summary": " Logout user",
+      "tags": ["Users"],
+      "security": [
+        {"bearerAuth": []}
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "404": {
+          "description": "Token is missing!"
+        },
+        "204": {
+          "description": "Logout complete successful!"
+        }
+      }
+      }
+    },
 
     "/folders": {
       "post": {
