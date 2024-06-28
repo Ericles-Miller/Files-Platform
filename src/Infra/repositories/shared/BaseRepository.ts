@@ -3,11 +3,11 @@ import { injectable } from 'inversify';
 import { IBaseRepository } from '@Applications/Interfaces/repositories/shared/IBaseRepository';
 import { RepositoryType } from '@Infra/Database/database';
 import {
-  Files, Folders, RefreshTokens, Users,
+  Files, Folders, RefreshTokens, SharedItems, Users,
 } from '@prisma/client';
 
 @injectable()
-export class BaseRepository<T extends Users | Files | Folders | RefreshTokens> implements IBaseRepository<T> {
+export class BaseRepository<T extends Users | Files | Folders | RefreshTokens | SharedItems> implements IBaseRepository<T> {
   protected readonly repository: RepositoryType<T>;
 
   constructor(repository: RepositoryType<T>) {
