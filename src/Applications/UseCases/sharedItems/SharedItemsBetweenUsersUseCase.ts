@@ -55,12 +55,12 @@ export class SharedItemsBetweenUsersUseCase {
       if (fileId) {
         const fileBelongUser = await this.filesRepository.filesBelongingUser(userId, fileId);
         if (!fileBelongUser) {
-          throw new AppError('File does not belong to user', 404);
+          throw new AppError('File does not belong to user!', 404);
         }
 
-        const alreadySharedFile = await this.sharedItemsRepository.alreadySharedFolder(fileId, sharedWithUserId);
+        const alreadySharedFile = await this.sharedItemsRepository.alreadySharedFile(fileId, sharedWithUserId);
         if (alreadySharedFile) {
-          throw new AppError('The folder has already been shared with the user!', 400);
+          throw new AppError('The file has already been shared with the user!', 400);
         }
 
         const sharedItems = new SharedItems(null, userId, sharedWithUserId);
