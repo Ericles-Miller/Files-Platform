@@ -23,7 +23,7 @@ export class ViewerSharedItemsUseCase {
     try {
       const sharedItem: SharedItems = await this.sharedItemsRepository.findById(id);
       if (sharedItem && sharedItem.sharedWithUserId !== sharedWithUserId) {
-        throw new AppError('Some of properties is incorrect. Check id the sharedItem or userId', 404);
+        throw new AppError('Some of properties is incorrect. Check id the sharedWithUserId or userId', 404);
       }
 
       if (sharedItem.fileId) {
