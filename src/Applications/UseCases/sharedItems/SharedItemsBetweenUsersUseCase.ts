@@ -36,6 +36,10 @@ export class SharedItemsBetweenUsersUseCase {
         throw new AppError('Some of properties should be true!', 400);
       }
 
+      if (!fileId && !folderId) {
+        throw new AppError('Some of properties should be true!', 400);
+      }
+
       if (folderId) {
         const folderBelongUser = await this.foldersRepository.folderBelongingUser(userId, folderId);
         if (!folderBelongUser) {

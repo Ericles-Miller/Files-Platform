@@ -25,6 +25,8 @@ import { SearchFolderByNameUseCase } from '@Applications/UseCases/folders/Search
 import { UpdateFolderUseCase } from '@Applications/UseCases/folders/UpdateFolderUseCase';
 import { UploadFolderUseCase } from '@Applications/UseCases/folders/UploadFolderUseCase';
 import { SearchFolderUseCase } from '@Applications/UseCases/shared/SearchFolderUseCase';
+import { SharedItemsBetweenUsersUseCase } from '@Applications/UseCases/sharedItems/SharedItemsBetweenUsersUseCase';
+import { ViewerSharedItemsUseCase } from '@Applications/UseCases/sharedItems/ViewerItemSharedUseCase';
 import { CreateUserUseCase } from '@Applications/UseCases/users/CreateUserUseCase';
 import { DeleteUserUseCase } from '@Applications/UseCases/users/DeleteUserUseCase';
 import { ListUsersUseCase } from '@Applications/UseCases/users/ListUserUseCase';
@@ -39,7 +41,6 @@ import { UsersRepository } from '@Infra/repositories/UsersRepository';
 import {
   Files, Folders, PrismaClient, RefreshTokens, SharedItems, Users,
 } from '@prisma/client';
-import { SharedItemsBetweenUsersUseCase } from '@Applications/UseCases/sharedItems/SharedItemsBetweenUsersUseCase';
 
 export const container = new Container();
 
@@ -94,3 +95,4 @@ container.bind<LogoutUserUseCase>(LogoutUserUseCase).toSelf();
 
 /// shared Items
 container.bind<SharedItemsBetweenUsersUseCase>(SharedItemsBetweenUsersUseCase).toSelf();
+container.bind<ViewerSharedItemsUseCase>(ViewerSharedItemsUseCase).toSelf();
