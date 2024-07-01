@@ -27,7 +27,6 @@ export class SharedItemsBetweenUsersUseCase {
     sharedWithUserId, userId, fileId, folderId,
   }: ISharedFilesFoldersDTO): Promise<void> {
     try {
-      console.log('aaaaaaa');
       const findUser: Users = await this.usersRepository.findById(sharedWithUserId);
       if (!findUser) {
         throw new AppError('UserId to shared file or folder does not exists!', 404);
@@ -72,7 +71,6 @@ export class SharedItemsBetweenUsersUseCase {
       if (error instanceof AppError) {
         throw error;
       }
-
       console.log(error);
       throw new AppError('Unexpected server error!', 500);
     }
