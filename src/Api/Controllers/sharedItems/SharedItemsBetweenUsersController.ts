@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { SharedItemsBetweenUsersUseCase } from '@Applications/UseCases/shared/SharedItemsBetweenUsersUseCase';
+import { SharedItemsBetweenUsersUseCase } from '@Applications/UseCases/sharedItems/SharedItemsBetweenUsersUseCase';
 import { container } from '@IoC/index';
 
 
