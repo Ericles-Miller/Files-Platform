@@ -11,13 +11,21 @@ export class UpdateViewSharedItemsUseCase {
     private sharedItemsRepository: ISharedItemsRepository,
   ) {}
 
-  async execute(id: string, userId: string, option: boolean): Promise<void> {
-    const sharedItem: SharedItems = await this.sharedItemsRepository.findById(id);
-    if (sharedItem && sharedItem.userId !== userId) {
-      throw new AppError('Some of properties is incorrect. Check id the sharedWithUserId or userId', 404);
-    }
-    sharedItem.sharedStatus = option;
+  async execute(id: string, userId: string, status: boolean): Promise<void> {
+    try {
+      const sharedItem: SharedItems = await this.sharedItemsRepository.findById(id);
+      if (sharedItem && sharedItem.userId !== userId) {
+        throw new AppError('Some of properties is incorrect. Check id the sharedWithUserId or userId!', 400);
+      }
+      sharedItem.sharedStatus = status;
 
-    await this.sharedItemsRepository.update(id, sharedItem);
+      await this.sharedItemsRepository.update(id, sharedItem);
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.log(error);
+      throw new AppError('Unexpected server error', 500);
+    }
   }
 }

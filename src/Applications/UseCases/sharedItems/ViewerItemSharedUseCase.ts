@@ -26,6 +26,10 @@ export class ViewerSharedItemsUseCase {
         throw new AppError('Some of properties is incorrect. Check id the sharedWithUserId or userId', 404);
       }
 
+      if (!sharedItem.sharedStatus) {
+        throw new AppError('The item is not available to view. Contact the owner of the folder or file.', 400);
+      }
+
       if (sharedItem.fileId) {
         const file : Files = await this.filesRepository.findById(sharedItem.fileId);
         const filesToFolder = await this.findFilesChildrenUseCase.execute({ id: file.folderId, userId: sharedItem.userId });
