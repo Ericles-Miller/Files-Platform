@@ -1114,6 +1114,112 @@
           }
         }
       }
+    },
+
+    "/sharedItems/": {
+      "post": {
+        "tags": ["Files", "Folders"],
+        "summary": "Shared Items between users",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderId": {
+                    "type": "string"
+                  },
+                  "fileId": {
+                    "type": "string"
+                  },
+                  "sharedWithUserId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["sharedWithUserId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId to shared file or folder does not exists!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "Folder does not belong to user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "File does not belong to user!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderIdAndFilesId": {
+                    "summary": "Errors related to properties",
+                    "value": {
+                      "message": "Some of properties should be true!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The folder has already been shared with the user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The file has already been shared with the user!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

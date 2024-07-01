@@ -1,5 +1,6 @@
 import {
   Files, PrismaClient, Users, Folders, RefreshTokens,
+  SharedItems,
 } from '@prisma/client';
 
 
@@ -15,6 +16,8 @@ export type RepositoryType<T> = T extends Users
   ? PrismaClient['folders']
   : T extends RefreshTokens
   ? PrismaClient['refreshTokens']
+  : T extends SharedItems
+  ? PrismaClient['sharedItems']
   : never;
 
 export const prisma = new PrismaClient();
