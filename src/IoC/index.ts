@@ -26,6 +26,7 @@ import { UpdateFolderUseCase } from '@Applications/UseCases/folders/UpdateFolder
 import { UploadFolderUseCase } from '@Applications/UseCases/folders/UploadFolderUseCase';
 import { SearchFolderUseCase } from '@Applications/UseCases/shared/SearchFolderUseCase';
 import { SharedItemsBetweenUsersUseCase } from '@Applications/UseCases/sharedItems/SharedItemsBetweenUsersUseCase';
+import { SharedItemsToUserUseCase } from '@Applications/UseCases/sharedItems/SharedItemsToUserUseCase';
 import { UpdateViewSharedItemsUseCase } from '@Applications/UseCases/sharedItems/UpdateViewSharedItemsUseCase';
 import { ViewerSharedItemsUseCase } from '@Applications/UseCases/sharedItems/ViewerItemSharedUseCase';
 import { CreateUserUseCase } from '@Applications/UseCases/users/CreateUserUseCase';
@@ -98,3 +99,4 @@ container.bind<LogoutUserUseCase>(LogoutUserUseCase).toSelf();
 container.bind<SharedItemsBetweenUsersUseCase>(SharedItemsBetweenUsersUseCase).toSelf();
 container.bind<ViewerSharedItemsUseCase>(ViewerSharedItemsUseCase).toSelf();
 container.bind<UpdateViewSharedItemsUseCase>(UpdateViewSharedItemsUseCase).toSelf();
+container.bind<SharedItemsToUserUseCase>(SharedItemsToUserUseCase).toSelf();
