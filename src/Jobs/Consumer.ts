@@ -18,12 +18,15 @@ export async function receiveMessages(): Promise<void> {
         const {
           email, name, token, method,
         } = JSON.parse(msg.content.toString()) as IEmailMessage;
+
         console.log(' [x] Received \'%s\'', email);
+
         if (method !== 'Forgot Password') {
           await sendEmailConfirmAccount(email, name, token);
           channel.ack(msg);
         } else {
           resetPasswordByEmail({ email, name, token });
+          channel.ack(msg);
         }
       }
     });

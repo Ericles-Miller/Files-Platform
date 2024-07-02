@@ -16,11 +16,11 @@ export class ResetPasswordController {
   }
 
   async getResetPassword(request: Request, response: Response): Promise<Response> {
-    const { userId } = request;
+    const { token } = request.params;
 
     const resetPasswordUseCase = container.get(ResetPasswordUseCase);
 
-    await resetPasswordUseCase.getReset(userId);
+    await resetPasswordUseCase.getReset(token);
 
     return response.json({ status: true });
   }

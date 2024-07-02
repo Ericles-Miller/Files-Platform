@@ -5,6 +5,7 @@ import { validationsFields } from '@Applications/Services/users/validateFields';
 import { User } from '@Domain/Entities/User';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { Users } from '@prisma/client';
+import { verify } from 'jsonwebtoken';
 
 @injectable()
 export class ResetPasswordUseCase {
@@ -32,7 +33,13 @@ export class ResetPasswordUseCase {
     await this.usersRepository.update(findUser.id, user);
   }
 
-  async getReset(userId: string): Promise<true> {
+  async getReset(token: string): Promise<true> {
+    if (!process.env.JWT_SECRET_NEW_USER) {
+      throw new AppError('The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable', 404);
+    }
+    const payload: any = verify(token, process.env.JWT_SECRET_NEW_USER);
+    const { userId } = payload;
+
     const user: Users = await this.usersRepository.findById(userId);
 
     if (!user) {
