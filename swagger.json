@@ -1304,7 +1304,7 @@
     "/auth/logout": {
       "patch": {
         "summary": " Logout user",
-      "tags": ["Users"],
+      "tags": ["Authenticated"],
       "security": [
         {"bearerAuth": []}
       ],
