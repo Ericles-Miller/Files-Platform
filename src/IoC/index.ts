@@ -31,7 +31,9 @@ import { UpdateViewSharedItemsUseCase } from '@Applications/UseCases/sharedItems
 import { ViewerSharedItemsUseCase } from '@Applications/UseCases/sharedItems/ViewerItemSharedUseCase';
 import { CreateUserUseCase } from '@Applications/UseCases/users/CreateUserUseCase';
 import { DeleteUserUseCase } from '@Applications/UseCases/users/DeleteUserUseCase';
+import { ForgotPasswordUseCase } from '@Applications/UseCases/users/ForgotPasswordUseCase';
 import { ListUsersUseCase } from '@Applications/UseCases/users/ListUserUseCase';
+import { ResetPasswordUseCase } from '@Applications/UseCases/users/ResetPasswordUseCase';
 import { UpdateUserUseCase } from '@Applications/UseCases/users/UpdateUserUseCase';
 import { prisma } from '@Infra/Database/database';
 import { RefreshTokenRepository } from '@Infra/repositories/auth/RefreshTokenRepository';
@@ -93,6 +95,8 @@ container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase).toSelf();
 container.bind<GenerateRefreshToken>(GenerateRefreshToken).toSelf();
 container.bind<RefreshTokenUserUseCase>(RefreshTokenUserUseCase).toSelf();
 container.bind<ConfirmEmailUseCase>(ConfirmEmailUseCase).toSelf();
+container.bind<ForgotPasswordUseCase>(ForgotPasswordUseCase).toSelf();
+container.bind<ResetPasswordUseCase>(ResetPasswordUseCase).toSelf();
 container.bind<LogoutUserUseCase>(LogoutUserUseCase).toSelf();
 
 /// shared Items

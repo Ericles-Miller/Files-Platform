@@ -21,7 +21,7 @@ export class ConfirmEmailUseCase {
 
       const userIsValid: Users = await this.usersRepository.findById(userId);
       if (!userIsValid) {
-        throw new AppError('User is invalid or does not confirm the account in email', 404);
+        throw new AppError('User is invalid or does not confirm the account in email!', 404);
       }
 
       await this.usersRepository.setUserTrue(userId);

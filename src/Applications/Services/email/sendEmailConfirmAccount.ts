@@ -2,10 +2,10 @@ import { EmailOptions } from '@Domain/Entities/EmailOptions';
 import { AppError } from '@Domain/Exceptions/AppError';
 import { Mailer } from '@Jobs/Mailer';
 
-export async function sendEmail(email: string, name: string, token: string) : Promise<void> {
+export async function sendEmailConfirmAccount(email: string, name: string, token: string) : Promise<void> {
   const url = `${process.env.PATH_CONFIRM_TOKEN}${token}`;
 
-  const subject = ' Confirm your account on All Safe Cloud';
+  const subject = ' Confirm your account on All Safe Cloud Platform';
   const from = process.env.EMAIL_LOGIN;
   const to = email;
   const html = ` <p>Hi ${name},</p>
@@ -27,7 +27,7 @@ export async function sendEmail(email: string, name: string, token: string) : Pr
     </ul>
     <p>We look forward to you being part of our community!</p>
     <p>Yours sincerely,</p>
-    <p>All Safe Cloud Team</p>
+    <p>All Safe Cloud Platform Team</p>
   `;
 
   if (!from) {
