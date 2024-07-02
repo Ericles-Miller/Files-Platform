@@ -1104,6 +1104,126 @@
           }
         }
       }
+    },
+    
+    "/auth/resetPassword": {
+      "patch": {
+        "summary": "Reset Password to user",
+        "description": "reset password by email user",
+        "tags": ["Authenticated"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "confirmPassword" : {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "reset password successful"
+          },
+          "400" : {
+            "description": "The password field does no same equals!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "summary": "Errors related to email",
+                    "value": {
+                      "message": "The email is incorrect or user does not exists!"
+                    }
+                  },
+                  "token jwt": {
+                    "value": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                  },
+                  "user don`t exists": {
+                    "value": "The userId does not exists or does not belongs to user"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/accountsConfirm/{token}" : {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Confirm created account in email",
+        "description": "Endpoint to confirm account created",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "token to confirm account",
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "account confirmed with success!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "token jwt": {
+                    "value": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                  },
+                  "user don`t exists": {
+                    "value": "User is invalid or does not confirm the account in email!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
     }
   }
 }

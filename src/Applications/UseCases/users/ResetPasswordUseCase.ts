@@ -25,7 +25,7 @@ export class ResetPasswordUseCase {
     }
 
     if (password !== confirmPassword) {
-      throw new AppError('The password field does no same equals', 400);
+      throw new AppError('The password field does no same equals!', 400);
     }
 
     validationsFields({ name: findUser.name, password, email });
