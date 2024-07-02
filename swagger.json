@@ -954,7 +954,423 @@
         }
       }
     },
-
+    "/sharedItems/": {
+      "post": {
+        "tags": ["Files", "Folders"],
+        "summary": "Shared Items between users",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderId": {
+                    "type": "string"
+                  },
+                  "fileId": {
+                    "type": "string"
+                  },
+                  "sharedWithUserId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["sharedWithUserId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId to shared file or folder does not exists!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "Folder does not belong to user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "File does not belong to user!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderIdAndFilesId": {
+                    "summary": "Errors related to properties",
+                    "value": {
+                      "message": "Some of properties should be true!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The folder has already been shared with the user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The file has already been shared with the user!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Data created with success!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Files", "Folders"],
+        "summary": "Update status shared Items",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "option": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["id","status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "200": {
+            "description": "Upload completed successfully!"
+          },
+          "400": {
+            "description": "Some of properties is incorrect. Check id the sharedWithUserId or userId!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Folders", "Files"],
+        "summary": "View all shared items with user",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "parentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "folderPath": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "folderId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The sharedWithUserId does not exists!"
+          },
+          "500" : {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/sharedItems/{id}": {
+      "get": {
+        "tags": ["Folders", "Files"],
+        "summary": "View shared items",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "folderId or fileID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "parentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "folderPath": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "folderId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content" : {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "value": {
+                      "message": "The item is not available to view. Contact the owner of the folder or file."
+                    }
+                  },
+                  "user not fold": {
+                    "value": {
+                      "message": "That folder does not belong this user or userId is incorrect!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "properties": {
+                    "summary": "error related to properties folderId and FileId",
+                    "value": {
+                      "message": "FolderId and fileId properties are undefined"
+                    }
+                  },
+                  "properties invalids": {
+                    "value": {
+                      "message": "Some of properties is incorrect. Check id the sharedWithUserId or userId"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
 
     "/auth/user": {
       "post": {
