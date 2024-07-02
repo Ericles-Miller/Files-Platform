@@ -6,7 +6,9 @@ import { container } from '@IoC/index';
 
 export class ResetPasswordController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { email, password, confirmPassword } = request.body;
+    const {
+      email, password, confirmPassword,
+    } = request.body;
 
     const resetPasswordUseCase = container.get(ResetPasswordUseCase);
 

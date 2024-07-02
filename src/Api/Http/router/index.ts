@@ -11,4 +11,4 @@ export const router = Router();
 router.use('/users', usersRoutes);
 router.use('/folders', foldersRoutes);
 router.use('/files', filesRouters);
-router.use('/sessions', authenticateRoutes);
+router.use('/auth', authenticateRoutes);

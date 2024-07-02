@@ -14,15 +14,23 @@ export class ForgotPasswordUseCase {
   ) {}
 
   async execute(email: string) : Promise<void> {
-    const findUser = await this.usersRepository.checkEmailAlreadyExist(email);
-    if (!findUser) {
-      throw new AppError('The email does not exists.Please check if address email exists!', 404);
+    try {
+      const findUser = await this.usersRepository.checkEmailAlreadyExist(email);
+      if (!findUser) {
+        throw new AppError('The email does not exists.Please check if address email exists!', 404);
+      }
+
+      const token = generateConfirmationToken(findUser.id);
+
+      addEmailToQueue({
+        email: findUser.email, name: findUser.name, token, method: 'Forgot Password',
+      });
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.log(error);
+      throw new AppError('Unexpected server error!', 500);
     }
-
-    const token = generateConfirmationToken(findUser.id);
-
-    addEmailToQueue({
-      email: findUser.email, name: findUser.name, token, method: 'Forgot Password',
-    });
   }
 }

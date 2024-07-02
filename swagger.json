@@ -263,76 +263,6 @@
         }
       }
     },
-    "/sessions/user": {
-      "post": {
-        "tags": ["Users"],
-        "summary": "Authenticated user",
-        "description":"Authenticated user with email and password",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                },
-                "required": ["email", "password"],
-                "example": {
-                  "email": "yourEmail@email.com",
-                  "password": "your password"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "500": {
-            "description": "Unexpected server error!"
-          },
-          "404": {
-            "description": "Email or password is incorrect!"
-          },
-          "200": {
-            "description": "Token generated with success!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "token": {
-                        "type": "string"
-                      },
-                      "refreshToken": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "expiresIn": {
-                            "type": "number"
-                          },
-                          "userId": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-
     "/folders": {
       "post": {
         "tags": ["Folders"],
@@ -949,9 +879,79 @@
       }
     },
 
-    "/sessions/refreshToken": {
+
+    "/auth/user": {
       "post": {
-        "tags": ["Refresh Token"],
+        "tags": ["Authenticated"],
+        "summary": "Authenticated user",
+        "description":"Authenticated user with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"],
+                "example": {
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Email or password is incorrect!"
+          },
+          "200": {
+            "description": "Token generated with success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "refreshToken": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "type": "number"
+                          },
+                          "userId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refreshToken": {
+      "post": {
+        "tags": ["Authenticated"],
         "summary": "Refresh token",
         "description": "refreshToken id to authenticated new token",
         "requestBody": {
@@ -1004,6 +1004,103 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+
+    "/auth/forgotPassword/{email}": {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Forgot Password",
+        "description": "endpoint responsible for sending email to confirm password reset",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "user's email",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "send email success!"
+          },
+          "404" : {
+            "description": "The email does not exists.Please check if address email exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/auth/resetPassword/{token}": {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Confirm received email",
+        "description": "the endpoint confirms whether the user accessed the email. If the path executed by the user returns true, the front end allows the user to change the password",
+        "parameters": [
+          {
+            "name": "token",
+            "in":"path",
+            "required" : true,
+            "description": "token's auth",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "value": {
+                      "message": "The userId does not exists or does not belongs to user"
+                    }
+                  },
+                  "token jwt": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
           }
         }
       }
