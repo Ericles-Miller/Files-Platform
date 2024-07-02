@@ -22,4 +22,9 @@ export class SharedItemsRepository extends BaseRepository<SharedItems> implement
     const sharedFile = await prisma.sharedItems.findFirst({ where: { fileId, sharedWithUserId } });
     return sharedFile;
   }
+
+  async findBySharedUserId(sharedWithUserId: string): Promise<SharedItems[]> {
+    const sharedItems = await prisma.sharedItems.findMany({ where: { sharedWithUserId } });
+    return sharedItems;
+  }
 }

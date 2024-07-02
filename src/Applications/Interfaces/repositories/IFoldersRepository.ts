@@ -11,4 +11,5 @@ export interface IFoldersRepository extends IBaseRepository<Folders> {
   foldersByUsers(userId: string) : Promise<Folders[]>;
   listFoldersWithoutParent(userId: string) : Promise<Folders[]>;
   searchFolderByName({ displayName, userId, parentId }:ISearchFoldersDTO): Promise<Folders[]>
+  findFoldersShared(id: string, userId: string): Promise<Folders| null>
 }

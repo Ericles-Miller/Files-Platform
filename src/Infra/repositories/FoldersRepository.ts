@@ -61,4 +61,9 @@ export class FoldersRepository extends BaseRepository<Folders> implements IFolde
 
     return folders;
   }
+
+  async findFoldersShared(id: string, userId: string): Promise<Folders | null> {
+    const folder = await prisma.folders.findFirst({ where: { id, userId } });
+    return folder;
+  }
 }
