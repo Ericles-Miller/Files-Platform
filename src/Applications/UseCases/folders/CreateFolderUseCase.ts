@@ -15,13 +15,13 @@ export class CreateFolderUseCase {
 
   async execute({ displayName, parentId, userId }: IRequestFoldersDTO) : Promise<Folders> {
     try {
-      const folder = new Folder({ displayName, id: null, userId });    
-       
-    if(parentId) {
-      const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, parentId);
-      if(!folderBelongingUser) {
-        throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
-      }
+      const folder = new Folder({ displayName, id: null, userId });
+
+      if (parentId) {
+        const folderBelongingUser = await this.foldersRepository.folderBelongingUser(userId, parentId);
+        if (!folderBelongingUser) {
+          throw new AppError('That folder does not belong this user or userId is incorrect!', 400);
+        }
 
         const parentFolder: Folders = await this.foldersRepository.findById(parentId);
         if (!parentFolder) {

@@ -23,8 +23,8 @@ export class FilesRepository extends BaseRepository<Files> implements IFilesRepo
     return path;
   }
 
-  async filesBelongingUser(userId: string, folderId: string): Promise<Files | null> {
-    const file = await prisma.files.findFirst({ where: { userId, folderId } });
+  async filesBelongingUser(userId: string, id: string): Promise<Files | null> {
+    const file = await prisma.files.findFirst({ where: { userId, id } });
     return file;
   }
 

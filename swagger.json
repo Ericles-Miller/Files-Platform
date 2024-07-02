@@ -263,6 +263,108 @@
         }
       }
     },
+    "/sessions/user": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Authenticated user",
+        "description":"Authenticated user with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"],
+                "example": {
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Email or password is incorrect!"
+          },
+          "200": {
+            "description": "Token generated with success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "refreshToken": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "type": "number"
+                          },
+                          "userId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/logout": {
+      "patch": {
+        "summary": " Logout user",
+      "tags": ["Users"],
+      "security": [
+        {"bearerAuth": []}
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "404": {
+          "description": "Token is missing!"
+        },
+        "204": {
+          "description": "Logout complete successful!"
+        }
+      }
+      }
+    },
+
     "/folders": {
       "post": {
         "tags": ["Folders"],
@@ -732,7 +834,82 @@
         }
       }
     },
-
+    "/folders/upload": {
+      "post": {
+        "summary": "Upload Folder",
+        "tags": ["Folders"],
+        "description": "Upload folder by zip file",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "folderZip": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload",
+                    "encoding": {
+                      "folderZip": {
+                        "contentType": "application/zip"
+                      }
+                    }
+                  }
+                },
+                "required": ["folderZip"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderBelongUser": {
+                    "summary": "Folder does not belong to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "folderAlreadyExists": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "file different zip": {
+                    "value": "The file must be of the zip type!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "200": {
+            "description": "Upload completed successfully!"
+          }
+        }
+      }
+    },
     "/files": {
       "post": {
         "tags": ["Files"],
@@ -843,7 +1020,7 @@
         }
       }
     },
-    "/files/download": {
+    "/files/download/{fileId}": {
       "get": {
         "tags": ["Files"],
         "summary": "Download file",

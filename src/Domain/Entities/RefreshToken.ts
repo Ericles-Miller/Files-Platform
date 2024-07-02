@@ -4,6 +4,7 @@ export class RefreshToken {
   userId: string;
   expiresIn: number;
   id: string;
+  revoked!: boolean;
 
   constructor(userId: string, expiresIn: number) {
     this.id = uuid();
