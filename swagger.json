@@ -1076,7 +1076,7 @@
                   "id": {
                     "type": "string"
                   },
-                  "option": {
+                  "status": {
                     "type": "boolean"
                   }
                 },

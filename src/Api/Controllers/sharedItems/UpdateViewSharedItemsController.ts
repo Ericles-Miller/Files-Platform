@@ -10,9 +10,8 @@ export class UpdateViewSharedItemsController {
     const { id, status } = request.body;
 
     const updateViewSharedItemsUseCase = container.get(UpdateViewSharedItemsUseCase);
-
     await updateViewSharedItemsUseCase.execute(id, userId, status);
-
     return response.status(204).send();
   }
 }
+
