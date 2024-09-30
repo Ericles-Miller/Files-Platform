@@ -1,8 +1,14 @@
-import { inject, injectable } from "inversify";
-import { User } from "Domain/Entities/User";
-import { IUsersRepository } from "@Applications/Interfaces/users/IUsersRepository";
-import { AppError } from "@Domain/Exceptions/AppError";
-import { IRequestDTO } from "@Infra/DTOs/users/IRequestDTO";
+import { inject, injectable } from 'inversify';
+
+import { IUsersRepository } from '@Applications/Interfaces/repositories/IUsersRepository';
+import { s3 } from '@Applications/Services/awsS3';
+import { generateConfirmationToken } from '@Applications/Services/email/GenerateConfirmationToken';
+import { validationsFields } from '@Applications/Services/users/validateFields';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { User } from '@Domain/Entities/User';
+import { AppError } from '@Domain/Exceptions/AppError';
+import { IRequestDTO } from '@Infra/DTOs/users/IRequestDTO';
+import { addEmailToQueue } from '@Jobs/producer';
 
 
 @injectable()
@@ -12,14 +18,43 @@ export class CreateUserUseCase {
     private usersRepository: IUsersRepository,
   ) {}
 
-  async execute({email, name,password }: IRequestDTO) : Promise<void> {    
-    const userAlreadyExists = await this.usersRepository.checkEmailAlreadyExist(email);
-        
-    if(userAlreadyExists) {
-      throw new AppError('user already exists with email!', 400);
+  async execute({
+    email, name, password, file,
+  }: IRequestDTO) : Promise<void> {
+    try {
+      validationsFields({ email, name, password });
+
+      const userAlreadyExists = await this.usersRepository.checkEmailAlreadyExist(email);
+      if (userAlreadyExists) {
+        throw new AppError('User already exists with email!', 400);
+      }
+
+      const user = new User(name, email, password, null);
+
+      if (file) {
+        user.setAvatar(file.originalname);
+        user.setFileName(file.originalname);
+
+        await s3.send(new PutObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: `/root/${user.id}/avatars/${file.originalname}`,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        }));
+      }
+
+      await user.setPassword(user.password);
+      const newUser = await this.usersRepository.create(user);
+
+      const token = generateConfirmationToken(newUser.id);
+
+      addEmailToQueue({ email, name, token });
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      console.log(error);
+      throw new AppError(`Unexpected server error!`, 500);
     }
-    
-    const user = new User(name, email, password);    
-    await this.usersRepository.create(user);
   }
 }

@@ -1,0 +1,1753 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Files Platform",
+    "description": "Platform to send files in cloud using AWS S3 ",
+    "version": "1.0",
+    "contact": {
+      "email": "ericlesmiller15@gmail.com"
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create User",
+        "description": "Create a new User to platform",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "required": ["name", "email", "password"],
+                "example": {
+                  "name": "Your full name",
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "emailError": {
+                    "summary": "email error",
+                    "value": {
+                      "message": "User already exists with email!"
+                    }
+                  },
+                  "password error": {
+                    "summary": "passwordInvalid",
+                    "value": {
+                      "message": "The field password contains incorrect characters, or the number of characters is greater than 8!"
+                    }
+                  },
+                  "name error": {
+                    "summary": "name error",
+                    "value": {
+                      "message": "The field name contains characters incorrect, number of characters is greater than 255, or number of names is equal to one!"
+                    }
+                  },
+                  "email error": {
+                    "summary": "email error validation",
+                    "value": {
+                      "message": "The field email contains incorrect characters!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "201": {
+            "description": "User Created With Success!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all Users",
+        "description": "List all users to frontEnd",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "enable": {
+                        "type": "boolean"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "avatar": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update User",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "enable": {
+                    "type": "boolean"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "example": {
+                  "name": "Your full name",
+                  "password": "your password",
+                  "enable": "true or false"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204" : {
+            "description": "User Updated with success!"
+          },
+          "404": {
+            "description": "UserId does not exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "enable error": {
+                    "summary": "email error",
+                    "value": {
+                      "message": "Value invalid to field enable!"
+                    }
+                  },
+                  "password error": {
+                    "summary": "passwordInvalid",
+                    "value": {
+                      "message": "The field password contains incorrect characters, or the number of characters is greater than 8!"
+                    }
+                  },
+                  "name error": {
+                    "summary": "name error",
+                    "value": {
+                      "message": "The field name contains characters incorrect, number of characters is greater than 255, or number of names is equal to one!"
+                    }
+                  },
+                  "email error": {
+                    "summary": "email error validation",
+                    "value": {
+                      "message": "The field email contains incorrect characters!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete User",
+        "description": "Delete an existing user by ID",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully!"
+          },
+          "404": {
+            "description": "User not found!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    
+    "/folders": {
+      "post": {
+        "tags": ["Folders"],
+        "summary": "Create Folder To user",
+        "description": "Create a new Folder in platform",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["displayName"],
+                "example": {
+                  "displayName": "Your folder name",
+                  "parentId": "et7bce5a-cb12-4c42-222c7-7724f0a33a1f"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Parent folder not found!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderBelongUser": {
+                    "summary": "Folder does not belong to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "folderAlreadyExists": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Folder created with success!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Folders", "Files"],
+        "summary": "Search folders and files",
+        "description": "Search folders and files of the user. The endpoint finds the files and folders in the platform.",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": false,
+            "description": "Folder's ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "required": false,
+            "description": "Folder's and user's display name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "parentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "folderPath": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "folderId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId does not exist!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "FolderId does not exist!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }  
+    },
+    "/folders/{folderId}" : {
+      "delete": {
+        "tags": ["Folders"],
+        "summary": "Delete folder",
+        "description": "Delete an existing folder by userId and folderId",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the folder to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Folder deleted successfully!"
+          },
+          "400": {
+            "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/ListAllFoldersByUser": {
+      "get": {
+        "tags": ["Folders"],
+        "summary": "List all Folders",
+        "description": "List all folders to aux frontEnd",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "size": {
+                        "type": "number"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "parentId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/{id}": {
+      "patch": {
+        "tags": ["Folders"],
+        "summary": "Update folder",
+        "description": "update path name etc",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in":"path",
+            "required": true,
+            "description": "folde's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["displayName", "userId"],
+                "example": {
+                  "displayName": "Your folder name",
+                  "userId": "ebbbce5a-cb12-4c42-82c7-7724f0a33a1f",
+                  "parentId": "et7bce5a-cb12-4c42-222c7-7724f0a33a1f"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success!"
+          },
+          "404": {
+            "description": "FolderId does not exists!"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderAlreadyExists": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/download/{folderId}": {
+      "get": {
+        "summary": "Download Folder",
+        "tags": ["Folders"],
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "description": "folder's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download folder make with success!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId does not exists!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "Response body is empty!"
+                  },
+                  "folderBelongUser": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/folders/upload": {
+      "post": {
+        "summary": "Upload Folder",
+        "tags": ["Folders"],
+        "description": "Upload folder by zip file",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parentId": {
+                    "type": "string"
+                  },
+                  "folderZip": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload",
+                    "encoding": {
+                      "folderZip": {
+                        "contentType": "application/zip"
+                      }
+                    }
+                  }
+                },
+                "required": ["folderZip"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderBelongUser": {
+                    "summary": "Folder does not belong to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "folderAlreadyExists": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "file different zip": {
+                    "value": "The file must be of the zip type!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "200": {
+            "description": "Upload completed successfully!"
+          }
+        }
+      }
+    },
+    "/files": {
+      "post": {
+        "tags": ["Files"],
+        "summary": "Create file",
+        "description": "Create a new file in a folder",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderId": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                },
+                "required": ["folderId", "file"],
+                "example": {
+                  "folderId": "Your folder's id",
+                  "file": "your file"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderAlreadyExists": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "The folder name already exists in dir. Please choose another name!"
+                    }
+                  },
+                  "folderInvalid": {
+                    "value": "That folder does not belong this user or userId is incorrect!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "201": {
+            "description": "File Created and save in cloud With Success!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Files"],
+        "summary": "Delete file",
+        "description": "Delete an existing file by userId and folderId",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "folderId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the folder to delete",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "ID of the file to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "File deleted successfully!"
+          },
+          "400": {
+            "description": "That folder does not belong to this user or userId is incorrect!"
+          },
+          "404": {
+            "description": "Id the file does not exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/files/download/{fileId}": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Download file",
+        "description": "using the endpoint on browser to do download file",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "description": "file's id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download file make with success!"
+          },
+          "400": {
+            "description": "That file does not belong this user or userId is incorrect!"
+          },
+          "404": {
+            "description": "UserId does not exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/sharedItems/": {
+      "post": {
+        "tags": ["Files", "Folders"],
+        "summary": "Shared Items between users",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderId": {
+                    "type": "string"
+                  },
+                  "fileId": {
+                    "type": "string"
+                  },
+                  "sharedWithUserId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["sharedWithUserId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "UserId to shared file or folder does not exists!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "Folder does not belong to user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "File does not belong to user!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "folderIdAndFilesId": {
+                    "summary": "Errors related to properties",
+                    "value": {
+                      "message": "Some of properties should be true!"
+                    }
+                  },
+                  "folder": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The folder has already been shared with the user!"
+                    }
+                  },
+                  "file": {
+                    "summary": "Errors related to folder",
+                    "value": {
+                      "message": "The file has already been shared with the user!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Data created with success!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Files", "Folders"],
+        "summary": "Update status shared Items",
+        "security": [
+          { "bearerAuth": []}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["id","status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "200": {
+            "description": "Upload completed successfully!"
+          },
+          "400": {
+            "description": "Some of properties is incorrect. Check id the sharedWithUserId or userId!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Folders", "Files"],
+        "summary": "View all shared items with user",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "parentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "folderPath": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "folderId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The sharedWithUserId does not exists!"
+          },
+          "500" : {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/sharedItems/{id}": {
+      "get": {
+        "tags": ["Folders", "Files"],
+        "summary": "View shared items",
+        "security": [
+          {"bearerAuth": []}
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "folderId or fileID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folders": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "parentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "folderPath": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "folderId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content" : {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "value": {
+                      "message": "The item is not available to view. Contact the owner of the folder or file."
+                    }
+                  },
+                  "user not fold": {
+                    "value": {
+                      "message": "That folder does not belong this user or userId is incorrect!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user": {
+                    "summary": "Errors related to user",
+                    "value": {
+                      "message": "That folder does not belong to this user or userId is incorrect!"
+                    }
+                  },
+                  "properties": {
+                    "summary": "error related to properties folderId and FileId",
+                    "value": {
+                      "message": "FolderId and fileId properties are undefined"
+                    }
+                  },
+                  "properties invalids": {
+                    "value": {
+                      "message": "Some of properties is incorrect. Check id the sharedWithUserId or userId"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/auth/user": {
+      "post": {
+        "tags": ["Authenticated"],
+        "summary": "Authenticated user",
+        "description":"Authenticated user with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"],
+                "example": {
+                  "email": "yourEmail@email.com",
+                  "password": "your password"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Unexpected server error!"
+          },
+          "404": {
+            "description": "Email or password is incorrect!"
+          },
+          "200": {
+            "description": "Token generated with success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "refreshToken": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "expiresIn": {
+                            "type": "number"
+                          },
+                          "userId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refreshToken": {
+      "post": {
+        "tags": ["Authenticated"],
+        "summary": "Refresh token",
+        "description": "refreshToken id to authenticated new token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "required": true
+                  }
+                },
+                "example": {
+                  "refreshToken": "you refresh token"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "Token invalid!"
+          },
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"                      
+                    },
+                    "newRefreshToken": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "expiresIn": {
+                          "type": "number"
+                        },
+                        "userId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/auth/forgotPassword/{email}": {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Forgot Password",
+        "description": "endpoint responsible for sending email to confirm password reset",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "user's email",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "send email success!"
+          },
+          "404" : {
+            "description": "The email does not exists.Please check if address email exists!"
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/auth/resetPassword/{token}": {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Confirm received email",
+        "description": "the endpoint confirms whether the user accessed the email. If the path executed by the user returns true, the front end allows the user to change the password",
+        "parameters": [
+          {
+            "name": "token",
+            "in":"path",
+            "required" : true,
+            "description": "token's auth",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "value": {
+                      "message": "The userId does not exists or does not belongs to user"
+                    }
+                  },
+                  "token jwt": {
+                    "summary": "Folder name already exists",
+                    "value": {
+                      "message": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    
+    "/auth/resetPassword": {
+      "patch": {
+        "summary": "Reset Password to user",
+        "description": "reset password by email user",
+        "tags": ["Authenticated"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "confirmPassword" : {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "reset password successful"
+          },
+          "400" : {
+            "description": "The password field does no same equals!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "user not fold": {
+                    "summary": "Errors related to email",
+                    "value": {
+                      "message": "The email is incorrect or user does not exists!"
+                    }
+                  },
+                  "token jwt": {
+                    "value": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                  },
+                  "user don`t exists": {
+                    "value": "The userId does not exists or does not belongs to user"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+
+    "/accountsConfirm/{token}" : {
+      "get": {
+        "tags": ["Authenticated"],
+        "summary": "Confirm created account in email",
+        "description": "Endpoint to confirm account created",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "token to confirm account",
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "account confirmed with success!"
+          },
+          "404" : {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "token jwt": {
+                    "value": "The JWT_SECRET_NEW_USER is null. Please the set secret key to development variable"
+                  },
+                  "user don`t exists": {
+                    "value": "User is invalid or does not confirm the account in email!"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error!"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "patch": {
+        "summary": " Logout user",
+      "tags": ["Authenticated"],
+      "security": [
+        {"bearerAuth": []}
+      ],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "404": {
+          "description": "Token is missing!"
+        },
+        "204": {
+          "description": "Logout complete successful!"
+        }
+      }
+      }
+    }
+  }
+}

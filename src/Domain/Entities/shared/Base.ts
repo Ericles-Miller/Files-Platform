@@ -1,21 +1,23 @@
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export class Base {
-  id: string;
+  id!: string;
   createdAt!: Date;
-  updatedAt: Date | null;
+  updatedAt!: Date | null;
   enable!: boolean;
 
-  constructor() {
-    this.id = uuid();
-    this.createdAt = new Date();
-    this.enable = true;
-    this.updatedAt = null;
+  constructor(id: string | null) {
+    if (!id) {
+      this.id = uuid();
+      this.createdAt = new Date();
+      this.updatedAt = null;
+    } else {
+      this.id = id;
+    }
   }
 
-  
   setUpdatedAt(date: Date): void {
-    this.updatedAt = new Date();
+    this.updatedAt = date;
   }
 
   getUpdatedAt(): Date | null {

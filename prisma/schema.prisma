@@ -3,37 +3,87 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
 model Files {
-  id           String     @id @default(uuid())
-  displayName  String     @unique
-  displayCover String
-  createdAt    DateTime   @default(now())
-  updateAt     DateTime?  @default(now())
-  description  String
-  Comments     Comments[]
+  id          String        @id @default(uuid())
+  displayName String
+  fileName    String
+  size        Float
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @default(now())
+  type        String
+  folderPath  String
+  user        Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  folderId    String
+  folder      Folders       @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  SharedItems SharedItems[]
 
-  @@map("posts")
+  @@map("files")
 }
 
 model Users {
-  id        String    @id @default(uuid())
-  name      String
-  email     String
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now())
-  enable    Boolean
+  id            String          @id @default(uuid())
+  name          String
+  email         String
+  password      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime?       @default(now())
+  enable        Boolean         @default(false)
+  avatar        String?
+  fileName      String?
+  files         Files[]
+  refreshTokens RefreshTokens[]
+  folders       Folders[]
+  SharedItems   SharedItems[]
 
   @@map("users")
 }
 
-model Comments {
-  id          String @id @default(uuid())
-  description String
-  files       Files  @relation(fields: [postsId], references: [id])
-  postsId     String
+model Folders {
+  id          String        @id @default(uuid())
+  displayName String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @default(now())
+  size        Float
+  path        String
+  parentId    String?
+  parent      Folders?      @relation("FoldersToParent", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Folders[]     @relation("FoldersToParent")
+  user        Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  files       Files[]
+  SharedItems SharedItems[]
+
+  @@map("folders")
+}
+
+model RefreshTokens {
+  id        String  @id @default(uuid())
+  expiresIn Int
+  user      Users   @relation(fields: [userId], references: [id])
+  userId    String
+  revoked   Boolean @default(false)
+
+  @@map("refreshTokens")
+}
+
+model SharedItems {
+  id               String    @id @default(uuid())
+  sharedWithUserId String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime? @default(now())
+  sharedStatus     Boolean   @default(true)
+  user             Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  file             Files?    @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId           String?
+  folder           Folders?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId         String?
+
+  @@unique([fileId, folderId, sharedWithUserId])
+  @@map("sharedItems")
 }
