@@ -30,3 +30,4 @@ Start enjoying the benefits of our cloud storage platform today!
 -- set environment variables present on file .example.env
 
 -- test on moment the branch develop
+
