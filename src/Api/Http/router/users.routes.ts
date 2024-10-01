@@ -17,7 +17,37 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid input
+ */
 usersRoutes.post('/', upload.single('avatar'), createUserController.handle);
+
+
 usersRoutes.get('/', listUserController.handle);
 usersRoutes.patch('/', ensureAuthenticated, upload.single('avatar'), updateUserController.handle);
 usersRoutes.delete('/', ensureAuthenticated, deleteUserController.handle);

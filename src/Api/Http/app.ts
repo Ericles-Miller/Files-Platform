@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata';
 import 'express-async-errors';
 import cors from 'cors';
@@ -8,9 +7,9 @@ import * as https from 'https';
 import * as path from 'path';
 import swaggerUi from 'swagger-ui-express';
 
+import { swaggerDocs } from '@Api/Extensions/swagger';
 import { AppError } from '@Domain/Exceptions/AppError';
 
-import swaggerFile from '../../../swagger.json';
 import { router } from './router';
 
 
@@ -28,7 +27,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 https.createServer(options, app).listen(3334, () => 'Server is running in https');
 
